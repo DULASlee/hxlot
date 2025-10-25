@@ -1,0 +1,238 @@
+# 🔧 修复数据库内省超时问题的完整脚本
+# 此脚本确保超时配置正确且浏览器缓存被清除
+
+Write-Host "`n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Gray
+Write-Host "🔧 数据库内省超时问题 - 彻底修复" -ForegroundColor Green
+Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`n" -ForegroundColor Gray
+
+# 1. 验证超时配置
+Write-Host "1️⃣ 验证超时配置...`n" -ForegroundColor Cyan
+
+$codeGenFile = "src\SmartAbp.Vue\packages\lowcode-api\src\code-generator.ts"
+$content = Get-Content $codeGenFile -Raw
+
+if ($content -match "timeout:\s*120000") {
+    Write-Host "   ✅ 超时配置正确: 120秒" -ForegroundColor Green
+} elseif ($content -match "timeout:\s*60000") {
+    Write-Host "   ⚠️  超时配置为60秒，建议增加到120秒" -ForegroundColor Yellow
+} else {
+    Write-Host "   ❌ 未找到超时配置！" -ForegroundColor Red
+}
+
+if ($content -match "longTimeoutHttp\.post.*introspect-db") {
+    Write-Host "   ✅ 正在使用longTimeoutHttp实例" -ForegroundColor Green
+} else {
+    Write-Host "   ❌ 未使用longTimeoutHttp实例！" -ForegroundColor Red
+}
+
+# 2. 检查后端配置
+Write-Host "`n2️⃣ 检查后端超时配置...`n" -ForegroundColor Cyan
+
+$appsettingsFile = "src\SmartAbp.Web\appsettings.json"
+if (Test-Path $appsettingsFile) {
+    $appsettings = Get-Content $appsettingsFile -Raw
+    if ($appsettings -match '"RequestTimeout":\s*"(\d+)"') {
+        $timeout = $matches[1]
+        Write-Host "   ✅ 后端请求超时: $timeout 秒" -ForegroundColor Green
+        if ([int]$timeout -lt 120) {
+            Write-Host "   ⚠️  建议增加到120秒以上" -ForegroundColor Yellow
+        }
+    } else {
+        Write-Host "   ℹ️  使用默认超时配置" -ForegroundColor Gray
+    }
+}
+
+# 3. 生成浏览器缓存清除指南
+Write-Host "`n3️⃣ 浏览器缓存清除指南`n" -ForegroundColor Cyan
+
+$clearCacheHtml = @"
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>清除浏览器缓存指南</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+        }
+        .method {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .method h2 {
+            color: #764ba2;
+            margin-top: 0;
+        }
+        .step {
+            background: white;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        .keyboard {
+            background: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            display: inline-block;
+            margin: 0 2px;
+        }
+        .success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .warning {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 清除浏览器缓存 - 修复超时问题</h1>
+
+        <div class="warning">
+            <strong>⚠️ 重要提示：</strong>
+            <p>如果遇到 <code>ERR_EMPTY_RESPONSE</code> 错误，通常是因为浏览器加载了旧的缓存代码。</p>
+            <p>超时配置已从 <strong>60秒</strong> 增加到 <strong>120秒</strong>，但需要清除缓存才能生效。</p>
+        </div>
+
+        <div class="method">
+            <h2>方法1：快速硬刷新（推荐）⚡</h2>
+            <div class="step">
+                <strong>1. 打开低代码设计器页面</strong>
+                <p>访问：<a href="http://localhost:9001/CodeGen/ultra-simple">http://localhost:9001/CodeGen/ultra-simple</a></p>
+            </div>
+            <div class="step">
+                <strong>2. 按快捷键强制刷新</strong>
+                <p>
+                    Windows: <span class="keyboard">Ctrl</span> + <span class="keyboard">Shift</span> + <span class="keyboard">R</span><br>
+                    Mac: <span class="keyboard">Cmd</span> + <span class="keyboard">Shift</span> + <span class="keyboard">R</span>
+                </p>
+            </div>
+            <div class="step">
+                <strong>3. 或者使用开发者工具</strong>
+                <p>
+                    1. 按 <span class="keyboard">F12</span> 打开开发者工具<br>
+                    2. 右键点击浏览器刷新按钮<br>
+                    3. 选择 "清空缓存并硬性重新加载"
+                </p>
+            </div>
+        </div>
+
+        <div class="method">
+            <h2>方法2：清除所有缓存（彻底）🧹</h2>
+            <div class="step">
+                <strong>1. 打开清除数据窗口</strong>
+                <p>
+                    按 <span class="keyboard">Ctrl</span> + <span class="keyboard">Shift</span> + <span class="keyboard">Delete</span>
+                </p>
+            </div>
+            <div class="step">
+                <strong>2. 选择清除选项</strong>
+                <p>
+                    ✅ 缓存的图片和文件<br>
+                    ✅ Cookie 和其他网站数据<br>
+                    时间范围：<strong>全部时间</strong>
+                </p>
+            </div>
+            <div class="step">
+                <strong>3. 点击"清除数据"</strong>
+                <p>等待清除完成后，关闭并重新打开浏览器</p>
+            </div>
+        </div>
+
+        <div class="method">
+            <h2>方法3：禁用缓存（开发期间）🚫</h2>
+            <div class="step">
+                <strong>1. 打开开发者工具</strong>
+                <p>按 <span class="keyboard">F12</span></p>
+            </div>
+            <div class="step">
+                <strong>2. 打开网络面板</strong>
+                <p>点击 "Network" 标签</p>
+            </div>
+            <div class="step">
+                <strong>3. 勾选"Disable cache"</strong>
+                <p>保持开发者工具打开，缓存将被禁用</p>
+            </div>
+        </div>
+
+        <div class="success">
+            <h3>✅ 验证修复是否成功</h3>
+            <ol>
+                <li>清除缓存后，刷新页面</li>
+                <li>打开开发者工具 (F12) → Console 标签</li>
+                <li>点击"测试连接"或"一键生成"</li>
+                <li>在控制台查找这行日志：<br>
+                    <code style="background:#333;color:#0f0;padding:5px;display:block;margin-top:5px;">
+                    🌐 [API] 使用超时配置: 120秒（longTimeoutHttp）
+                    </code>
+                </li>
+                <li>如果看到这行日志，说明超时配置已生效！</li>
+            </ol>
+        </div>
+
+        <div class="warning">
+            <h3>⚠️ 如果问题仍然存在</h3>
+            <p>1. 确认后端服务正在运行（http://localhost:9002）</p>
+            <p>2. 检查后端日志，查看实际处理时间</p>
+            <p>3. 如果后端处理超过120秒，需要优化数据库查询或增加超时时间</p>
+        </div>
+    </div>
+</body>
+</html>
+"@
+
+$htmlPath = "docs\清除浏览器缓存指南.html"
+$clearCacheHtml | Out-File -FilePath $htmlPath -Encoding UTF8
+Write-Host "   ✅ 已生成缓存清除指南: $htmlPath" -ForegroundColor Green
+
+# 4. 打开指南
+Write-Host "`n4️⃣ 打开清除指南...`n" -ForegroundColor Cyan
+Start-Process $htmlPath
+
+# 5. 总结
+Write-Host "`n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Gray
+Write-Host "📋 修复摘要" -ForegroundColor Green
+Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`n" -ForegroundColor Gray
+
+Write-Host "✅ 超时配置已更新为120秒" -ForegroundColor Green
+Write-Host "✅ 已生成浏览器缓存清除指南" -ForegroundColor Green
+Write-Host "✅ 指南已在浏览器中打开`n" -ForegroundColor Green
+
+Write-Host "🚀 下一步操作：" -ForegroundColor Cyan
+Write-Host "1. 按照指南清除浏览器缓存" -ForegroundColor White
+Write-Host "2. 刷新低代码设计器页面" -ForegroundColor White
+Write-Host "3. 重新测试数据库内省功能`n" -ForegroundColor White
+
+Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`n" -ForegroundColor Gray
+

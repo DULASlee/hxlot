@@ -155,6 +155,61 @@
               </el-col>
             </el-row>
 
+            <!-- 🎨 新增：UI模板选择 -->
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="UI模板预设 *" required>
+                  <el-radio-group v-model="config.templatePreset" size="large" class="template-selector">
+                    <el-radio-button value="standard">
+                      <div class="template-option">
+                        <div class="template-header">
+                          <el-icon :size="20"><Document /></el-icon>
+                          <span class="template-name">标准企业级</span>
+                          <el-tag type="success" size="small">推荐</el-tag>
+                        </div>
+                        <div class="template-desc">完整CRUD + 基础搜索 + 权限控制 (~400行)</div>
+                        <div class="template-features">
+                          <el-tag size="small" effect="plain">SmartComponents</el-tag>
+                          <el-tag size="small" effect="plain">响应式</el-tag>
+                          <el-tag size="small" effect="plain">企业级</el-tag>
+                        </div>
+                      </div>
+                    </el-radio-button>
+                    <el-radio-button value="pro">
+                      <div class="template-option">
+                        <div class="template-header">
+                          <el-icon :size="20"><Trophy /></el-icon>
+                          <span class="template-name">专业增强版</span>
+                          <el-tag type="warning" size="small">高级</el-tag>
+                        </div>
+                        <div class="template-desc">高级筛选 + 批量操作 + 数据可视化 (~800行)</div>
+                        <div class="template-features">
+                          <el-tag size="small" effect="plain">高级筛选</el-tag>
+                          <el-tag size="small" effect="plain">批量操作</el-tag>
+                          <el-tag size="small" effect="plain">导出打印</el-tag>
+                        </div>
+                      </div>
+                    </el-radio-button>
+                    <el-radio-button value="minimal">
+                      <div class="template-option">
+                        <div class="template-header">
+                          <el-icon :size="20"><Aim /></el-icon>
+                          <span class="template-name">极简版</span>
+                          <el-tag type="info" size="small">快速</el-tag>
+                        </div>
+                        <div class="template-desc">零配置 + 快速原型 + 学习示例 (<200行)</div>
+                        <div class="template-features">
+                          <el-tag size="small" effect="plain">极简</el-tag>
+                          <el-tag size="small" effect="plain">快速上手</el-tag>
+                          <el-tag size="small" effect="plain">原型开发</el-tag>
+                        </div>
+                      </div>
+                    </el-radio-button>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
             <!-- 7-8. 前端界面配置 -->
             <h3 class="section-title">
               {{ t('ultraSimple.form.frontendConfig') }}
@@ -288,7 +343,7 @@
 
 <script setup lang="ts">
 import * as EpIcons from '@element-plus/icons-vue'
-import { Promotion } from '@element-plus/icons-vue'
+import { Promotion, Document, Trophy, Aim } from '@element-plus/icons-vue'
 import type { TableSchema } from '@smartabp/lowcode-api'
 import { codeGeneratorApi } from '@smartabp/lowcode-api'
 import { mapDbTypeToEntityType, safeValidateModuleMetadata } from '@smartabp/lowcode-shared'
@@ -321,6 +376,7 @@ interface MetadataConfig {
   databaseProvider: 'SqlServer' | 'MySql' | 'PostgreSql'
   parentMenuId: string
   menuIcon: string
+  templatePreset: 'standard' | 'pro' | 'minimal' // 🎨 新增：UI模板选择
 }
 
 interface GenerationLog {
@@ -376,7 +432,8 @@ const config = reactive<MetadataConfig>({
   architecturePattern: 'Crud',
   databaseProvider: 'SqlServer',
   parentMenuId: 'business',
-  menuIcon: 'database'
+  menuIcon: 'database',
+  templatePreset: 'standard' // 🎨 默认使用标准企业级模板
 })
 
 // 🔥 调试：监听所有变化
@@ -666,7 +723,8 @@ const convertToModuleMetadata = (): SmartAbp_CodeGenerator_Services_V9_ModuleMet
     // ✅ 必需：Frontend (FrontendConfigDto)
     frontend: {
       parentId: c.parentMenuId || 'business',
-      routePrefix: route
+      routePrefix: route,
+      templatePreset: c.templatePreset || 'standard' // 🎨 新增：UI模板预设
     },
 
     // ✅ 必需：GenerateMobilePages
@@ -2005,6 +2063,71 @@ const importPermissionSystem = async () => {
   .generate-btn {
     height: 44px;
     font-size: var(--font-size-base);
+  }
+}
+
+// 🎨 模板选择器样式
+.template-selector {
+  width: 100%;
+  display: flex;
+  gap: var(--spacing-md);
+
+  :deep(.el-radio-button) {
+    flex: 1;
+    min-width: 0;
+
+    .el-radio-button__inner {
+      width: 100%;
+      height: auto;
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      transition: all 0.3s;
+
+      &:hover {
+        border-color: var(--color-primary-500);
+        background: var(--color-primary-50);
+      }
+    }
+
+    &.is-active .el-radio-button__inner {
+      border-color: var(--color-primary-500);
+      background: var(--color-primary-500);
+      color: white;
+
+      .template-desc,
+      .template-features .el-tag {
+        color: rgba(255, 255, 255, 0.9);
+      }
+    }
+  }
+}
+
+.template-option {
+  text-align: left;
+
+  .template-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+
+    .template-name {
+      font-weight: var(--font-weight-semibold);
+      font-size: var(--font-size-base);
+    }
+  }
+
+  .template-desc {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.5;
+  }
+
+  .template-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
   }
 }
 </style>

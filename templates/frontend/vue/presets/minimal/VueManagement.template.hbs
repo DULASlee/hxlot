@@ -1,0 +1,206 @@
+{{!--
+  🎯 Minimal极简管理页面模板
+  特性:
+    - 极简设计（<200行）
+    - 零配置
+    - 快速上手
+    - 适合快速原型开发
+--}}
+<template>
+  <div class="{{camelCase entityName}}-management-minimal">
+    {{!-- 简洁标题栏 --}}
+    <div class="header">
+      <h1>{{entityDisplayName}}管理</h1>
+      <el-button type="primary" @click="handleAdd">新增</el-button>
+    </div>
+
+    {{!-- 搜索 --}}
+    <div class="search">
+      <el-input
+        v-model="searchText"
+        placeholder="搜索..."
+        clearable
+        @keyup.enter="handleSearch"
+      />
+      <el-button @click="handleSearch">搜索</el-button>
+    </div>
+
+    {{!-- 表格 --}}
+    <el-table
+      v-loading="loading"
+      :data="tableData"
+      stripe
+      style="width: 100%"
+    >
+      {{#each displayProperties}}
+      <el-table-column
+        prop="{{this.name}}"
+        label="{{this.displayName}}"
+        {{#if this.width}}width="{{this.width}}"{{/if}}
+      />
+      {{/each}}
+      <el-table-column label="操作" width="150">
+        <template #default="{ row }">
+          <el-button link type="primary" @click="handleEdit(row)">编辑</el-button>
+          <el-button link type="danger" @click="handleDelete(row)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    {{!-- 分页 --}}
+    <el-pagination
+      v-model:current-page="page"
+      v-model:page-size="pageSize"
+      :total="total"
+      layout="prev, pager, next"
+      @current-change="loadData"
+    />
+
+    {{!-- 编辑对话框 --}}
+    <el-dialog
+      v-model="dialogVisible"
+      :title="dialogMode === 'add' ? '新增' : '编辑'"
+      width="500px"
+    >
+      <el-form :model="formData" label-width="100px">
+        {{#each editableProperties}}
+        <el-form-item label="{{this.displayName}}">
+          {{#if (eq this.type "string")}}
+          <el-input v-model="formData.{{this.name}}" />
+          {{else if (eq this.type "number")}}
+          <el-input-number v-model="formData.{{this.name}}" style="width: 100%" />
+          {{else if (eq this.type "boolean")}}
+          <el-switch v-model="formData.{{this.name}}" />
+          {{else if (eq this.type "DateTime")}}
+          <el-date-picker v-model="formData.{{this.name}}" type="datetime" style="width: 100%" />
+          {{/if}}
+        </el-form-item>
+        {{/each}}
+      </el-form>
+      <template #footer>
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="handleSubmit">确定</el-button>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, reactive, onMounted, computed } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { use{{pascalCase entityName}}Store } from '@/stores/modules/{{camelCase moduleName}}/{{camelCase entityName}}'
+import type { {{pascalCase entityName}}Dto } from '@/types/{{camelCase moduleName}}/{{camelCase entityName}}'
+
+// Store
+const store = use{{pascalCase entityName}}Store()
+
+// State
+const loading = ref(false)
+const submitLoading = ref(false)
+const dialogVisible = ref(false)
+const dialogMode = ref<'add' | 'edit'>('add')
+const searchText = ref('')
+const page = ref(1)
+const pageSize = ref(20)
+const total = ref(0)
+
+// Form
+const formData = reactive({
+  {{#each editableProperties}}
+  {{this.name}}: {{#if (eq this.type "string")}}''{{else if (eq this.type "number")}}0{{else if (eq this.type "boolean")}}false{{else}}undefined{{/if}},
+  {{/each}}
+})
+
+// Computed
+const tableData = computed(() => store.pagedList.items)
+
+// Lifecycle
+onMounted(() => loadData())
+
+// Methods
+async function loadData() {
+  loading.value = true
+  try {
+    await store.fetchList({
+      filter: searchText.value,
+      skipCount: (page.value - 1) * pageSize.value,
+      maxResultCount: pageSize.value
+    })
+    total.value = store.pagedList.total
+  } finally {
+    loading.value = false
+  }
+}
+
+function handleAdd() {
+  dialogMode.value = 'add'
+  Object.keys(formData).forEach(key => {
+    formData[key] = ''
+  })
+  dialogVisible.value = true
+}
+
+function handleEdit(row: {{pascalCase entityName}}Dto) {
+  dialogMode.value = 'edit'
+  Object.assign(formData, row)
+  dialogVisible.value = true
+}
+
+async function handleSubmit() {
+  submitLoading.value = true
+  try {
+    if (dialogMode.value === 'add') {
+      await store.createItem(formData)
+    } else {
+      await store.updateItem((formData as any).id, formData)
+    }
+    ElMessage.success('保存成功')
+    dialogVisible.value = false
+    await loadData()
+  } finally {
+    submitLoading.value = false
+  }
+}
+
+async function handleDelete(row: {{pascalCase entityName}}Dto) {
+  await ElMessageBox.confirm('确认删除？', '警告', { type: 'warning' })
+  await store.deleteItem(row.id)
+  ElMessage.success('删除成功')
+  await loadData()
+}
+
+function handleSearch() {
+  page.value = 1
+  loadData()
+}
+</script>
+
+<style scoped>
+.{{camelCase entityName}}-management-minimal {
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.search {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.el-pagination {
+  margin-top: 20px;
+  justify-content: center;
+}
+</style>
+

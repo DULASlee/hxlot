@@ -207,24 +207,19 @@ public class EnhancedFrontendGenerator : ITransientDependency
         string vueRoot,
         Dictionary<string, string> generatedFiles)
     {
-        _logger.LogDebug("生成模块级文件: {ModuleName}", metadata.Name);
+        _logger.LogInformation("🚀 生成模块级文件: {ModuleName}", metadata.Name);
 
-        // 🛣️ 生成路由配置
-        var routeContent = await GenerateModuleRoutesAsync(metadata);
-        if (routeContent.IsSuccess)
-        {
-            generatedFiles.Add(
-                Path.Combine(vueRoot, "src", "router", "modules", $"{metadata.Name.ToLowerInvariant()}.ts"),
-                routeContent.RenderedContent!
-            );
-        }
+        // 🛣️ 生成路由配置 - 强制生成，不使用模板
+        var routeFilePath = Path.Combine(vueRoot, "src", "router", "modules", $"{metadata.Name.ToLowerInvariant()}.ts");
+        var routeContent = GenerateRouteConfigurationContent(metadata);
+        generatedFiles.Add(routeFilePath, routeContent);
+        _logger.LogInformation("✅ 路由文件已生成: {Path}", routeFilePath);
 
         // 📜 生成菜单配置（独立文件）
+        var menuFilePath = Path.Combine(vueRoot, "src", "config", "menus", $"{metadata.Name.ToLowerInvariant()}.ts");
         var menuContent = GenerateMenuConfiguration(metadata);
-        generatedFiles.Add(
-            Path.Combine(vueRoot, "src", "config", "menus", $"{metadata.Name.ToLowerInvariant()}.ts"),
-            menuContent
-        );
+        generatedFiles.Add(menuFilePath, menuContent);
+        _logger.LogInformation("✅ 菜单文件已生成: {Path}", menuFilePath);
 
         // 🔥 关键修复：自动注册菜单到主配置文件
         await IntegrateMenuToMainConfigAsync(metadata, vueRoot, generatedFiles);
@@ -441,7 +436,7 @@ public class EnhancedFrontendGenerator : ITransientDependency
         Dictionary<string, string> generatedFiles)
     {
         var mainMenuPath = Path.Combine(vueRoot, "src", "config", "menus.ts");
-        var moduleName = metadata.Name.ToLowerInvariant(); // 🔧 提升作用域，在catch块中也可访问
+        var moduleName = metadata.Name.ToLowerInvariant();
 
         try
         {
@@ -452,52 +447,97 @@ public class EnhancedFrontendGenerator : ITransientDependency
             }
 
             var mainMenuContent = await File.ReadAllTextAsync(mainMenuPath);
-            var importStatement = $"import {{ {moduleName}MenuConfig }} from './menus/{moduleName}'";
-            var menuChildStatement = $"    ...{moduleName}MenuConfig.children || []";
 
-            // 检查是否已经导入
-            if (mainMenuContent.Contains(importStatement))
+            // 生成菜单项（不是使用spread，而是标准MenuItem格式）
+            var menuItem = GenerateMenuItemForMainConfig(metadata);
+
+            // 检查是否已存在
+            if (mainMenuContent.Contains($"key: \"{moduleName}-management\""))
             {
                 _logger.LogInformation("✅ 菜单已存在，跳过自动注册: {ModuleName}", metadata.Name);
                 return;
             }
 
-            // 在 import type 之后添加导入语句
-            var importTypeIndex = mainMenuContent.IndexOf("import type");
-            if (importTypeIndex > -0)
+            // 🎯 关键修复：定位到系统管理模块的children数组
+            var systemManagementPattern = @"key:\s*""system-management""[\s\S]*?children:\s*\[";
+            var systemMatch = System.Text.RegularExpressions.Regex.Match(mainMenuContent, systemManagementPattern);
+
+            if (!systemMatch.Success)
             {
-                var afterImportType = mainMenuContent.IndexOf("\n", importTypeIndex);
-                mainMenuContent = mainMenuContent.Insert(afterImportType + 1, importStatement + "\n");
+                _logger.LogWarning("⚠️ 未找到系统管理模块，菜单将添加到根级别");
+                // 回退方案：添加到menus数组末尾
+                var menusArrayEnd = mainMenuContent.LastIndexOf("],\n}");
+                if (menusArrayEnd > 0)
+                {
+                    mainMenuContent = mainMenuContent.Insert(menusArrayEnd, ",\n" + menuItem + "\n  ");
+                }
             }
             else
             {
-                // 找不到 import type，在开头添加
-                mainMenuContent = importStatement + "\n\n" + mainMenuContent;
-            }
+                // 找到系统管理模块的children数组，定位到其闭合括号
+                var startPos = systemMatch.Index + systemMatch.Length;
+                var bracketCount = 1;
+                var insertPosition = -1;
 
-            // 在 children 数组中添加菜单项（在最后一个 ] 之前）
-            var childrenMatch = System.Text.RegularExpressions.Regex.Match(
-                mainMenuContent,
-                @"children:\s*\[(.*?)\]",
-                System.Text.RegularExpressions.RegexOptions.Singleline
-            );
+                // 查找匹配的闭合括号
+                for (int i = startPos; i < mainMenuContent.Length && bracketCount > 0; i++)
+                {
+                    if (mainMenuContent[i] == '[') bracketCount++;
+                    else if (mainMenuContent[i] == ']')
+                    {
+                        bracketCount--;
+                        if (bracketCount == 0)
+                        {
+                            insertPosition = i;
+                            break;
+                        }
+                    }
+                }
 
-            if (childrenMatch.Success)
-            {
-                var closingBracketIndex = childrenMatch.Groups[0].Value.LastIndexOf(']');
-                var insertPosition = mainMenuContent.IndexOf(childrenMatch.Value) + childrenMatch.Value.LastIndexOf(']');
-                mainMenuContent = mainMenuContent.Insert(insertPosition, ",\n" + menuChildStatement + "\n  ");
+                if (insertPosition > 0)
+                {
+                    // 在闭合括号前插入菜单项
+                    mainMenuContent = mainMenuContent.Insert(insertPosition, ",\n" + menuItem + "\n        ");
+                    _logger.LogInformation("✅ 菜单已自动注册到系统管理模块: {ModuleName}", metadata.Name);
+                }
             }
 
             // 更新主菜单配置文件
             generatedFiles[mainMenuPath] = mainMenuContent;
-            _logger.LogInformation("✅ 菜单已自动注册到主配置: {ModuleName}", metadata.Name);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "❌ 菜单自动注册失败: {ModuleName}", metadata.Name);
-            _logger.LogWarning($"⚠️ 请手动添加菜单导入: import {{ {moduleName}MenuConfig }} from './menus/{moduleName}'");
+            _logger.LogWarning("⚠️ 请手动添加菜单到系统管理模块的children数组");
         }
+    }
+
+    /// <summary>
+    /// 🎯 生成标准菜单项配置
+    /// </summary>
+    private string GenerateMenuItemForMainConfig(ModuleMetadataDto metadata)
+    {
+        var moduleName = metadata.Name.ToLowerInvariant();
+        var sb = new StringBuilder();
+
+        sb.AppendLine("        {");
+        sb.AppendLine($"          key: \"{moduleName}-management\",");
+        sb.AppendLine($"          title: \"{metadata.DisplayName}\",");
+        sb.AppendLine("          icon: \"users\",");
+        sb.AppendLine("          type: \"page\",");
+        sb.AppendLine($"          path: \"/{moduleName}/{moduleName}\",");
+        sb.AppendLine($"          component: \"@/views/{moduleName}/{metadata.Entities.FirstOrDefault()?.Name ?? metadata.Name}Management.vue\",");
+        sb.AppendLine($"          order: {100 + (moduleName.GetHashCode() % 100)},");
+        sb.AppendLine("          visible: true,");
+        sb.AppendLine("          requiredRoles: [ROLES.ADMIN],");
+        sb.AppendLine("          closable: true,");
+        sb.AppendLine("          meta: {");
+        sb.AppendLine($"            title: \"{metadata.DisplayName}\",");
+        sb.AppendLine($"            menuKey: \"{moduleName}-management\",");
+        sb.AppendLine("          },");
+        sb.Append("        }");
+
+        return sb.ToString();
     }
 
     /// <summary>

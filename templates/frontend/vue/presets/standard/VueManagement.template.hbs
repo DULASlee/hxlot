@@ -1,0 +1,454 @@
+{{!--
+  🎨 Standard企业级管理页面模板
+  特性:
+    - SmartComponents封装
+    - 设计令牌（Design Tokens）
+    - 响应式布局
+    - 完整CRUD
+    - 高级筛选
+    - 批量操作
+--}}
+<template>
+  <div class="{{camelCase entityName}}-management">
+    {{!-- 页面标题 --}}
+    <SmartCard elevation="none" class="page-header">
+      <div class="header-content">
+        <div class="title-section">
+          <SmartIcon icon="carbon:data-table" size="xl" class="title-icon" />
+          <div class="title-text">
+            <h1 class="page-title">{{entityDisplayName}}管理</h1>
+            <p class="page-subtitle">{{entityDescription}}</p>
+          </div>
+        </div>
+        <div class="actions-section">
+          <SmartButton
+            v-if="hasPermission('{{moduleName}}.{{entityName}}.Create')"
+            variant="primary"
+            size="md"
+            @click="handleAdd"
+          >
+            <template #icon>
+              <SmartIcon icon="carbon:add" />
+            </template>
+            新增{{entityDisplayName}}
+          </SmartButton>
+        </div>
+      </div>
+    </SmartCard>
+
+    {{!-- 搜索筛选区 --}}
+    <SmartCard elevation="sm" class="search-section">
+      <el-form :model="searchForm" :inline="true" class="search-form">
+        {{#each searchableProperties}}
+        <el-form-item label="{{this.displayName}}">
+          {{#if (eq this.type "string")}}
+          <el-input
+            v-model="searchForm.{{this.name}}"
+            placeholder="请输入{{this.displayName}}"
+            clearable
+            @keyup.enter="handleSearch"
+          />
+          {{else if (eq this.type "number")}}
+          <el-input-number
+            v-model="searchForm.{{this.name}}"
+            placeholder="请输入{{this.displayName}}"
+            controls-position="right"
+          />
+          {{else if (eq this.type "boolean")}}
+          <el-select
+            v-model="searchForm.{{this.name}}"
+            placeholder="请选择{{this.displayName}}"
+            clearable
+          >
+            <el-option label="是" :value="true" />
+            <el-option label="否" :value="false" />
+          </el-select>
+          {{/if}}
+        </el-form-item>
+        {{/each}}
+        <el-form-item>
+          <SmartButton variant="primary" @click="handleSearch">
+            <template #icon>
+              <SmartIcon icon="carbon:search" />
+            </template>
+            搜索
+          </SmartButton>
+          <SmartButton variant="default" @click="handleReset">
+            <template #icon>
+              <SmartIcon icon="carbon:reset" />
+            </template>
+            重置
+          </SmartButton>
+        </el-form-item>
+      </el-form>
+    </SmartCard>
+
+    {{!-- 数据表格 --}}
+    <SmartCard elevation="sm" class="table-section">
+      <el-table
+        v-loading="loading"
+        :data="tableData"
+        stripe
+        border
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55" fixed="left" />
+        {{#each displayProperties}}
+        <el-table-column
+          prop="{{this.name}}"
+          label="{{this.displayName}}"
+          {{#if this.sortable}}sortable{{/if}}
+          {{#if this.filterable}}filterable{{/if}}
+          {{#if this.width}}width="{{this.width}}"{{/if}}
+        >
+          {{#if (eq this.type "boolean")}}
+          <template #default="{ row }">
+            <el-tag :type="row.{{this.name}} ? 'success' : 'danger'">
+              {{ row.{{this.name}} ? '是' : '否' }}
+            </el-tag>
+          </template>
+          {{else if (eq this.type "DateTime")}}
+          <template #default="{ row }">
+            {{ formatDateTime(row.{{this.name}}) }}
+          </template>
+          {{/if}}
+        </el-table-column>
+        {{/each}}
+        <el-table-column label="操作" width="200" fixed="right">
+          <template #default="{ row }">
+            <SmartButton
+              v-if="hasPermission('{{moduleName}}.{{entityName}}.Update')"
+              link
+              type="primary"
+              size="small"
+              @click="handleEdit(row)"
+            >
+              <SmartIcon icon="carbon:edit" />
+            </SmartButton>
+            <SmartButton
+              v-if="hasPermission('{{moduleName}}.{{entityName}}.Delete')"
+              link
+              type="danger"
+              size="small"
+              @click="handleDelete(row)"
+            >
+              <SmartIcon icon="carbon:delete" />
+            </SmartButton>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      {{!-- 分页 --}}
+      <div class="pagination-container">
+        <el-pagination
+          v-model:current-page="pagination.current"
+          v-model:page-size="pagination.pageSize"
+          :page-sizes="[10, 20, 50, 100]"
+          :total="pagination.total"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
+    </SmartCard>
+
+    {{!-- 编辑对话框 --}}
+    <el-dialog
+      v-model="dialogVisible"
+      :title="`${dialogMode === 'add' ? '新增' : '编辑'}{{entityDisplayName}}`"
+      width="600px"
+      :close-on-click-modal="false"
+    >
+      <el-form
+        ref="formRef"
+        :model="formData"
+        :rules="formRules"
+        label-width="120px"
+      >
+        {{#each editableProperties}}
+        <el-form-item label="{{this.displayName}}" prop="{{this.name}}">
+          {{#if (eq this.type "string")}}
+          <el-input
+            v-model="formData.{{this.name}}"
+            placeholder="请输入{{this.displayName}}"
+            {{#if this.maxLength}}maxlength="{{this.maxLength}}"{{/if}}
+            show-word-limit
+          />
+          {{else if (eq this.type "number")}}
+          <el-input-number
+            v-model="formData.{{this.name}}"
+            placeholder="请输入{{this.displayName}}"
+            controls-position="right"
+            style="width: 100%"
+          />
+          {{else if (eq this.type "boolean")}}
+          <el-switch
+            v-model="formData.{{this.name}}"
+            active-text="是"
+            inactive-text="否"
+          />
+          {{else if (eq this.type "DateTime")}}
+          <el-date-picker
+            v-model="formData.{{this.name}}"
+            type="datetime"
+            placeholder="请选择{{this.displayName}}"
+            style="width: 100%"
+          />
+          {{/if}}
+        </el-form-item>
+        {{/each}}
+      </el-form>
+      <template #footer>
+        <SmartButton variant="default" @click="dialogVisible = false">
+          取消
+        </SmartButton>
+        <SmartButton
+          variant="primary"
+          :loading="submitLoading"
+          @click="handleSubmit"
+        >
+          确定
+        </SmartButton>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, reactive, onMounted, computed } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
+import { SmartButton, SmartCard, SmartIcon } from '@/components/design-system'
+import { use{{pascalCase entityName}}Store } from '@/stores/modules/{{camelCase moduleName}}/{{camelCase entityName}}'
+import { usePermission } from '@/composables/usePermission'
+import type { {{pascalCase entityName}}Dto, Create{{pascalCase entityName}}Dto, Update{{pascalCase entityName}}Dto } from '@/types/{{camelCase moduleName}}/{{camelCase entityName}}'
+
+// Store & Composables
+const store = use{{pascalCase entityName}}Store()
+const { hasPermission } = usePermission()
+
+// 响应式数据
+const loading = ref(false)
+const submitLoading = ref(false)
+const dialogVisible = ref(false)
+const dialogMode = ref<'add' | 'edit'>('add')
+const formRef = ref<FormInstance>()
+const selectedRows = ref<{{pascalCase entityName}}Dto[]>([])
+
+// 搜索表单
+const searchForm = reactive({
+  {{#each searchableProperties}}
+  {{this.name}}: {{#if (eq this.type "string")}}''{{else if (eq this.type "number")}}undefined{{else if (eq this.type "boolean")}}undefined{{/if}},
+  {{/each}}
+})
+
+// 分页
+const pagination = reactive({
+  current: 1,
+  pageSize: 20,
+  total: 0
+})
+
+// 表单数据
+const formData = reactive<Create{{pascalCase entityName}}Dto | Update{{pascalCase entityName}}Dto>({
+  {{#each editableProperties}}
+  {{this.name}}: {{#if (eq this.type "string")}}''{{else if (eq this.type "number")}}0{{else if (eq this.type "boolean")}}false{{else if (eq this.type "DateTime")}}undefined{{/if}},
+  {{/each}}
+})
+
+// 表单验证规则
+const formRules: FormRules = {
+  {{#each requiredProperties}}
+  {{this.name}}: [
+    { required: true, message: '请输入{{this.displayName}}', trigger: 'blur' }
+  ],
+  {{/each}}
+}
+
+// 计算属性
+const tableData = computed(() => store.pagedList.items)
+
+// 生命周期
+onMounted(() => {
+  loadData()
+})
+
+// 方法
+async function loadData() {
+  loading.value = true
+  try {
+    await store.fetchList({
+      ...searchForm,
+      skipCount: (pagination.current - 1) * pagination.pageSize,
+      maxResultCount: pagination.pageSize
+    })
+    pagination.total = store.pagedList.total
+  } finally {
+    loading.value = false
+  }
+}
+
+function handleAdd() {
+  dialogMode.value = 'add'
+  Object.keys(formData).forEach(key => {
+    formData[key] = {{#if (eq this.type "string")}}''{{else if (eq this.type "number")}}0{{else if (eq this.type "boolean")}}false{{else}}undefined{{/if}}
+  })
+  dialogVisible.value = true
+}
+
+function handleEdit(row: {{pascalCase entityName}}Dto) {
+  dialogMode.value = 'edit'
+  Object.assign(formData, row)
+  dialogVisible.value = true
+}
+
+async function handleSubmit() {
+  if (!formRef.value) return
+
+  await formRef.value.validate(async (valid) => {
+    if (!valid) return
+
+    submitLoading.value = true
+    try {
+      if (dialogMode.value === 'add') {
+        await store.createItem(formData as Create{{pascalCase entityName}}Dto)
+        ElMessage.success('创建成功')
+      } else {
+        await store.updateItem((formData as any).id, formData as Update{{pascalCase entityName}}Dto)
+        ElMessage.success('更新成功')
+      }
+      dialogVisible.value = false
+      await loadData()
+    } finally {
+      submitLoading.value = false
+    }
+  })
+}
+
+async function handleDelete(row: {{pascalCase entityName}}Dto) {
+  await ElMessageBox.confirm(`确认删除"${row.{{displayPropertyName}}}"吗？`, '警告', {
+    type: 'warning'
+  })
+
+  await store.deleteItem(row.id)
+  ElMessage.success('删除成功')
+  await loadData()
+}
+
+function handleSearch() {
+  pagination.current = 1
+  loadData()
+}
+
+function handleReset() {
+  Object.keys(searchForm).forEach(key => {
+    searchForm[key] = undefined
+  })
+  handleSearch()
+}
+
+function handleSelectionChange(rows: {{pascalCase entityName}}Dto[]) {
+  selectedRows.value = rows
+}
+
+function handleSizeChange(size: number) {
+  pagination.pageSize = size
+  loadData()
+}
+
+function handleCurrentChange(page: number) {
+  pagination.current = page
+  loadData()
+}
+
+function formatDateTime(date: string | Date | undefined): string {
+  if (!date) return '-'
+  return new Date(date).toLocaleString('zh-CN')
+}
+</script>
+
+<style scoped>
+/* 🎨 企业级样式 - 使用设计令牌 */
+.{{camelCase entityName}}-management {
+  padding: var(--spacing-6);
+  background: var(--color-bg-container);
+  min-height: calc(100vh - 120px);
+}
+
+/* 页面头部 */
+.page-header {
+  margin-bottom: var(--spacing-6);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-5);
+}
+
+.title-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.title-icon {
+  color: var(--color-primary-500);
+}
+
+.page-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.page-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: var(--spacing-1) 0 0;
+}
+
+/* 搜索区域 */
+.search-section {
+  margin-bottom: var(--spacing-6);
+}
+
+.search-form {
+  padding: var(--spacing-4);
+}
+
+/* 表格区域 */
+.table-section {
+  padding: var(--spacing-5);
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--spacing-6);
+  padding-top: var(--spacing-5);
+  border-top: 1px solid var(--color-border-default);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .{{camelCase entityName}}-management {
+    padding: var(--spacing-4);
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: var(--spacing-4);
+    align-items: flex-start;
+  }
+
+  .search-form {
+    display: flex;
+    flex-direction: column;
+  }
+}
+</style>
+

@@ -216,24 +216,7 @@ export const menuConfig: MenuConfig = {
             menuKey: "admin-performance",
           },
         },
-      ,
-        {
-          key: "smarttenant-management",
-          title: "租户管理",
-          icon: "users",
-          type: "page",
-          path: "/smarttenant/smarttenant",
-          component: "@/views/smarttenant/SmartTenantManagement.vue",
-          order: 176,
-          visible: true,
-          requiredRoles: [ROLES.ADMIN],
-          closable: true,
-          meta: {
-            title: "租户管理",
-            menuKey: "smarttenant-management",
-          },
-        }
-        ],
+      ],
     },
 
     // 测试功能模块 (开发环境)

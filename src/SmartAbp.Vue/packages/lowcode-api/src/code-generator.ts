@@ -1,12 +1,13 @@
-import { http, createHttpClient } from './http-client';
+import { createHttpClient, http } from './http-client';
 import type { CodeGeneratorApi, GenerationResult, ModuleGenerationConfig, ModuleMetadata, Template } from "./types/index";
 
 /**
  * 🔥 创建专用HTTP客户端用于长时间API（数据库内省）
- * 默认的http实例timeout是30秒，这里需要60秒
+ * 默认的http实例timeout是30秒，数据库内省需要更长时间
+ * 增加到120秒以确保大型数据库扫描不会超时
  */
 const longTimeoutHttp = createHttpClient({
-  timeout: 60000 // 60秒超时，专门用于introspect-db等长时间操作
+  timeout: 120000 // 120秒超时（2分钟），确保数据库内省不会超时
 });
 
 /**
@@ -54,14 +55,16 @@ export const codeGeneratorApi: CodeGeneratorApi = {
   async introspectDatabase(req: any): Promise<any> {
     console.log('🌐 [API] introspectDatabase 调用，URL: /api/code-generator/introspect-db')
     console.log('🌐 [API] 请求参数:', req)
+    console.log('🌐 [API] 使用超时配置: 120秒（longTimeoutHttp）')
     try {
-      // 🔥 关键修复：使用longTimeoutHttp（60秒超时）而不是默认的http（30秒）
+      // 🔥 关键修复：使用longTimeoutHttp（120秒超时）而不是默认的http（30秒）
       const result = await longTimeoutHttp.post<any>('/api/code-generator/introspect-db', req)
       console.log('🌐 [API] introspectDatabase 成功，返回表数量:', result?.tables?.length)
       return result
     } catch (error: any) {
       console.error('🌐 [API] introspectDatabase 失败!')
       console.error('🌐 [API] 错误:', error)
+      console.error('🌐 [API] 错误类型:', error?.code, error?.message)
       throw error
     }
   },

@@ -112,7 +112,8 @@ public class SmartAbpDevKitCoreModule : AbpModule
         services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.EnhancedGenerators.TypeScriptTypeGenerator>();
         services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.EnhancedGenerators.ApiClientGenerator>();
         services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.EnhancedGenerators.PiniaStoreGenerator>();
-        Console.WriteLine("✅ [DevKit] 4个EnhancedGenerator已注册（Enum, TypeScript, ApiClient, PiniaStore）");
+        services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.EnhancedGenerators.RouterGenerator>();
+        Console.WriteLine("✅ [DevKit] 5个EnhancedGenerator已注册（Enum, TypeScript, ApiClient, PiniaStore, Router）");
 
         // 4.5.5 P1阶段生成器（核心功能增强）
         services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.EnhancedGenerators.VueFormComponentGenerator>();
@@ -202,6 +203,7 @@ public class SmartAbpDevKitCoreModule : AbpModule
         Console.WriteLine("      • TypeScriptTypeGenerator - TS类型定义生成器");
         Console.WriteLine("      • ApiClientGenerator - 前端API服务生成器");
         Console.WriteLine("      • PiniaStoreGenerator - Pinia状态管理生成器");
+        Console.WriteLine("      • RouterGenerator - 🛣️ 路由配置生成器（Vue Router）");
         Console.WriteLine("      【⭐P1阶段生成器 - 核心功能增强】");
         Console.WriteLine("      • VueFormComponentGenerator - Vue表单生成器（支持字段分组）");
         Console.WriteLine("      • TreeStructureGenerator - 树形结构生成器（递归查询 + el-tree）");
