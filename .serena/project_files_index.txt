@@ -1,6 +1,10 @@
 src/SmartAbp.Application/BusinessRules/BusinessRuleAppService.cs
 src/SmartAbp.Application/BusinessRules/Services/IScriptExecutionService.cs
 src/SmartAbp.Application/BusinessRules/Services/ScriptExecutionService.cs
+src/SmartAbp.Application/CodeGeneration/CodeGenerationAppService.cs
+src/SmartAbp.Application/CodeGeneration/CodeGenerationAutoMapperProfile.cs
+src/SmartAbp.Application/CodeGeneration/Generators/MES/MesDashboardGenerator.cs
+src/SmartAbp.Application/CodeGeneration/Generators/UniApp/UniAppGenerator.cs
 src/SmartAbp.Application/CodeGenerator/CodeGenStatsAppService.cs
 src/SmartAbp.Application/CodeGenerator/GenerationHistoryAppService.cs
 src/SmartAbp.Application/CodeGenerator/UserProfileAppService.cs
@@ -78,6 +82,7 @@ src/SmartAbp.Application/SmartAbpApplicationAutoMapperProfile.cs
 src/SmartAbp.Application/SmartAbpApplicationModule.cs
 src/SmartAbp.Domain/BusinessRules/BusinessRule.cs
 src/SmartAbp.Domain/BusinessRules/BusinessRuleVersion.cs
+src/SmartAbp.Domain/CodeGeneration/CodeGenerationTask.cs
 src/SmartAbp.Domain/CodeGenerator/CodeGenStat.cs
 src/SmartAbp.Domain/CodeGenerator/GenerationHistory.cs
 src/SmartAbp.Domain/CodeGenerator/UserProfile.cs
@@ -107,6 +112,7 @@ src/SmartAbp.Domain/SmartAbp.Domain.abppkg.analyze.json
 src/SmartAbp.Domain/SmartAbpConsts.cs
 src/SmartAbp.Domain/SmartAbpDomainModule.cs
 src/SmartAbp.Vue/src/App.vue
+src/SmartAbp.Vue/src/api/code-generation-api.ts
 src/SmartAbp.Vue/src/api/generated/api-client.d.ts
 src/SmartAbp.Vue/src/api/generated/api-client.js
 src/SmartAbp.Vue/src/api/generated/api-client.ts
@@ -407,6 +413,11 @@ src/SmartAbp.Vue/src/components/common/ModuleLoadingState.vue
 src/SmartAbp.Vue/src/components/common/SmartAbp.vue
 src/SmartAbp.Vue/src/components/dashboard/KPICard.vue
 src/SmartAbp.Vue/src/components/dashboard/RealtimeChart.vue
+src/SmartAbp.Vue/src/components/design-system/SmartButton.vue
+src/SmartAbp.Vue/src/components/design-system/SmartCard.vue
+src/SmartAbp.Vue/src/components/design-system/SmartIcon.vue
+src/SmartAbp.Vue/src/components/design-system/SmartInput.vue
+src/SmartAbp.Vue/src/components/design-system/index.ts
 src/SmartAbp.Vue/src/components/icons/EnterpriseIconSystem.vue
 src/SmartAbp.Vue/src/components/icons/IconCommunity.vue
 src/SmartAbp.Vue/src/components/icons/IconDemo.vue
@@ -487,6 +498,7 @@ src/SmartAbp.Vue/src/core/api/core/ApiResult.ts
 src/SmartAbp.Vue/src/core/api/core/CancelablePromise.ts
 src/SmartAbp.Vue/src/core/api/core/OpenAPI.ts
 src/SmartAbp.Vue/src/core/api/core/request.ts
+src/SmartAbp.Vue/src/core/api/entity-modeling-bridge.ts
 src/SmartAbp.Vue/src/core/api/index.ts
 src/SmartAbp.Vue/src/core/api/models/SmartAbp_Application_BusinessRules_Services_ScriptValidationResult.ts
 src/SmartAbp.Vue/src/core/api/models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleActionDto.ts
@@ -822,6 +834,11 @@ src/SmartAbp.Vue/src/stores/modules/user.d.ts
 src/SmartAbp.Vue/src/stores/modules/user.js
 src/SmartAbp.Vue/src/stores/modules/user.ts
 src/SmartAbp.Vue/src/stores/productionLineRealtimeStore.ts
+src/SmartAbp.Vue/src/stores/useCodeGenerationStore.ts
+src/SmartAbp.Vue/src/styles/design-tokens/colors.ts
+src/SmartAbp.Vue/src/styles/design-tokens/index.ts
+src/SmartAbp.Vue/src/styles/design-tokens/motion.ts
+src/SmartAbp.Vue/src/styles/design-tokens/spacing.ts
 src/SmartAbp.Vue/src/styles/tokens/colorPalette.js
 src/SmartAbp.Vue/src/styles/tokens/colorPalette.ts
 src/SmartAbp.Vue/src/styles/tokens/colors.js
@@ -847,6 +864,8 @@ src/SmartAbp.Vue/src/types/auth.js
 src/SmartAbp.Vue/src/types/auth.ts
 src/SmartAbp.Vue/src/types/canvas.js
 src/SmartAbp.Vue/src/types/canvas.ts
+src/SmartAbp.Vue/src/types/code-generation.types.ts
+src/SmartAbp.Vue/src/types/common.types.ts
 src/SmartAbp.Vue/src/types/global.d.ts
 src/SmartAbp.Vue/src/types/menu.d.ts
 src/SmartAbp.Vue/src/types/menu.js
@@ -869,7 +888,6 @@ src/SmartAbp.Vue/src/utils/errorMonitor.ts
 src/SmartAbp.Vue/src/utils/eventBus.d.ts
 src/SmartAbp.Vue/src/utils/eventBus.js
 src/SmartAbp.Vue/src/utils/eventBus.ts
-src/SmartAbp.Vue/src/utils/http.js
 src/SmartAbp.Vue/src/utils/http.ts
 src/SmartAbp.Vue/src/utils/index.js
 src/SmartAbp.Vue/src/utils/index.ts
@@ -968,12 +986,16 @@ src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.enhanced.vue
 src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.test.ts
 src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.vue
 src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioWelcome.vue
+src/SmartAbp.Vue/src/views/lowcode/MESGeneratorView.vue
 src/SmartAbp.Vue/src/views/lowcode/QuickStart.vue
+src/SmartAbp.Vue/src/views/lowcode/SmartStudioLite.spec.ts
 src/SmartAbp.Vue/src/views/lowcode/SmartStudioLite.vue
 src/SmartAbp.Vue/src/views/lowcode/UltraSimpleStudio.vue
+src/SmartAbp.Vue/src/views/lowcode/UniAppGeneratorView.vue
 src/SmartAbp.Vue/src/views/lowcode/WorkflowsView.vue
 src/SmartAbp.Vue/src/views/lowcode/components/AggregateEditor.vue
 src/SmartAbp.Vue/src/views/lowcode/components/EntryCard.vue
+src/SmartAbp.Vue/src/views/lowcode/components/FieldConfigTable.spec.ts
 src/SmartAbp.Vue/src/views/lowcode/components/FieldConfigTable.vue
 src/SmartAbp.Vue/src/views/lowcode/components/RecentProjects.vue
 src/SmartAbp.Vue/src/views/lowcode/components/UsageStatistics.vue

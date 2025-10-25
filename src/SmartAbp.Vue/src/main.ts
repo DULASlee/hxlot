@@ -280,6 +280,11 @@ async function bootstrap() {
     hasUser: !!authStore.userInfo
   })
 
+  // 🔥 初始化实体建模API桥接 - 修复花瓶式实现
+  const { initializeEntityModelingApiBridge } = await import("./core/api/entity-modeling-bridge")
+  initializeEntityModelingApiBridge()
+  logger.info("[EntityModeling] API桥接已初始化，Store现在使用真实API")
+
   // 🎨 初始化图标风格 - 从localStorage恢复图标风格偏好
   const { useIconStyleStore } = await import("./stores/modules/iconStyle")
   const iconStyleStore = useIconStyleStore()
