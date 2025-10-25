@@ -1,8 +1,8 @@
 <template>
   <div class="login-test-container">
-    <el-card
+    <SmartCard
       class="login-card"
-      shadow="hover"
+      variant="elevated"
     >
       <template #header>
         <div class="card-header">
@@ -203,7 +203,7 @@
           </div>
         </div>
       </div>
-    </el-card>
+    </SmartCard>
   </div>
 </template>
 
@@ -213,6 +213,7 @@ import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "elem
 import { useAuthStore } from "@/stores"
 import { api } from "@/utils/api"
 import dayjs from "dayjs"
+import { SmartCard } from "@/components/design-system"
 
 // 使用 stores
 const authStore = useAuthStore()
@@ -414,8 +415,8 @@ onMounted(() => {
 <style scoped>
 .login-test-container {
   max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
+  margin: var(--spacing-5) auto;
+  padding: var(--spacing-5);
 }
 
 .login-card {
@@ -447,7 +448,7 @@ onMounted(() => {
 
 .quick-test-buttons {
   display: flex;
-  gap: 10px;
+  gap: var(--spacing-2);
   margin-top: 15px;
   flex-wrap: wrap;
 }
@@ -465,7 +466,7 @@ onMounted(() => {
 .auth-actions {
   margin-top: 15px;
   display: flex;
-  gap: 10px;
+  gap: var(--spacing-2);
 }
 
 .test-logs {
@@ -482,12 +483,12 @@ onMounted(() => {
 }
 
 .log-item {
-  padding: 8px 12px;
+  padding: var(--spacing-2) var(--spacing-3);
   border-bottom: 1px solid #ebeef5;
   font-family: monospace;
   font-size: 12px;
   display: flex;
-  gap: 10px;
+  gap: var(--spacing-2);
 }
 
 .log-item:last-child {
@@ -524,7 +525,7 @@ onMounted(() => {
 }
 
 .no-logs {
-  padding: 20px;
+  padding: var(--spacing-5);
   text-align: center;
   color: #909399;
 }
@@ -538,7 +539,7 @@ onMounted(() => {
 
   .card-header {
     flex-direction: column;
-    gap: 10px;
+    gap: var(--spacing-2);
     align-items: flex-start;
   }
 

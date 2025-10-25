@@ -55,9 +55,9 @@ import LoginForm from '@/components/auth/LoginForm.vue';
   justify-content: center;
   overflow: hidden;
   background: linear-gradient(135deg,
-      #0066ff 0%,
-      #0052cc 50%,
-      #003d99 100%);
+      var(--color-primary-600) 0%,
+      var(--color-primary-700) 50%,
+      var(--color-primary-800) 100%);
   padding: 2vh 2vw;
   animation: gradientShift 15s ease infinite;
 }
@@ -330,7 +330,7 @@ import LoginForm from '@/components/auth/LoginForm.vue';
 }
 
 [data-theme='dark'] .system-title {
-  background: linear-gradient(135deg, #4096ff 0%, #69b1ff 100%);
+  background: linear-gradient(135deg, var(--color-primary-400) 0%, var(--color-primary-300) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;

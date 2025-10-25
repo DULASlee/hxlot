@@ -3,7 +3,7 @@
     <div class="dashboard-header">
       <div class="header-content">
         <div class="header-text">
-          <h1><i class="fas fa-tachometer-alt header-icon" />{{ t('dashboard.title') }}</h1>
+          <h1><SmartIcon icon="carbon:dashboard" size="lg" class="header-icon" />{{ t('dashboard.title') }}</h1>
           <p>{{ t('dashboard.welcome') }}</p>
         </div>
         <div class="header-actions">
@@ -11,14 +11,14 @@
             class="header-btn"
             @click="refreshDashboard"
           >
-            <i class="fas fa-sync-alt" />
+            <SmartIcon icon="carbon:renew" />
             <span>{{ t('dashboard.actions.refresh') }}</span>
           </button>
           <button
             class="header-btn"
             @click="exportReport"
           >
-            <i class="fas fa-download" />
+            <SmartIcon icon="carbon:download" />
             <span>{{ t('dashboard.actions.export') }}</span>
           </button>
         </div>
@@ -30,7 +30,7 @@
       <div class="stat-cards">
         <div class="stat-card users">
           <div class="stat-icon">
-            <i class="fas fa-users" />
+            <SmartIcon icon="carbon:user" />
           </div>
           <div class="stat-content">
             <div class="stat-number">
@@ -40,7 +40,7 @@
               {{ t('dashboard.stats.totalUsers') }}
             </div>
             <div class="stat-trend">
-              <i class="fas fa-arrow-up trend-up" />
+              <SmartIcon icon="carbon:trending-up" class="trend-up" />
               <span>+12% {{ t('dashboard.trends.thisMonth') }}</span>
             </div>
           </div>
@@ -48,7 +48,7 @@
 
         <div class="stat-card projects">
           <div class="stat-icon">
-            <i class="fas fa-project-diagram" />
+            <SmartIcon icon="carbon:flow-data" />
           </div>
           <div class="stat-content">
             <div class="stat-number">
@@ -58,7 +58,7 @@
               {{ t('dashboard.stats.totalProjects') }}
             </div>
             <div class="stat-trend">
-              <i class="fas fa-arrow-up trend-up" />
+              <SmartIcon icon="carbon:trending-up" class="trend-up" />
               <span>+3 {{ t('dashboard.trends.thisWeek') }}</span>
             </div>
           </div>
@@ -66,7 +66,7 @@
 
         <div class="stat-card health">
           <div class="stat-icon">
-            <i class="fas fa-chart-line" />
+            <SmartIcon icon="carbon:chart-line" />
           </div>
           <div class="stat-content">
             <div class="stat-number">
@@ -76,7 +76,7 @@
               {{ t('dashboard.stats.systemHealth') }}
             </div>
             <div class="stat-trend">
-              <i class="fas fa-arrow-down trend-down" />
+              <SmartIcon icon="carbon:trending-down" class="trend-down" />
               <span>-2% {{ t('dashboard.trends.today') }}</span>
             </div>
           </div>
@@ -84,7 +84,7 @@
 
         <div class="stat-card logs">
           <div class="stat-icon">
-            <i class="fas fa-file-alt" />
+            <SmartIcon icon="carbon:document" />
           </div>
           <div class="stat-content">
             <div class="stat-number">
@@ -94,7 +94,7 @@
               {{ t('dashboard.stats.todayLogs') }}
             </div>
             <div class="stat-trend">
-              <i class="fas fa-arrow-up trend-up" />
+              <SmartIcon icon="carbon:trending-up" class="trend-up" />
               <span>+156 {{ t('dashboard.trends.today') }}</span>
             </div>
           </div>
@@ -103,13 +103,13 @@
 
       <!-- 快速操作 -->
       <div class="quick-actions">
-        <h2><i class="fas fa-bolt" />{{ t('dashboard.quickActions.title') }}</h2>
+        <h2><SmartIcon icon="carbon:lightning" />{{ t('dashboard.quickActions.title') }}</h2>
         <div class="action-grid">
           <button
             class="action-btn"
             @click="router.push('/Admin/users')"
           >
-            <i class="fas fa-users" />
+            <SmartIcon icon="carbon:user" />
             <div class="action-content">
               <span class="action-title">{{ t('dashboard.quickActions.userManagement') }}</span>
               <span class="action-desc">{{ t('dashboard.quickActions.userManagementDesc') }}</span>
@@ -120,7 +120,7 @@
             class="action-btn"
             @click="router.push('/Project')"
           >
-            <i class="fas fa-project-diagram" />
+            <SmartIcon icon="carbon:flow-data" />
             <div class="action-content">
               <span class="action-title">{{ t('dashboard.quickActions.projectManagement') }}</span>
               <span class="action-desc">{{ t('dashboard.quickActions.projectManagementDesc') }}</span>
@@ -131,7 +131,7 @@
             class="action-btn"
             @click="router.push('/Log')"
           >
-            <i class="fas fa-file-alt" />
+            <SmartIcon icon="carbon:document" />
             <div class="action-content">
               <span class="action-title">{{ t('dashboard.quickActions.systemLogs') }}</span>
               <span class="action-desc">{{ t('dashboard.quickActions.systemLogsDesc') }}</span>
@@ -142,7 +142,7 @@
             class="action-btn"
             @click="testTheme"
           >
-            <i class="fas fa-palette" />
+            <SmartIcon icon="carbon:color-palette" />
             <div class="action-content">
               <span class="action-title">{{ t('dashboard.quickActions.themeTest') }}</span>
               <span class="action-desc">{{ t('dashboard.quickActions.themeTestDesc') }}</span>
@@ -153,7 +153,7 @@
             class="action-btn"
             @click="router.push('/Admin/settings')"
           >
-            <i class="fas fa-cog" />
+            <SmartIcon icon="carbon:settings" />
             <div class="action-content">
               <span class="action-title">{{ t('dashboard.quickActions.systemSettings') }}</span>
               <span class="action-desc">{{ t('dashboard.quickActions.systemSettingsDesc') }}</span>
@@ -164,7 +164,7 @@
             class="action-btn"
             @click="router.push('/Admin/permissions')"
           >
-            <i class="fas fa-shield-alt" />
+            <SmartIcon icon="carbon:security" />
             <div class="action-content">
               <span class="action-title">{{ t('dashboard.quickActions.permissionManagement') }}</span>
               <span class="action-desc">{{ t('dashboard.quickActions.permissionManagementDesc') }}</span>
@@ -175,11 +175,11 @@
 
       <!-- 系统状态 -->
       <div class="system-status">
-        <h2><i class="fas fa-server" />{{ t('dashboard.systemStatus.title') }}</h2>
+        <h2><SmartIcon icon="carbon:server" />{{ t('dashboard.systemStatus.title') }}</h2>
         <div class="status-list">
           <div class="status-item">
             <div class="status-icon">
-              <i class="fas fa-database" />
+              <SmartIcon icon="carbon:data-base" />
             </div>
             <div class="status-info">
               <span class="status-name">{{ t('dashboard.systemStatus.databaseConnection') }}</span>
@@ -189,7 +189,7 @@
           </div>
           <div class="status-item">
             <div class="status-icon">
-              <i class="fas fa-memory" />
+              <SmartIcon icon="carbon:memory" />
             </div>
             <div class="status-info">
               <span class="status-name">{{ t('dashboard.systemStatus.cacheService') }}</span>
@@ -199,7 +199,7 @@
           </div>
           <div class="status-item">
             <div class="status-icon">
-              <i class="fas fa-hdd" />
+              <SmartIcon icon="carbon:hard-drive" />
             </div>
             <div class="status-info">
               <span class="status-name">{{ t('dashboard.systemStatus.diskSpace') }}</span>
@@ -209,7 +209,7 @@
           </div>
           <div class="status-item">
             <div class="status-icon">
-              <i class="fas fa-microchip" />
+              <SmartIcon icon="carbon:chip" />
             </div>
             <div class="status-info">
               <span class="status-name">{{ t('dashboard.systemStatus.memoryUsage') }}</span>
@@ -227,6 +227,7 @@
 import { useThemeStore } from "@/stores"
 import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
+import { SmartIcon } from "@/components/design-system"
 
 const themeStore = useThemeStore()
 const { t } = useI18n()
