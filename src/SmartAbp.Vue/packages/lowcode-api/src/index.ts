@@ -67,18 +67,8 @@ export type {
 // ============================================================================
 // 实体建模API导出（v9.0 审计修复）
 // ============================================================================
+// 避免重复导出，entity-modeling.js已经通过export *导出了所有内容
 export * from "./entity-modeling.js"
-export {
-  addField, createEntity, createRelation, deleteEntity, deleteField, deleteRelation, getAllEntities, getAllRelations, getEntityById,
-  getEntityByName, updateEntity, updateField, updateRelation, validateSchema
-} from "./entity-modeling.js"
-export type {
-  CreateOrUpdateEntityDefinitionDto,
-  CreateOrUpdateEntityFieldDto,
-  CreateOrUpdateEntityRelationDto, EntityDefinition,
-  EntityField,
-  EntityRelation, SchemaValidationResult, ValidationRule
-} from "./entity-modeling.js"
 
 // ============================================================================
 // Composables导出（Task 1.2 新增）

@@ -12,6 +12,18 @@ const httpClient = createHttpClient({
     baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:44375'
 })
 
+// 🔥 修复：添加CreateOrUpdateEntityDefinitionDto类型定义（后端一致性）
+export interface CreateOrUpdateEntityDefinitionDto {
+    name: string
+    tableName: string
+    displayName: string
+    description?: string
+    entityType: string
+    baseType: string
+    namespace: string
+    fields?: CreateOrUpdateEntityFieldDto[]
+}
+
 /**
  * 实体定义（对应后端EntityDefinitionDto）
  */
@@ -101,14 +113,14 @@ export function getEntityByName(name: string) {
 /**
  * 创建实体定义
  */
-export function createEntity(data: Partial<EntityDefinition>) {
+export function createEntity(data: CreateOrUpdateEntityDefinitionDto) {
     return httpClient.post<EntityDefinition>('/api/lowcode/entity-modeling/entities', data)
 }
 
 /**
  * 更新实体定义
  */
-export function updateEntity(id: string, data: Partial<EntityDefinition>) {
+export function updateEntity(id: string, data: CreateOrUpdateEntityDefinitionDto) {
     return httpClient.put<EntityDefinition>(`/api/lowcode/entity-modeling/entities/${id}`, data)
 }
 
@@ -195,4 +207,90 @@ export interface SchemaValidationResult {
 export function validateSchema() {
     return httpClient.post<SchemaValidationResult>('/api/lowcode/entity-modeling/validate-schema')
 }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🔥 API桥接注入逻辑（修复花瓶式实现）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * 🔥 API桥接类型定义（对应Store中的EntityModelingApiBridge）
+ */
+export interface EntityModelingApiBridge {
+    createEntity: (data: CreateOrUpdateEntityDefinitionDto) => Promise<EntityDefinition>
+    deleteEntity: (id: string) => Promise<void>
+    updateEntity: (id: string, data: CreateOrUpdateEntityDefinitionDto) => Promise<EntityDefinition>
+    getAllEntities: () => Promise<EntityDefinition[]>
+    getAllRelations: () => Promise<EntityRelation[]>
+    getEntityById: (id: string) => Promise<EntityDefinition>
+    getEntityByName: (name: string) => Promise<EntityDefinition>
+    addField: (data: CreateOrUpdateEntityFieldDto) => Promise<EntityField>
+    updateField: (id: string, data: CreateOrUpdateEntityFieldDto) => Promise<EntityField>
+    deleteField: (id: string) => Promise<void>
+    createRelation: (data: CreateOrUpdateEntityRelationDto) => Promise<EntityRelation>
+    updateRelation: (id: string, data: CreateOrUpdateEntityRelationDto) => Promise<EntityRelation>
+    deleteRelation: (id: string) => Promise<void>
+    validateSchema: () => Promise<SchemaValidationResult>
+}
+
+/**
+ * 🔥 创建API桥接实例（真实的HTTP调用）
+ */
+export function createEntityModelingApiBridge(): EntityModelingApiBridge {
+    return {
+        createEntity: async (data: CreateOrUpdateEntityDefinitionDto) => {
+            const response = await createEntity(data)
+            return response
+        },
+        deleteEntity: async (id: string) => {
+            await deleteEntity(id)
+        },
+        updateEntity: async (id: string, data: CreateOrUpdateEntityDefinitionDto) => {
+            const response = await updateEntity(id, data)
+            return response
+        },
+        getAllEntities: async () => {
+            const response = await getAllEntities()
+            return response
+        },
+        getAllRelations: async () => {
+            const response = await getAllRelations()
+            return response
+        },
+        getEntityById: async (id: string) => {
+            const response = await getEntityById(id)
+            return response
+        },
+        getEntityByName: async (name: string) => {
+            const response = await getEntityByName(name)
+            return response
+        },
+        addField: async (data: CreateOrUpdateEntityFieldDto) => {
+            const response = await addField(data)
+            return response
+        },
+        updateField: async (id: string, data: CreateOrUpdateEntityFieldDto) => {
+            const response = await updateField(id, data)
+            return response
+        },
+        deleteField: async (id: string) => {
+            await deleteField(id)
+        },
+        createRelation: async (data: CreateOrUpdateEntityRelationDto) => {
+            const response = await createRelation(data)
+            return response
+        },
+        updateRelation: async (id: string, data: CreateOrUpdateEntityRelationDto) => {
+            const response = await updateRelation(id, data)
+            return response
+        },
+        deleteRelation: async (id: string) => {
+            await deleteRelation(id)
+        },
+        validateSchema: async () => {
+            const response = await validateSchema()
+            return response
+        }
+    }
+}
+
 

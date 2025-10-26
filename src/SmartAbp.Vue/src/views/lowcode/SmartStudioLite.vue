@@ -168,7 +168,7 @@
             <el-table-column prop="type" label="类型" width="120" />
             <el-table-column label="必填" width="80">
               <template #default="{ row }">
-                <el-tag v-if="row.isRequired" type="danger" size="small">是</el-tag>
+                <el-tag v-if="row?.isRequired" type="danger" size="small">是</el-tag>
                 <el-tag v-else type="info" size="small">否</el-tag>
               </template>
             </el-table-column>

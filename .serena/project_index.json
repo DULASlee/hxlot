@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-23T15:08:22.880Z",
+  "timestamp": "2025-10-25T04:16:37.384Z",
   "project": "Baobab.SmartAbp",
   "language": "typescript",
   "files": [
@@ -23,6 +23,34 @@
       "type": "file",
       "size": 16214,
       "modified": "2025-10-12T17:17:08.113Z"
+    },
+    {
+      "name": "CodeGenerationAppService.cs",
+      "path": "src/SmartAbp.Application/CodeGeneration/CodeGenerationAppService.cs",
+      "type": "file",
+      "size": 10974,
+      "modified": "2025-10-24T08:33:25.734Z"
+    },
+    {
+      "name": "CodeGenerationAutoMapperProfile.cs",
+      "path": "src/SmartAbp.Application/CodeGeneration/CodeGenerationAutoMapperProfile.cs",
+      "type": "file",
+      "size": 2003,
+      "modified": "2025-10-24T08:18:39.937Z"
+    },
+    {
+      "name": "MesDashboardGenerator.cs",
+      "path": "src/SmartAbp.Application/CodeGeneration/Generators/MES/MesDashboardGenerator.cs",
+      "type": "file",
+      "size": 13105,
+      "modified": "2025-10-24T08:20:06.933Z"
+    },
+    {
+      "name": "UniAppGenerator.cs",
+      "path": "src/SmartAbp.Application/CodeGeneration/Generators/UniApp/UniAppGenerator.cs",
+      "type": "file",
+      "size": 25190,
+      "modified": "2025-10-24T08:33:25.734Z"
     },
     {
       "name": "CodeGenStatsAppService.cs",
@@ -50,7 +78,7 @@
       "path": "src/SmartAbp.Application/DatabaseInfo/DatabaseInfoAppService.cs",
       "type": "file",
       "size": 7516,
-      "modified": "2025-10-23T08:26:01.560Z"
+      "modified": "2025-10-24T08:04:46.330Z"
     },
     {
       "name": "EquipmentAppService.cs",
@@ -120,7 +148,7 @@
       "path": "src/SmartAbp.Application/LowCode/PermissionSystemGenerator.cs",
       "type": "file",
       "size": 9203,
-      "modified": "2025-10-23T14:36:27.618Z"
+      "modified": "2025-10-24T08:04:46.331Z"
     },
     {
       "name": "SchemaVersionHistoryAppService.cs",
@@ -141,7 +169,7 @@
       "path": "src/SmartAbp.Application/LowCode/SmartStudioLiteAppService.cs",
       "type": "file",
       "size": 18019,
-      "modified": "2025-10-23T14:52:35.563Z"
+      "modified": "2025-10-24T08:04:46.331Z"
     },
     {
       "name": "PageConfigValidator.cs",
@@ -154,22 +182,22 @@
       "name": "AlarmNotificationService.cs",
       "path": "src/SmartAbp.Application/MES/Alarm/AlarmNotificationService.cs",
       "type": "file",
-      "size": 8204,
-      "modified": "2025-10-23T04:08:15.638Z"
+      "size": 8300,
+      "modified": "2025-10-24T10:01:10.599Z"
     },
     {
       "name": "IAlarmRule.cs",
       "path": "src/SmartAbp.Application/MES/Alarm/IAlarmRule.cs",
       "type": "file",
-      "size": 3568,
-      "modified": "2025-10-23T04:08:15.630Z"
+      "size": 3535,
+      "modified": "2025-10-24T10:01:10.599Z"
     },
     {
       "name": "ThresholdAlarmRule.cs",
       "path": "src/SmartAbp.Application/MES/Alarm/ThresholdAlarmRule.cs",
       "type": "file",
-      "size": 8695,
-      "modified": "2025-10-23T04:08:15.628Z"
+      "size": 8662,
+      "modified": "2025-10-24T10:01:10.600Z"
     },
     {
       "name": "IPLCAdapter.cs",
@@ -203,8 +231,8 @@
       "name": "PLCDataCollectorBackgroundWorker.cs",
       "path": "src/SmartAbp.Application/MES/PLCDataCollectorBackgroundWorker.cs",
       "type": "file",
-      "size": 13775,
-      "modified": "2025-10-23T04:32:38.900Z"
+      "size": 13143,
+      "modified": "2025-10-24T10:01:10.600Z"
     },
     {
       "name": "EnterpriseAlertingService.cs",
@@ -504,8 +532,8 @@
       "name": "RealtimeDataAggregatorService.cs",
       "path": "src/SmartAbp.Application/RealtimeData/RealtimeDataAggregatorService.cs",
       "type": "file",
-      "size": 15811,
-      "modified": "2025-10-23T04:08:15.628Z"
+      "size": 15865,
+      "modified": "2025-10-24T10:01:10.600Z"
     },
     {
       "name": "SensorDataAppService.cs",
@@ -518,8 +546,8 @@
       "name": "SensorDataAutoMapperProfile.cs",
       "path": "src/SmartAbp.Application/SensorData/SensorDataAutoMapperProfile.cs",
       "type": "file",
-      "size": 1760,
-      "modified": "2025-10-23T04:08:15.639Z"
+      "size": 1736,
+      "modified": "2025-10-24T10:01:10.600Z"
     },
     {
       "name": "SmartAbp.Application.abppkg.analyze.json",
@@ -547,7 +575,7 @@
       "path": "src/SmartAbp.Application/SmartAbpApplicationModule.cs",
       "type": "file",
       "size": 1196,
-      "modified": "2025-10-23T08:57:54.316Z"
+      "modified": "2025-10-24T08:04:46.334Z"
     },
     {
       "name": "BusinessRule.cs",
@@ -562,6 +590,13 @@
       "type": "file",
       "size": 5022,
       "modified": "2025-10-12T17:17:08.139Z"
+    },
+    {
+      "name": "CodeGenerationTask.cs",
+      "path": "src/SmartAbp.Domain/CodeGeneration/CodeGenerationTask.cs",
+      "type": "file",
+      "size": 4366,
+      "modified": "2025-10-24T10:01:30.019Z"
     },
     {
       "name": "CodeGenStat.cs",
@@ -610,63 +645,63 @@
       "path": "src/SmartAbp.Domain/Entities/LowCode/EntityDefinition.cs",
       "type": "file",
       "size": 6169,
-      "modified": "2025-10-16T07:20:37.662Z"
+      "modified": "2025-10-23T15:26:44.953Z"
     },
     {
       "name": "EntityField.cs",
       "path": "src/SmartAbp.Domain/Entities/LowCode/EntityField.cs",
       "type": "file",
       "size": 4613,
-      "modified": "2025-10-16T07:20:37.662Z"
+      "modified": "2025-10-23T15:26:44.955Z"
     },
     {
       "name": "EntityRelation.cs",
       "path": "src/SmartAbp.Domain/Entities/LowCode/EntityRelation.cs",
       "type": "file",
       "size": 2404,
-      "modified": "2025-10-12T17:17:08.139Z"
+      "modified": "2025-10-23T15:26:44.949Z"
     },
     {
       "name": "LowCodeEntity.cs",
       "path": "src/SmartAbp.Domain/Entities/LowCode/LowCodeEntity.cs",
       "type": "file",
-      "size": 8521,
-      "modified": "2025-10-17T08:16:40.523Z"
+      "size": 8431,
+      "modified": "2025-10-24T08:04:46.342Z"
     },
     {
       "name": "LowCodeModule.cs",
       "path": "src/SmartAbp.Domain/Entities/LowCode/LowCodeModule.cs",
       "type": "file",
-      "size": 12739,
-      "modified": "2025-10-18T06:40:39.529Z"
+      "size": 12468,
+      "modified": "2025-10-24T08:04:46.342Z"
     },
     {
       "name": "LowCodePageConfig.cs",
       "path": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs",
       "type": "file",
-      "size": 16505,
-      "modified": "2025-10-18T06:40:39.529Z"
+      "size": 16460,
+      "modified": "2025-10-24T08:04:46.343Z"
     },
     {
       "name": "LowCodeProperty.cs",
       "path": "src/SmartAbp.Domain/Entities/LowCode/LowCodeProperty.cs",
       "type": "file",
-      "size": 15091,
-      "modified": "2025-10-17T17:21:47.164Z"
+      "size": 15001,
+      "modified": "2025-10-24T08:04:46.343Z"
     },
     {
       "name": "SchemaVersionHistory.cs",
       "path": "src/SmartAbp.Domain/Entities/LowCode/SchemaVersionHistory.cs",
       "type": "file",
       "size": 3692,
-      "modified": "2025-10-12T17:17:08.139Z"
+      "modified": "2025-10-23T15:26:44.951Z"
     },
     {
       "name": "ValidationRule.cs",
       "path": "src/SmartAbp.Domain/Entities/LowCode/ValidationRule.cs",
       "type": "file",
       "size": 2562,
-      "modified": "2025-10-16T07:20:37.663Z"
+      "modified": "2025-10-23T15:26:44.964Z"
     },
     {
       "name": "Equipment.cs",
@@ -756,8 +791,8 @@
       "name": "SmartAbpDomainModule.cs",
       "path": "src/SmartAbp.Domain/SmartAbpDomainModule.cs",
       "type": "file",
-      "size": 4366,
-      "modified": "2025-10-12T17:17:08.141Z"
+      "size": 5149,
+      "modified": "2025-10-24T08:04:46.114Z"
     },
     {
       "name": "App.vue",
@@ -765,6 +800,13 @@
       "type": "file",
       "size": 757,
       "modified": "2025-10-12T17:17:08.231Z"
+    },
+    {
+      "name": "code-generation-api.ts",
+      "path": "src/SmartAbp.Vue/src/api/code-generation-api.ts",
+      "type": "file",
+      "size": 1267,
+      "modified": "2025-10-24T10:01:10.836Z"
     },
     {
       "name": "api-client.d.ts",
@@ -2660,8 +2702,8 @@
       "name": "entity-modeling.ts",
       "path": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts",
       "type": "file",
-      "size": 5404,
-      "modified": "2025-10-12T17:17:08.231Z"
+      "size": 9336,
+      "modified": "2025-10-25T03:12:01.942Z"
     },
     {
       "name": "moduleApi.ts",
@@ -2779,8 +2821,8 @@
       "name": "LoginForm.vue",
       "path": "src/SmartAbp.Vue/src/components/auth/LoginForm.vue",
       "type": "file",
-      "size": 21975,
-      "modified": "2025-10-14T03:23:47.387Z"
+      "size": 17546,
+      "modified": "2025-10-24T08:04:46.119Z"
     },
     {
       "name": "BaseButton.vue",
@@ -2865,6 +2907,41 @@
       "type": "file",
       "size": 6495,
       "modified": "2025-10-21T20:22:36.358Z"
+    },
+    {
+      "name": "SmartButton.vue",
+      "path": "src/SmartAbp.Vue/src/components/design-system/SmartButton.vue",
+      "type": "file",
+      "size": 11631,
+      "modified": "2025-10-24T08:04:46.120Z"
+    },
+    {
+      "name": "SmartCard.vue",
+      "path": "src/SmartAbp.Vue/src/components/design-system/SmartCard.vue",
+      "type": "file",
+      "size": 13390,
+      "modified": "2025-10-24T08:04:46.120Z"
+    },
+    {
+      "name": "SmartIcon.vue",
+      "path": "src/SmartAbp.Vue/src/components/design-system/SmartIcon.vue",
+      "type": "file",
+      "size": 3253,
+      "modified": "2025-10-24T08:04:46.121Z"
+    },
+    {
+      "name": "SmartInput.vue",
+      "path": "src/SmartAbp.Vue/src/components/design-system/SmartInput.vue",
+      "type": "file",
+      "size": 11227,
+      "modified": "2025-10-24T08:04:46.121Z"
+    },
+    {
+      "name": "index.ts",
+      "path": "src/SmartAbp.Vue/src/components/design-system/index.ts",
+      "type": "file",
+      "size": 704,
+      "modified": "2025-10-24T08:04:46.122Z"
     },
     {
       "name": "EnterpriseIconSystem.vue",
@@ -3367,8 +3444,8 @@
       "name": "menus.ts",
       "path": "src/SmartAbp.Vue/src/config/menus.ts",
       "type": "file",
-      "size": 21297,
-      "modified": "2025-10-22T09:03:05.146Z"
+      "size": 22902,
+      "modified": "2025-10-24T08:04:46.347Z"
     },
     {
       "name": "theme-icon.config.js",
@@ -3425,6 +3502,13 @@
       "type": "file",
       "size": 10209,
       "modified": "2025-10-18T09:19:06.929Z"
+    },
+    {
+      "name": "entity-modeling-bridge.ts",
+      "path": "src/SmartAbp.Vue/src/core/api/entity-modeling-bridge.ts",
+      "type": "file",
+      "size": 1290,
+      "modified": "2025-10-25T03:11:30.720Z"
     },
     {
       "name": "index.ts",
@@ -5327,8 +5411,8 @@
       "name": "main.ts",
       "path": "src/SmartAbp.Vue/src/main.ts",
       "type": "file",
-      "size": 11103,
-      "modified": "2025-10-14T03:23:47.390Z"
+      "size": 11465,
+      "modified": "2025-10-25T02:53:14.422Z"
     },
     {
       "name": "optimization.js",
@@ -5397,8 +5481,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/src/router/index.ts",
       "type": "file",
-      "size": 20951,
-      "modified": "2025-10-22T09:47:05.433Z"
+      "size": 22023,
+      "modified": "2025-10-24T08:04:46.347Z"
     },
     {
       "name": "lazyLoad.js",
@@ -5772,6 +5856,41 @@
       "modified": "2025-10-21T20:22:36.361Z"
     },
     {
+      "name": "useCodeGenerationStore.ts",
+      "path": "src/SmartAbp.Vue/src/stores/useCodeGenerationStore.ts",
+      "type": "file",
+      "size": 1871,
+      "modified": "2025-10-24T08:04:46.348Z"
+    },
+    {
+      "name": "colors.ts",
+      "path": "src/SmartAbp.Vue/src/styles/design-tokens/colors.ts",
+      "type": "file",
+      "size": 4938,
+      "modified": "2025-10-24T08:04:46.125Z"
+    },
+    {
+      "name": "index.ts",
+      "path": "src/SmartAbp.Vue/src/styles/design-tokens/index.ts",
+      "type": "file",
+      "size": 1613,
+      "modified": "2025-10-24T08:04:46.126Z"
+    },
+    {
+      "name": "motion.ts",
+      "path": "src/SmartAbp.Vue/src/styles/design-tokens/motion.ts",
+      "type": "file",
+      "size": 4279,
+      "modified": "2025-10-24T08:04:46.126Z"
+    },
+    {
+      "name": "spacing.ts",
+      "path": "src/SmartAbp.Vue/src/styles/design-tokens/spacing.ts",
+      "type": "file",
+      "size": 3725,
+      "modified": "2025-10-24T08:04:46.127Z"
+    },
+    {
       "name": "colorPalette.js",
       "path": "src/SmartAbp.Vue/src/styles/tokens/colorPalette.js",
       "type": "file",
@@ -5947,6 +6066,20 @@
       "modified": "2025-10-12T17:17:08.253Z"
     },
     {
+      "name": "code-generation.types.ts",
+      "path": "src/SmartAbp.Vue/src/types/code-generation.types.ts",
+      "type": "file",
+      "size": 1508,
+      "modified": "2025-10-24T08:04:46.348Z"
+    },
+    {
+      "name": "common.types.ts",
+      "path": "src/SmartAbp.Vue/src/types/common.types.ts",
+      "type": "file",
+      "size": 1,
+      "modified": "2025-10-25T04:04:32.732Z"
+    },
+    {
       "name": "global.d.ts",
       "path": "src/SmartAbp.Vue/src/types/global.d.ts",
       "type": "file",
@@ -6098,13 +6231,6 @@
       "path": "src/SmartAbp.Vue/src/utils/eventBus.ts",
       "type": "file",
       "size": 606,
-      "modified": "2025-10-12T17:17:08.255Z"
-    },
-    {
-      "name": "http.js",
-      "path": "src/SmartAbp.Vue/src/utils/http.js",
-      "type": "file",
-      "size": 2073,
       "modified": "2025-10-12T17:17:08.255Z"
     },
     {
@@ -6510,8 +6636,8 @@
       "name": "Login.vue",
       "path": "src/SmartAbp.Vue/src/views/auth/Login.vue",
       "type": "file",
-      "size": 1865,
-      "modified": "2025-10-14T03:23:47.391Z"
+      "size": 6720,
+      "modified": "2025-10-24T08:04:46.128Z"
     },
     {
       "name": "LoginTest.vue",
@@ -6794,6 +6920,13 @@
       "modified": "2025-10-22T09:47:05.434Z"
     },
     {
+      "name": "MESGeneratorView.vue",
+      "path": "src/SmartAbp.Vue/src/views/lowcode/MESGeneratorView.vue",
+      "type": "file",
+      "size": 14737,
+      "modified": "2025-10-24T08:04:46.349Z"
+    },
+    {
       "name": "QuickStart.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/QuickStart.vue",
       "type": "file",
@@ -6801,11 +6934,18 @@
       "modified": "2025-10-18T06:40:39.556Z"
     },
     {
+      "name": "SmartStudioLite.spec.ts",
+      "path": "src/SmartAbp.Vue/src/views/lowcode/SmartStudioLite.spec.ts",
+      "type": "file",
+      "size": 13858,
+      "modified": "2025-10-25T02:25:22.329Z"
+    },
+    {
       "name": "SmartStudioLite.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/SmartStudioLite.vue",
       "type": "file",
-      "size": 20166,
-      "modified": "2025-10-23T05:08:46.066Z"
+      "size": 20167,
+      "modified": "2025-10-25T02:11:57.333Z"
     },
     {
       "name": "UltraSimpleStudio.vue",
@@ -6813,6 +6953,13 @@
       "type": "file",
       "size": 228,
       "modified": "2025-10-12T17:17:08.264Z"
+    },
+    {
+      "name": "UniAppGeneratorView.vue",
+      "path": "src/SmartAbp.Vue/src/views/lowcode/UniAppGeneratorView.vue",
+      "type": "file",
+      "size": 15966,
+      "modified": "2025-10-24T08:04:46.350Z"
     },
     {
       "name": "WorkflowsView.vue",
@@ -6834,6 +6981,13 @@
       "type": "file",
       "size": 2625,
       "modified": "2025-10-21T20:22:28.293Z"
+    },
+    {
+      "name": "FieldConfigTable.spec.ts",
+      "path": "src/SmartAbp.Vue/src/views/lowcode/components/FieldConfigTable.spec.ts",
+      "type": "file",
+      "size": 52518,
+      "modified": "2025-10-25T02:05:32.983Z"
     },
     {
       "name": "FieldConfigTable.vue",
@@ -7210,8 +7364,8 @@
       "name": "entity-modeling.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/entity-modeling.ts",
       "type": "file",
-      "size": 6663,
-      "modified": "2025-10-14T03:23:47.381Z"
+      "size": 6753,
+      "modified": "2025-10-25T03:12:01.942Z"
     },
     {
       "name": "generation-history-api.ts",
@@ -7245,8 +7399,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/index.ts",
       "type": "file",
-      "size": 5938,
-      "modified": "2025-10-17T17:21:47.166Z"
+      "size": 5535,
+      "modified": "2025-10-25T03:12:01.942Z"
     },
     {
       "name": "industryTemplate.ts",
@@ -8967,8 +9121,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/index.ts",
       "type": "file",
-      "size": 17183,
-      "modified": "2025-10-19T00:45:09.348Z"
+      "size": 17139,
+      "modified": "2025-10-24T08:04:46.346Z"
     },
     {
       "name": "MetadataDrivenPageRenderer.vue",
@@ -9163,8 +9317,8 @@
       "name": "UltraSimpleStudio.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/UltraSimpleStudio.vue",
       "type": "file",
-      "size": 56532,
-      "modified": "2025-10-23T03:11:52.176Z"
+      "size": 67990,
+      "modified": "2025-10-24T08:04:46.347Z"
     },
     {
       "name": "VisualDesignerView.vue",
@@ -10828,6 +10982,34 @@
       "file": "src/SmartAbp.Application/BusinessRules/Services/ScriptExecutionService.cs"
     },
     {
+      "name": "CodeGenerationAppService",
+      "type": "class",
+      "line": 21,
+      "exported": true,
+      "file": "src/SmartAbp.Application/CodeGeneration/CodeGenerationAppService.cs"
+    },
+    {
+      "name": "CodeGenerationAutoMapperProfile",
+      "type": "class",
+      "line": 10,
+      "exported": true,
+      "file": "src/SmartAbp.Application/CodeGeneration/CodeGenerationAutoMapperProfile.cs"
+    },
+    {
+      "name": "MesDashboardGenerator",
+      "type": "class",
+      "line": 14,
+      "exported": true,
+      "file": "src/SmartAbp.Application/CodeGeneration/Generators/MES/MesDashboardGenerator.cs"
+    },
+    {
+      "name": "UniAppGenerator",
+      "type": "class",
+      "line": 14,
+      "exported": true,
+      "file": "src/SmartAbp.Application/CodeGeneration/Generators/UniApp/UniAppGenerator.cs"
+    },
+    {
       "name": "CodeGenStatsAppService",
       "type": "class",
       "line": 14,
@@ -11019,35 +11201,35 @@
     {
       "name": "AlarmNotificationService",
       "type": "class",
-      "line": 33,
+      "line": 34,
       "exported": true,
       "file": "src/SmartAbp.Application/MES/Alarm/AlarmNotificationService.cs"
     },
     {
       "name": "AlarmTriggeredEvent",
       "type": "class",
-      "line": 193,
+      "line": 194,
       "exported": true,
       "file": "src/SmartAbp.Application/MES/Alarm/AlarmNotificationService.cs"
     },
     {
       "name": "IAlarmRule",
       "type": "interface",
-      "line": 20,
+      "line": 19,
       "exported": true,
       "file": "src/SmartAbp.Application/MES/Alarm/IAlarmRule.cs"
     },
     {
       "name": "AlarmResult",
       "type": "class",
-      "line": 79,
+      "line": 78,
       "exported": true,
       "file": "src/SmartAbp.Application/MES/Alarm/IAlarmRule.cs"
     },
     {
       "name": "ThresholdAlarmRule",
       "type": "class",
-      "line": 21,
+      "line": 20,
       "exported": true,
       "file": "src/SmartAbp.Application/MES/Alarm/ThresholdAlarmRule.cs"
     },
@@ -12531,14 +12713,14 @@
     {
       "name": "RealtimeDataAggregatorService",
       "type": "class",
-      "line": 29,
+      "line": 30,
       "exported": true,
       "file": "src/SmartAbp.Application/RealtimeData/RealtimeDataAggregatorService.cs"
     },
     {
       "name": "ProductionLineRealtimeData",
       "type": "class",
-      "line": 271,
+      "line": 272,
       "exported": true,
       "file": "src/SmartAbp.Application/RealtimeData/RealtimeDataAggregatorService.cs"
     },
@@ -12590,6 +12772,13 @@
       "line": 11,
       "exported": true,
       "file": "src/SmartAbp.Domain/BusinessRules/BusinessRuleVersion.cs"
+    },
+    {
+      "name": "CodeGenerationTask",
+      "type": "class",
+      "line": 12,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/CodeGeneration/CodeGenerationTask.cs"
     },
     {
       "name": "CodeGenStat",
@@ -12664,14 +12853,14 @@
     {
       "name": "EntityConfig",
       "type": "class",
-      "line": 170,
+      "line": 168,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeEntity.cs"
     },
     {
       "name": "EntityUIConfig",
       "type": "class",
-      "line": 211,
+      "line": 209,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeEntity.cs"
     },
@@ -12685,49 +12874,49 @@
     {
       "name": "ModuleArchitectureConfig",
       "type": "class",
-      "line": 178,
+      "line": 172,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeModule.cs"
     },
     {
       "name": "ModuleFrontendConfig",
       "type": "class",
-      "line": 234,
+      "line": 228,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeModule.cs"
     },
     {
       "name": "MenuConfigItem",
       "type": "class",
-      "line": 267,
+      "line": 261,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeModule.cs"
     },
     {
       "name": "ModuleCodeGenOptions",
       "type": "class",
-      "line": 303,
+      "line": 297,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeModule.cs"
     },
     {
       "name": "ModulePermissionConfig",
       "type": "class",
-      "line": 347,
+      "line": 341,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeModule.cs"
     },
     {
       "name": "PermissionGroupConfig",
       "type": "class",
-      "line": 364,
+      "line": 358,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeModule.cs"
     },
     {
       "name": "ModuleFeatureManagement",
       "type": "class",
-      "line": 387,
+      "line": 381,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeModule.cs"
     },
@@ -12741,91 +12930,91 @@
     {
       "name": "PageConfigDto",
       "type": "class",
-      "line": 146,
+      "line": 145,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
     },
     {
       "name": "FormConfig",
       "type": "class",
-      "line": 177,
+      "line": 176,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
     },
     {
       "name": "FormCreateRule",
       "type": "class",
-      "line": 198,
+      "line": 197,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
     },
     {
       "name": "FormGlobalConfig",
       "type": "class",
-      "line": 242,
+      "line": 241,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
     },
     {
       "name": "FieldEffect",
       "type": "class",
-      "line": 288,
+      "line": 287,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
     },
     {
       "name": "ListConfig",
       "type": "class",
-      "line": 328,
+      "line": 327,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
     },
     {
       "name": "ColumnDefinition",
       "type": "class",
-      "line": 349,
+      "line": 348,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
     },
     {
       "name": "PaginationConfig",
       "type": "class",
-      "line": 392,
+      "line": 391,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
     },
     {
       "name": "ActionConfig",
       "type": "class",
-      "line": 408,
+      "line": 407,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
     },
     {
       "name": "DetailConfig",
       "type": "class",
-      "line": 446,
+      "line": 445,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
     },
     {
       "name": "DetailSection",
       "type": "class",
-      "line": 462,
+      "line": 461,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
     },
     {
       "name": "EventConfig",
       "type": "class",
-      "line": 489,
+      "line": 488,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
     },
     {
       "name": "LayoutConfig",
       "type": "class",
-      "line": 531,
+      "line": 530,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
     },
@@ -12839,35 +13028,35 @@
     {
       "name": "PropertyUIConfig",
       "type": "class",
-      "line": 215,
+      "line": 213,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeProperty.cs"
     },
     {
       "name": "DataSourceConfig",
       "type": "class",
-      "line": 312,
+      "line": 310,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeProperty.cs"
     },
     {
       "name": "ListFieldConfig",
       "type": "class",
-      "line": 343,
+      "line": 341,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeProperty.cs"
     },
     {
       "name": "FormFieldConfig",
       "type": "class",
-      "line": 369,
+      "line": 367,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeProperty.cs"
     },
     {
       "name": "ValidationRuleConfig",
       "type": "class",
-      "line": 401,
+      "line": 399,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeProperty.cs"
     },
@@ -12944,7 +13133,7 @@
     {
       "name": "SmartAbpDomainModule",
       "type": "class",
-      "line": 40,
+      "line": 43,
       "exported": true,
       "file": "src/SmartAbp.Domain/SmartAbpDomainModule.cs"
     },
@@ -16400,128 +16589,149 @@
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.js"
     },
     {
+      "name": "CreateOrUpdateEntityDefinitionDto",
+      "type": "interface",
+      "line": 16,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
+    },
+    {
       "name": "EntityDefinition",
       "type": "interface",
-      "line": 18,
+      "line": 30,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "EntityField",
       "type": "interface",
-      "line": 33,
+      "line": 45,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "EntityRelation",
       "type": "interface",
-      "line": 52,
+      "line": 64,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "getAllEntities",
       "type": "function",
-      "line": 81,
+      "line": 93,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "getEntityById",
       "type": "function",
-      "line": 88,
+      "line": 100,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "getEntityByName",
       "type": "function",
-      "line": 95,
+      "line": 107,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "createEntity",
       "type": "function",
-      "line": 104,
+      "line": 116,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "updateEntity",
       "type": "function",
-      "line": 111,
+      "line": 123,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "deleteEntity",
       "type": "function",
-      "line": 118,
+      "line": 130,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "addField",
       "type": "function",
-      "line": 129,
+      "line": 141,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "updateField",
       "type": "function",
-      "line": 136,
+      "line": 148,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "deleteField",
       "type": "function",
-      "line": 143,
+      "line": 155,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "getAllRelations",
       "type": "function",
-      "line": 154,
+      "line": 166,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "createRelation",
       "type": "function",
-      "line": 161,
+      "line": 173,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "updateRelation",
       "type": "function",
-      "line": 168,
+      "line": 180,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "deleteRelation",
       "type": "function",
-      "line": 175,
+      "line": 187,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "SchemaValidationResult",
       "type": "interface",
-      "line": 186,
+      "line": 198,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
     {
       "name": "validateSchema",
       "type": "function",
-      "line": 195,
+      "line": 207,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
+    },
+    {
+      "name": "EntityModelingApiBridge",
+      "type": "interface",
+      "line": 218,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
+    },
+    {
+      "name": "createEntityModelingApiBridge",
+      "type": "function",
+      "line": 238,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
     },
@@ -16685,6 +16895,27 @@
       "line": 74,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/components/common/LanguageSwitcher.vue"
+    },
+    {
+      "name": "SmartCardProps",
+      "type": "interface",
+      "line": 63,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/components/design-system/SmartCard.vue"
+    },
+    {
+      "name": "SmartCardEmits",
+      "type": "interface",
+      "line": 137,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/components/design-system/SmartCard.vue"
+    },
+    {
+      "name": "installDesignSystem",
+      "type": "function",
+      "line": 19,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/components/design-system/index.ts"
     },
     {
       "name": "IconProps",
@@ -17329,6 +17560,20 @@
       "line": 25,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/api/core/CancelablePromise.ts"
+    },
+    {
+      "name": "initializeEntityModelingApiBridge",
+      "type": "function",
+      "line": 16,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/core/api/entity-modeling-bridge.ts"
+    },
+    {
+      "name": "getEntityModelingApiBridgeStatus",
+      "type": "function",
+      "line": 32,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/core/api/entity-modeling-bridge.ts"
     },
     {
       "name": "AbpApiDefinitionService",
@@ -18038,6 +18283,34 @@
       "file": "src/SmartAbp.Vue/src/stores/modules/user.ts"
     },
     {
+      "name": "generateColorVariables",
+      "type": "function",
+      "line": 122,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/styles/design-tokens/colors.ts"
+    },
+    {
+      "name": "generateDesignTokens",
+      "type": "function",
+      "line": 19,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/styles/design-tokens/index.ts"
+    },
+    {
+      "name": "generateMotionVariables",
+      "type": "function",
+      "line": 127,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/styles/design-tokens/motion.ts"
+    },
+    {
+      "name": "generateSpacingVariables",
+      "type": "function",
+      "line": 88,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/styles/design-tokens/spacing.ts"
+    },
+    {
       "name": "generateThemePalettes",
       "type": "function",
       "line": 19,
@@ -18393,6 +18666,34 @@
       "line": 107,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/types/canvas.ts"
+    },
+    {
+      "name": "CodeGenerationTaskDto",
+      "type": "interface",
+      "line": 5,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/types/code-generation.types.ts"
+    },
+    {
+      "name": "MESGeneratorConfigDto",
+      "type": "interface",
+      "line": 37,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/types/code-generation.types.ts"
+    },
+    {
+      "name": "UniAppGeneratorConfigDto",
+      "type": "interface",
+      "line": 50,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/types/code-generation.types.ts"
+    },
+    {
+      "name": "CodeGenerationResultDto",
+      "type": "interface",
+      "line": 64,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/types/code-generation.types.ts"
     },
     {
       "name": "BaseMenuItem",
@@ -24466,14 +24767,14 @@
     {
       "name": "registerDesignerComponents",
       "type": "function",
-      "line": 48,
+      "line": 44,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-designer/src/index.ts"
     },
     {
       "name": "initializeDesigner",
       "type": "function",
-      "line": 284,
+      "line": 280,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-designer/src/index.ts"
     },

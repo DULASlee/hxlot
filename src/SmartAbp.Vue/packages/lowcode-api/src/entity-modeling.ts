@@ -256,3 +256,6 @@ export function validateSchema() {
     return httpClient.post<SchemaValidationResult>('/api/lowcode/entity-modeling/validate-schema')
 }
 
+// 注意：API桥接类型和函数已在主应用中定义，这里避免重复导出
+
+
