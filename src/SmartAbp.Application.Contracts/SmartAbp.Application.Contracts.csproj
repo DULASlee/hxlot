@@ -18,6 +18,7 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.10" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="9.0.10" />
   <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.10" />
+  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
     <PackageReference Include="Volo.Abp.PermissionManagement.Application.Contracts" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.FeatureManagement.Application.Contracts" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.SettingManagement.Application.Contracts" Version="$(AbpVersion)" />
