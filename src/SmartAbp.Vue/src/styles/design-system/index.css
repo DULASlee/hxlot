@@ -9,6 +9,9 @@
 /* 导入主题系统 */
 @import "./themes/index.css";
 
+/* ⚠️ 临时兼容层 - SSOT重构期间使用 - 2025-11-15删除 */
+@import "../migration-aliases.css";
+
 /* ✅ 导入过渡动画系统 */
 @import "./transitions.css";
 
