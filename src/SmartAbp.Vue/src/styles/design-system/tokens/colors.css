@@ -1,4 +1,15 @@
-/* 颜色令牌 - 定义系统中使用的所有颜色 */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ * 颜色令牌 - SSOT (Single Source of Truth)
+ * 
+ * 📍 唯一真实来源: 此文件
+ * 🚫 禁止修改: theme-base.css, tokens.ts (自动同步)
+ * 📅 最后更新: 2025-10-27
+ * 📖 使用指南: docs/二次开发/主题样式/设计令牌使用指南.md
+ * 
+ * ⚠️ 重要：修改此文件后必须同步更新:
+ *   1. packages/lowcode-shared/src/theme/tokens.ts
+ *   2. 运行: npm run sync-tokens
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 :root {
   /* 基础颜色 */
   --color-white: #ffffff;
@@ -17,14 +28,14 @@
   --color-gray-900: #111827;
 
   /* 主色调色阶 */
-  --color-primary-50: #f0f9ff;
+  --theme-brand-primary-lighter: #f0f9ff;
   --color-primary-100: #e0f2fe;
   --color-primary-200: #bae6fd;
   --color-primary-300: #7dd3fc;
   --color-primary-400: #38bdf8;
-  --color-primary-500: #0ea5e9;
-  --color-primary-600: #0284c7;
-  --color-primary-700: #0369a1;
+  --theme-brand-primary: #0ea5e9;
+  --theme-brand-primary-hover: #0284c7;
+  --theme-brand-primary-active: #0369a1;
   --color-primary-800: #075985;
   --color-primary-900: #0c4a6e;
 

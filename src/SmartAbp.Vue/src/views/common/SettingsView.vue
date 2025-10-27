@@ -367,8 +367,8 @@ const resetSettings = () => {
 }
 
 .settings-section {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
+  background: var(--theme-bg-component);
+  border: 1px solid var(--theme-border-base);
   border-radius: 8px;
   padding: 24px;
 }
@@ -410,7 +410,7 @@ const resetSettings = () => {
 .setting-info h3 {
   font-size: 16px;
   font-weight: 500;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 4px;
 }
 
@@ -423,10 +423,10 @@ const resetSettings = () => {
 .setting-input,
 .setting-select {
   padding: 8px 12px;
-  border: 1px solid var(--color-border-primary);
+  border: 1px solid var(--theme-border-base);
   border-radius: 6px;
-  background: var(--color-bg-primary);
-  color: var(--color-text-primary);
+  background: var(--theme-bg-component);
+  color: var(--theme-text-primary);
   min-width: 200px;
 }
 
@@ -441,10 +441,10 @@ const resetSettings = () => {
   align-items: center;
   gap: 8px;
   padding: 12px;
-  border: 2px solid var(--color-border-primary);
+  border: 2px solid var(--theme-border-base);
   border-radius: 8px;
   background: var(--color-bg-secondary);
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -455,7 +455,7 @@ const resetSettings = () => {
 
 .theme-option.active {
   border-color: var(--color-primary);
-  background: var(--color-primary-light);
+  background: var(--theme-brand-primary-light);
   color: var(--color-primary);
 }
 
@@ -463,7 +463,7 @@ const resetSettings = () => {
   width: 32px;
   height: 32px;
   border-radius: 6px;
-  border: 1px solid var(--color-border-primary);
+  border: 1px solid var(--theme-border-base);
 }
 
 .theme-option span {
@@ -512,7 +512,7 @@ const resetSettings = () => {
   position: absolute;
   cursor: pointer;
   inset: 0;
-  background-color: var(--color-border-primary);
+  background-color: var(--theme-border-base);
   transition: 0.3s;
   border-radius: 24px;
 }
@@ -542,8 +542,8 @@ input:checked + .slider::before {
   gap: 16px;
   justify-content: center;
   padding: 24px;
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
+  background: var(--theme-bg-component);
+  border: 1px solid var(--theme-border-base);
   border-radius: 8px;
 }
 
@@ -569,8 +569,8 @@ input:checked + .slider::before {
 
 .btn-secondary {
   background: transparent;
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border-primary);
+  color: var(--theme-text-primary);
+  border: 1px solid var(--theme-border-base);
 }
 
 .btn-secondary:hover {

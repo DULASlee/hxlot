@@ -55,8 +55,8 @@ import LoginForm from '@/components/auth/LoginForm.vue';
   justify-content: center;
   overflow: hidden;
   background: linear-gradient(135deg,
-      var(--color-primary-600) 0%,
-      var(--color-primary-700) 50%,
+      var(--theme-brand-primary-hover) 0%,
+      var(--theme-brand-primary-active) 50%,
       var(--color-primary-800) 100%);
   padding: 2vh 2vw;
   animation: gradientShift 15s ease infinite;
@@ -286,7 +286,7 @@ import LoginForm from '@/components/auth/LoginForm.vue';
 }
 
 .footer-link:hover {
-  color: var(--color-primary-500);
+  color: var(--theme-brand-primary);
 }
 
 .separator {

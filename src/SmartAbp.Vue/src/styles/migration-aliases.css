@@ -8,42 +8,42 @@
 
 :root {
   /* ===== 品牌色兼容映射 ===== */
-  --primary-color: var(--theme-brand-primary);
+  --theme-brand-primary: var(--theme-brand-primary);
   --color-primary: var(--theme-brand-primary);
-  --color-primary-500: var(--theme-brand-primary);
-  --color-primary-600: var(--theme-brand-primary-hover);
-  --color-primary-700: var(--theme-brand-primary-active);
-  --color-primary-50: var(--theme-brand-primary-lighter);
-  --primary-light: var(--theme-brand-primary-light);
-  --color-primary-light: var(--theme-brand-primary-light);
+  --theme-brand-primary: var(--theme-brand-primary);
+  --theme-brand-primary-hover: var(--theme-brand-primary-hover);
+  --theme-brand-primary-active: var(--theme-brand-primary-active);
+  --theme-brand-primary-lighter: var(--theme-brand-primary-lighter);
+  --theme-brand-primary-light: var(--theme-brand-primary-light);
+  --theme-brand-primary-light: var(--theme-brand-primary-light);
   --color-primary-hover: var(--theme-brand-primary-hover);
   
   /* ===== 背景色兼容映射 ===== */
-  --bg-color: var(--theme-bg-body);
-  --color-bg-primary: var(--theme-bg-component);
-  --color-bgPrimary: var(--theme-bg-component);
+  --theme-bg-body: var(--theme-bg-body);
+  --theme-bg-component: var(--theme-bg-component);
+  --theme-bg-component: var(--theme-bg-component);
   --color-bg-secondary: var(--theme-bg-sunken);
   --color-bgSecondary: var(--theme-bg-sunken);
   --color-bg-tertiary: var(--theme-bg-body);
-  --bg-white: var(--theme-bg-component);
-  --card-bg: var(--theme-bg-component);
+  --theme-bg-component: var(--theme-bg-component);
+  --theme-bg-component: var(--theme-bg-component);
   --navbar-bg: var(--theme-bg-navbar);
   --sidebar-bg: var(--theme-bg-sidebar);
   --color-bg-elevated: var(--theme-bg-elevated);
   
   /* ===== 文本色兼容映射 ===== */
-  --text-color: var(--theme-text-primary);
-  --color-text-primary: var(--theme-text-primary);
-  --color-textPrimary: var(--theme-text-primary);
+  --theme-text-primary: var(--theme-text-primary);
+  --theme-text-primary: var(--theme-text-primary);
+  --theme-text-primary: var(--theme-text-primary);
   --color-text-secondary: var(--theme-text-secondary);
   --color-textSecondary: var(--theme-text-secondary);
   --color-text-tertiary: var(--theme-text-tertiary);
-  --text-secondary: var(--theme-text-secondary);
+  --theme-text-secondary: var(--theme-text-secondary);
   --color-text-disabled: var(--theme-text-disabled);
   
   /* ===== 边框色兼容映射 ===== */
-  --border-color: var(--theme-border-base);
-  --color-border-primary: var(--theme-border-base);
+  --theme-border-base: var(--theme-border-base);
+  --theme-border-base: var(--theme-border-base);
   --color-borderPrimary: var(--theme-border-base);
   --color-border-secondary: var(--theme-border-light);
   --color-border-base: var(--theme-border-base);
@@ -51,18 +51,18 @@
   --color-border-focus: var(--theme-brand-primary);
   
   /* ===== 功能色兼容映射 ===== */
-  --success-color: var(--theme-success);
+  --theme-success: var(--theme-success);
   --color-success: var(--theme-success);
   --color-success-500: var(--theme-success);
   --color-success-50: var(--theme-success-light);
   
-  --warning-color: var(--theme-warning);
+  --theme-warning: var(--theme-warning);
   --color-warning: var(--theme-warning);
   --color-warning-500: var(--theme-warning);
   --color-warning-50: var(--theme-warning-light);
   
-  --danger-color: var(--theme-danger);
-  --error-color: var(--theme-danger);
+  --theme-danger: var(--theme-danger);
+  --theme-danger: var(--theme-danger);
   --color-error: var(--theme-danger);
   --color-danger: var(--theme-danger);
   --color-error-500: var(--theme-danger);
@@ -93,10 +93,10 @@
 [data-theme="light-purple"],
 [data-theme="dark"] {
   /* 重复定义确保主题切换时兼容性 */
-  --primary-color: var(--theme-brand-primary);
-  --bg-color: var(--theme-bg-body);
-  --text-color: var(--theme-text-primary);
-  --border-color: var(--theme-border-base);
+  --theme-brand-primary: var(--theme-brand-primary);
+  --theme-bg-body: var(--theme-bg-body);
+  --theme-text-primary: var(--theme-text-primary);
+  --theme-border-base: var(--theme-border-base);
 }
 
 /* ⚠️ 警告：此文件将在2025-11-15删除 ⚠️ */

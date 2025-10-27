@@ -782,14 +782,14 @@ onBeforeUnmount(() => {
   border: none;
   border-radius: 6px;
   background-color: transparent;
-  color: var(--text-color);
+  color: var(--theme-text-primary);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .theme-btn:hover {
   background-color: var(--hover-bg);
-  color: var(--primary-color);
+  color: var(--theme-brand-primary);
 }
 
 .theme-icon {
@@ -805,8 +805,8 @@ onBeforeUnmount(() => {
   right: 0;
   margin-top: 8px;
   padding: 8px;
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
+  background-color: var(--theme-bg-component);
+  border: 1px solid var(--theme-border-base);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
   min-width: 160px;
@@ -828,13 +828,13 @@ onBeforeUnmount(() => {
 }
 
 .theme-option.active {
-  background-color: var(--primary-color);
+  background-color: var(--theme-brand-primary);
   color: white;
 }
 
 .theme-divider {
   height: 1px;
-  background-color: var(--border-color);
+  background-color: var(--theme-border-base);
   margin: 4px 0;
 }
 

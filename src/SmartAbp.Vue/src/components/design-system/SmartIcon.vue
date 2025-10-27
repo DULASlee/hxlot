@@ -128,7 +128,7 @@ function handleClick(event: MouseEvent) {
 }
 
 .smart-icon--primary {
-  color: var(--color-primary-500);
+  color: var(--theme-brand-primary);
 }
 
 .smart-icon--success {

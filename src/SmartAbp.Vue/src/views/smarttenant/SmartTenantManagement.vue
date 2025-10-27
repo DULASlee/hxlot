@@ -664,7 +664,7 @@ onMounted(async () => {
 .page-title {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin: 0 0 var(--spacing-2) 0;
 }
 

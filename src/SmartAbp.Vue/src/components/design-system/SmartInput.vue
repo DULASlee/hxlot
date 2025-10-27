@@ -279,7 +279,7 @@ watch(() => props.error, (newError) => {
 .smart-input-label {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   line-height: var(--line-height-tight);
   margin-bottom: 6px;
 }
@@ -372,7 +372,7 @@ watch(() => props.error, (newError) => {
   padding: 0 var(--spacing-4);
   font-size: var(--font-size-sm);
   font-family: inherit;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   line-height: var(--line-height-normal);
 }
 
@@ -433,7 +433,7 @@ watch(() => props.error, (newError) => {
 
 .spinner {
   animation: spin 1.5s linear infinite;
-  color: var(--color-primary-500);
+  color: var(--theme-brand-primary);
 }
 
 /* 消息容器 - 固定高度防止抖动 */

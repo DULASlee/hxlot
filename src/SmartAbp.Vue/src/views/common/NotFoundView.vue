@@ -65,7 +65,7 @@ const goBack = () => {
 h1 {
   font-size: 32px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 16px;
 }
 
@@ -104,8 +104,8 @@ p {
 
 .btn-secondary {
   background: transparent;
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border-primary);
+  color: var(--theme-text-primary);
+  border: 1px solid var(--theme-border-base);
 }
 
 .btn-secondary:hover {

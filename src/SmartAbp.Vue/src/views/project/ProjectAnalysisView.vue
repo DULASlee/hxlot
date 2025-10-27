@@ -288,7 +288,7 @@ const getStatusText = (status: string) => {
 .page-header h1 {
   font-size: 28px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 8px;
 }
 
@@ -316,8 +316,8 @@ const getStatusText = (status: string) => {
   align-items: center;
   gap: 16px;
   padding: 24px;
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
+  background: var(--theme-bg-component);
+  border: 1px solid var(--theme-border-base);
   border-radius: 8px;
   box-shadow: 0 2px 8px rgb(0 0 0 / 5%);
 }
@@ -328,7 +328,7 @@ const getStatusText = (status: string) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-primary-light);
+  background: var(--theme-brand-primary-light);
   border-radius: 8px;
   color: var(--color-primary);
 }
@@ -346,7 +346,7 @@ const getStatusText = (status: string) => {
 .stat-number {
   font-size: 24px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 4px;
 }
 
@@ -363,8 +363,8 @@ const getStatusText = (status: string) => {
 }
 
 .chart-card {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
+  background: var(--theme-bg-component);
+  border: 1px solid var(--theme-border-base);
   border-radius: 8px;
   padding: 24px;
 }
@@ -372,7 +372,7 @@ const getStatusText = (status: string) => {
 .chart-card h3 {
   font-size: 18px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 20px;
 }
 
@@ -465,8 +465,8 @@ const getStatusText = (status: string) => {
 
 /* 项目表格 */
 .projects-table-section {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
+  background: var(--theme-bg-component);
+  border: 1px solid var(--theme-border-base);
   border-radius: 8px;
   padding: 24px;
 }
@@ -474,7 +474,7 @@ const getStatusText = (status: string) => {
 .projects-table-section h3 {
   font-size: 18px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 20px;
 }
 
@@ -491,13 +491,13 @@ const getStatusText = (status: string) => {
 .projects-table td {
   padding: 12px;
   text-align: left;
-  border-bottom: 1px solid var(--color-border-primary);
+  border-bottom: 1px solid var(--theme-border-base);
 }
 
 .projects-table th {
   background: var(--color-bg-secondary);
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
 }
 
 .projects-table td {
@@ -506,7 +506,7 @@ const getStatusText = (status: string) => {
 
 .project-name strong {
   display: block;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 4px;
 }
 
@@ -528,7 +528,7 @@ const getStatusText = (status: string) => {
 }
 
 .status-badge.completed {
-  background: var(--color-primary-light);
+  background: var(--theme-brand-primary-light);
   color: var(--color-primary);
 }
 

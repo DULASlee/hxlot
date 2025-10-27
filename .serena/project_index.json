@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-25T04:16:37.384Z",
+  "timestamp": "2025-10-27T14:43:17.933Z",
   "project": "Baobab.SmartAbp",
   "language": "typescript",
   "files": [
@@ -28,8 +28,8 @@
       "name": "CodeGenerationAppService.cs",
       "path": "src/SmartAbp.Application/CodeGeneration/CodeGenerationAppService.cs",
       "type": "file",
-      "size": 10974,
-      "modified": "2025-10-24T08:33:25.734Z"
+      "size": 21568,
+      "modified": "2025-10-26T02:18:20.321Z"
     },
     {
       "name": "CodeGenerationAutoMapperProfile.cs",
@@ -231,8 +231,8 @@
       "name": "PLCDataCollectorBackgroundWorker.cs",
       "path": "src/SmartAbp.Application/MES/PLCDataCollectorBackgroundWorker.cs",
       "type": "file",
-      "size": 13143,
-      "modified": "2025-10-24T10:01:10.600Z"
+      "size": 13154,
+      "modified": "2025-10-26T02:18:20.321Z"
     },
     {
       "name": "EnterpriseAlertingService.cs",
@@ -578,6 +578,13 @@
       "modified": "2025-10-24T08:04:46.334Z"
     },
     {
+      "name": "SmartTenantAppService.cs",
+      "path": "src/SmartAbp.Application/SmartTenant/SmartTenantAppService.cs",
+      "type": "file",
+      "size": 620,
+      "modified": "2025-10-26T02:18:20.321Z"
+    },
+    {
       "name": "BusinessRule.cs",
       "path": "src/SmartAbp.Domain/BusinessRules/BusinessRule.cs",
       "type": "file",
@@ -802,11 +809,25 @@
       "modified": "2025-10-12T17:17:08.231Z"
     },
     {
+      "name": "smarttenant.ts",
+      "path": "src/SmartAbp.Vue/src/api/SmartTenant/smarttenant.ts",
+      "type": "file",
+      "size": 1341,
+      "modified": "2025-10-26T02:18:20.337Z"
+    },
+    {
       "name": "code-generation-api.ts",
       "path": "src/SmartAbp.Vue/src/api/code-generation-api.ts",
       "type": "file",
       "size": 1267,
       "modified": "2025-10-24T10:01:10.836Z"
+    },
+    {
+      "name": "code-generation.spec.ts",
+      "path": "src/SmartAbp.Vue/src/api/code-generation.spec.ts",
+      "type": "file",
+      "size": 19724,
+      "modified": "2025-10-26T02:19:27.940Z"
     },
     {
       "name": "api-client.d.ts",
@@ -861,8 +882,8 @@
       "name": "OpenAPI.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/core/OpenAPI.ts",
       "type": "file",
-      "size": 984,
-      "modified": "2025-10-21T20:22:31.654Z"
+      "size": 1093,
+      "modified": "2025-10-26T02:18:20.338Z"
     },
     {
       "name": "request.ts",
@@ -2699,11 +2720,18 @@
       "modified": "2025-10-12T17:17:08.231Z"
     },
     {
+      "name": "entity-modeling.spec.ts",
+      "path": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.spec.ts",
+      "type": "file",
+      "size": 23671,
+      "modified": "2025-10-26T02:19:27.941Z"
+    },
+    {
       "name": "entity-modeling.ts",
       "path": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts",
       "type": "file",
       "size": 9336,
-      "modified": "2025-10-25T03:12:01.942Z"
+      "modified": "2025-10-26T02:19:27.941Z"
     },
     {
       "name": "moduleApi.ts",
@@ -2821,8 +2849,8 @@
       "name": "LoginForm.vue",
       "path": "src/SmartAbp.Vue/src/components/auth/LoginForm.vue",
       "type": "file",
-      "size": 17546,
-      "modified": "2025-10-24T08:04:46.119Z"
+      "size": 18113,
+      "modified": "2025-10-26T02:18:20.339Z"
     },
     {
       "name": "BaseButton.vue",
@@ -2919,8 +2947,8 @@
       "name": "SmartCard.vue",
       "path": "src/SmartAbp.Vue/src/components/design-system/SmartCard.vue",
       "type": "file",
-      "size": 13390,
-      "modified": "2025-10-24T08:04:46.120Z"
+      "size": 13273,
+      "modified": "2025-10-26T02:18:20.339Z"
     },
     {
       "name": "SmartIcon.vue",
@@ -3336,6 +3364,13 @@
       "modified": "2025-10-12T17:17:08.239Z"
     },
     {
+      "name": "usePermission.ts",
+      "path": "src/SmartAbp.Vue/src/composables/usePermission.ts",
+      "type": "file",
+      "size": 3663,
+      "modified": "2025-10-26T02:18:20.339Z"
+    },
+    {
       "name": "useRBAC.js",
       "path": "src/SmartAbp.Vue/src/composables/useRBAC.js",
       "type": "file",
@@ -3434,6 +3469,27 @@
       "modified": "2025-10-12T17:17:08.240Z"
     },
     {
+      "name": "smarttenant.ts",
+      "path": "src/SmartAbp.Vue/src/config/menus/smarttenant.ts",
+      "type": "file",
+      "size": 594,
+      "modified": "2025-10-26T02:18:20.340Z"
+    },
+    {
+      "name": "menus.backup.20251026_001502.ts",
+      "path": "src/SmartAbp.Vue/src/config/menus.backup.20251026_001502.ts",
+      "type": "file",
+      "size": 22902,
+      "modified": "2025-10-26T02:18:20.339Z"
+    },
+    {
+      "name": "menus.backup.20251026_004942.ts",
+      "path": "src/SmartAbp.Vue/src/config/menus.backup.20251026_004942.ts",
+      "type": "file",
+      "size": 22905,
+      "modified": "2025-10-26T02:18:20.339Z"
+    },
+    {
       "name": "menus.d.ts",
       "path": "src/SmartAbp.Vue/src/config/menus.d.ts",
       "type": "file",
@@ -3444,8 +3500,8 @@
       "name": "menus.ts",
       "path": "src/SmartAbp.Vue/src/config/menus.ts",
       "type": "file",
-      "size": 22902,
-      "modified": "2025-10-24T08:04:46.347Z"
+      "size": 23398,
+      "modified": "2025-10-26T02:18:20.339Z"
     },
     {
       "name": "theme-icon.config.js",
@@ -3508,7 +3564,7 @@
       "path": "src/SmartAbp.Vue/src/core/api/entity-modeling-bridge.ts",
       "type": "file",
       "size": 1290,
-      "modified": "2025-10-25T03:11:30.720Z"
+      "modified": "2025-10-26T02:19:27.941Z"
     },
     {
       "name": "index.ts",
@@ -5387,13 +5443,6 @@
       "modified": "2025-10-16T12:38:50.685Z"
     },
     {
-      "name": "lowcode-entry.js",
-      "path": "src/SmartAbp.Vue/src/lowcode-entry.js",
-      "type": "file",
-      "size": 379,
-      "modified": "2025-10-12T17:17:08.242Z"
-    },
-    {
       "name": "lowcode-entry.ts",
       "path": "src/SmartAbp.Vue/src/lowcode-entry.ts",
       "type": "file",
@@ -5401,18 +5450,11 @@
       "modified": "2025-10-12T17:17:08.242Z"
     },
     {
-      "name": "main.js",
-      "path": "src/SmartAbp.Vue/src/main.js",
-      "type": "file",
-      "size": 10559,
-      "modified": "2025-10-14T03:23:47.390Z"
-    },
-    {
       "name": "main.ts",
       "path": "src/SmartAbp.Vue/src/main.ts",
       "type": "file",
-      "size": 11465,
-      "modified": "2025-10-25T02:53:14.422Z"
+      "size": 11471,
+      "modified": "2025-10-26T02:19:27.942Z"
     },
     {
       "name": "optimization.js",
@@ -5511,6 +5553,13 @@
       "type": "file",
       "size": 1823,
       "modified": "2025-10-12T17:17:08.244Z"
+    },
+    {
+      "name": "smarttenant.ts",
+      "path": "src/SmartAbp.Vue/src/router/modules/smarttenant.ts",
+      "type": "file",
+      "size": 872,
+      "modified": "2025-10-26T02:18:20.340Z"
     },
     {
       "name": "userService.js",
@@ -5691,8 +5740,8 @@
       "name": "auth.ts",
       "path": "src/SmartAbp.Vue/src/stores/modules/auth.ts",
       "type": "file",
-      "size": 8481,
-      "modified": "2025-10-12T17:17:08.246Z"
+      "size": 13929,
+      "modified": "2025-10-26T02:18:20.342Z"
     },
     {
       "name": "iconStyle.js",
@@ -5770,6 +5819,13 @@
       "type": "file",
       "size": 5472,
       "modified": "2025-10-12T17:17:08.247Z"
+    },
+    {
+      "name": "smarttenant.ts",
+      "path": "src/SmartAbp.Vue/src/stores/modules/smarttenant/smarttenant.ts",
+      "type": "file",
+      "size": 1690,
+      "modified": "2025-10-26T02:18:20.342Z"
     },
     {
       "name": "studioStore.js",
@@ -6077,7 +6133,7 @@
       "path": "src/SmartAbp.Vue/src/types/common.types.ts",
       "type": "file",
       "size": 1,
-      "modified": "2025-10-25T04:04:32.732Z"
+      "modified": "2025-10-26T02:19:27.942Z"
     },
     {
       "name": "global.d.ts",
@@ -6120,6 +6176,13 @@
       "type": "file",
       "size": 2584,
       "modified": "2025-10-12T17:17:08.253Z"
+    },
+    {
+      "name": "smarttenant.ts",
+      "path": "src/SmartAbp.Vue/src/types/smarttenant/smarttenant.ts",
+      "type": "file",
+      "size": 3097,
+      "modified": "2025-10-26T02:18:20.342Z"
     },
     {
       "name": "ui.js",
@@ -6636,15 +6699,15 @@
       "name": "Login.vue",
       "path": "src/SmartAbp.Vue/src/views/auth/Login.vue",
       "type": "file",
-      "size": 6720,
-      "modified": "2025-10-24T08:04:46.128Z"
+      "size": 6805,
+      "modified": "2025-10-26T02:18:20.342Z"
     },
     {
       "name": "LoginTest.vue",
       "path": "src/SmartAbp.Vue/src/views/auth/LoginTest.vue",
       "type": "file",
-      "size": 12877,
-      "modified": "2025-10-12T17:17:08.261Z"
+      "size": 12105,
+      "modified": "2025-10-26T02:18:20.344Z"
     },
     {
       "name": "exporter.js",
@@ -6664,8 +6727,8 @@
       "name": "DashboardView.vue",
       "path": "src/SmartAbp.Vue/src/views/common/DashboardView.vue",
       "type": "file",
-      "size": 16401,
-      "modified": "2025-10-12T17:17:08.261Z"
+      "size": 16460,
+      "modified": "2025-10-26T02:18:20.345Z"
     },
     {
       "name": "HelpView.vue",
@@ -6706,8 +6769,8 @@
       "name": "ProductionLineDashboard.vue",
       "path": "src/SmartAbp.Vue/src/views/dashboard/ProductionLineDashboard.vue",
       "type": "file",
-      "size": 20231,
-      "modified": "2025-10-21T20:22:36.362Z"
+      "size": 19470,
+      "modified": "2025-10-26T02:18:20.345Z"
     },
     {
       "name": "Forbidden.vue",
@@ -6867,8 +6930,8 @@
       "name": "GenerationView.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/GenerationView.vue",
       "type": "file",
-      "size": 27243,
-      "modified": "2025-10-18T06:40:39.556Z"
+      "size": 25845,
+      "modified": "2025-10-26T02:18:20.346Z"
     },
     {
       "name": "IndustryTemplateConfig.vue",
@@ -6937,15 +7000,15 @@
       "name": "SmartStudioLite.spec.ts",
       "path": "src/SmartAbp.Vue/src/views/lowcode/SmartStudioLite.spec.ts",
       "type": "file",
-      "size": 13858,
-      "modified": "2025-10-25T02:25:22.329Z"
+      "size": 17403,
+      "modified": "2025-10-26T02:19:27.942Z"
     },
     {
       "name": "SmartStudioLite.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/SmartStudioLite.vue",
       "type": "file",
-      "size": 20167,
-      "modified": "2025-10-25T02:11:57.333Z"
+      "size": 19725,
+      "modified": "2025-10-26T02:19:27.943Z"
     },
     {
       "name": "UltraSimpleStudio.vue",
@@ -6987,14 +7050,14 @@
       "path": "src/SmartAbp.Vue/src/views/lowcode/components/FieldConfigTable.spec.ts",
       "type": "file",
       "size": 52518,
-      "modified": "2025-10-25T02:05:32.983Z"
+      "modified": "2025-10-26T02:19:27.943Z"
     },
     {
       "name": "FieldConfigTable.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/components/FieldConfigTable.vue",
       "type": "file",
-      "size": 15182,
-      "modified": "2025-10-21T20:22:28.294Z"
+      "size": 14519,
+      "modified": "2025-10-26T02:18:20.349Z"
     },
     {
       "name": "RecentProjects.vue",
@@ -7086,6 +7149,13 @@
       "type": "file",
       "size": 14545,
       "modified": "2025-10-14T03:23:47.392Z"
+    },
+    {
+      "name": "SmartTenantManagement.vue",
+      "path": "src/SmartAbp.Vue/src/views/smarttenant/SmartTenantManagement.vue",
+      "type": "file",
+      "size": 21895,
+      "modified": "2025-10-26T02:18:20.349Z"
     },
     {
       "name": "PerformanceMonitorView.vue",
@@ -7193,34 +7263,6 @@
       "modified": "2025-10-16T12:38:50.732Z"
     },
     {
-      "name": "code-generator.test.ts",
-      "path": "src/SmartAbp.Vue/packages/lowcode-api/src/__tests__/code-generator.test.ts",
-      "type": "file",
-      "size": 14599,
-      "modified": "2025-10-16T17:11:51.214Z"
-    },
-    {
-      "name": "api-responses.ts",
-      "path": "src/SmartAbp.Vue/packages/lowcode-api/src/__tests__/mocks/api-responses.ts",
-      "type": "file",
-      "size": 16022,
-      "modified": "2025-10-16T17:11:51.214Z"
-    },
-    {
-      "name": "index.ts",
-      "path": "src/SmartAbp.Vue/packages/lowcode-api/src/__tests__/mocks/index.ts",
-      "type": "file",
-      "size": 286,
-      "modified": "2025-10-12T17:17:08.162Z"
-    },
-    {
-      "name": "mock-server.ts",
-      "path": "src/SmartAbp.Vue/packages/lowcode-api/src/__tests__/mocks/mock-server.ts",
-      "type": "file",
-      "size": 10456,
-      "modified": "2025-10-12T17:17:08.162Z"
-    },
-    {
       "name": "business-rule.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/business-rule.ts",
       "type": "file",
@@ -7245,8 +7287,8 @@
       "name": "code-generator.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/code-generator.ts",
       "type": "file",
-      "size": 3997,
-      "modified": "2025-10-16T01:25:44.642Z"
+      "size": 5078,
+      "modified": "2025-10-26T02:18:20.334Z"
     },
     {
       "name": "index.ts",
@@ -7365,7 +7407,7 @@
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/entity-modeling.ts",
       "type": "file",
       "size": 6753,
-      "modified": "2025-10-25T03:12:01.942Z"
+      "modified": "2025-10-26T02:19:27.939Z"
     },
     {
       "name": "generation-history-api.ts",
@@ -7392,15 +7434,15 @@
       "name": "http-client.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/http-client.ts",
       "type": "file",
-      "size": 6175,
-      "modified": "2025-10-14T03:23:47.381Z"
+      "size": 6259,
+      "modified": "2025-10-26T02:18:20.335Z"
     },
     {
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/index.ts",
       "type": "file",
       "size": 5535,
-      "modified": "2025-10-25T03:12:01.942Z"
+      "modified": "2025-10-26T02:19:27.940Z"
     },
     {
       "name": "industryTemplate.ts",
@@ -7966,8 +8008,8 @@
       "name": "EnhancedApiClientGenerator.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/src/generators/EnhancedApiClientGenerator.ts",
       "type": "file",
-      "size": 7599,
-      "modified": "2025-10-19T00:45:09.347Z"
+      "size": 7595,
+      "modified": "2025-10-26T02:18:20.336Z"
     },
     {
       "name": "EnhancedAppServiceGenerator.ts",
@@ -8500,13 +8542,6 @@
       "type": "file",
       "size": 4297,
       "modified": "2025-10-12T17:17:08.180Z"
-    },
-    {
-      "name": "index.js",
-      "path": "src/SmartAbp.Vue/packages/lowcode-designer/index.js",
-      "type": "file",
-      "size": 4699,
-      "modified": "2025-10-14T03:23:47.382Z"
     },
     {
       "name": "index.ts",
@@ -9121,8 +9156,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/index.ts",
       "type": "file",
-      "size": 17139,
-      "modified": "2025-10-24T08:04:46.346Z"
+      "size": 17166,
+      "modified": "2025-10-26T02:18:20.336Z"
     },
     {
       "name": "MetadataDrivenPageRenderer.vue",
@@ -9317,8 +9352,8 @@
       "name": "UltraSimpleStudio.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/UltraSimpleStudio.vue",
       "type": "file",
-      "size": 67990,
-      "modified": "2025-10-24T08:04:46.347Z"
+      "size": 79702,
+      "modified": "2025-10-26T02:18:20.337Z"
     },
     {
       "name": "VisualDesignerView.vue",
@@ -9566,24 +9601,10 @@
       "modified": "2025-10-16T04:20:40.112Z"
     },
     {
-      "name": "tsup.config.js",
-      "path": "src/SmartAbp.Vue/packages/lowcode-designer/tsup.config.js",
-      "type": "file",
-      "size": 676,
-      "modified": "2025-10-12T17:17:08.195Z"
-    },
-    {
       "name": "tsup.config.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/tsup.config.ts",
       "type": "file",
       "size": 604,
-      "modified": "2025-10-12T17:17:08.195Z"
-    },
-    {
-      "name": "security.js",
-      "path": "src/SmartAbp.Vue/packages/lowcode-designer/types/security.js",
-      "type": "file",
-      "size": 834,
       "modified": "2025-10-12T17:17:08.195Z"
     },
     {
@@ -9619,13 +9640,6 @@
       "path": "src/SmartAbp.Vue/packages/lowcode-quality-guardian/README.md",
       "type": "file",
       "size": 7782,
-      "modified": "2025-10-12T17:17:08.196Z"
-    },
-    {
-      "name": "esbuild.config.js",
-      "path": "src/SmartAbp.Vue/packages/lowcode-quality-guardian/esbuild.config.js",
-      "type": "file",
-      "size": 382,
       "modified": "2025-10-12T17:17:08.196Z"
     },
     {
@@ -10297,8 +10311,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/index.ts",
       "type": "file",
-      "size": 16974,
-      "modified": "2025-10-21T20:22:31.652Z"
+      "size": 17012,
+      "modified": "2025-10-26T02:18:20.337Z"
     },
     {
       "name": "ErrorLogIntegration.ts",
@@ -10546,6 +10560,13 @@
       "modified": "2025-10-12T17:17:08.208Z"
     },
     {
+      "name": "type-mapping.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/type-mapping.ts",
+      "type": "file",
+      "size": 1660,
+      "modified": "2025-10-26T02:18:20.337Z"
+    },
+    {
       "name": "unified-validator.spec.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/validation/__tests__/unified-validator.spec.ts",
       "type": "file",
@@ -10693,13 +10714,6 @@
       "modified": "2025-10-12T17:17:08.209Z"
     },
     {
-      "name": "index.js",
-      "path": "src/SmartAbp.Vue/packages/lowcode-tools/index.js",
-      "type": "file",
-      "size": 1843,
-      "modified": "2025-10-12T17:17:08.210Z"
-    },
-    {
       "name": "package.json",
       "path": "src/SmartAbp.Vue/packages/lowcode-tools/package.json",
       "type": "file",
@@ -10819,20 +10833,6 @@
       "modified": "2025-10-16T01:25:44.653Z"
     },
     {
-      "name": "build-template-index.js",
-      "path": "src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/build-template-index.js",
-      "type": "file",
-      "size": 32930,
-      "modified": "2025-10-12T17:17:08.212Z"
-    },
-    {
-      "name": "simple-template-index.js",
-      "path": "src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/simple-template-index.js",
-      "type": "file",
-      "size": 28956,
-      "modified": "2025-10-12T17:17:08.212Z"
-    },
-    {
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-tools/src/vite/index.ts",
       "type": "file",
@@ -10866,27 +10866,6 @@
       "type": "file",
       "size": 3886,
       "modified": "2025-10-12T17:17:08.212Z"
-    },
-    {
-      "name": "check-all.js",
-      "path": "src/SmartAbp.Vue/packages/quality-guardian/checkers/check-all.js",
-      "type": "file",
-      "size": 617,
-      "modified": "2025-10-13T11:43:47.982Z"
-    },
-    {
-      "name": "check-component-registration.js",
-      "path": "src/SmartAbp.Vue/packages/quality-guardian/checkers/check-component-registration.js",
-      "type": "file",
-      "size": 515,
-      "modified": "2025-10-13T11:43:47.982Z"
-    },
-    {
-      "name": "check-config-consistency.js",
-      "path": "src/SmartAbp.Vue/packages/quality-guardian/checkers/check-config-consistency.js",
-      "type": "file",
-      "size": 2493,
-      "modified": "2025-10-13T11:43:47.982Z"
     },
     {
       "name": "package.json",
@@ -10984,7 +10963,7 @@
     {
       "name": "CodeGenerationAppService",
       "type": "class",
-      "line": 21,
+      "line": 25,
       "exported": true,
       "file": "src/SmartAbp.Application/CodeGeneration/CodeGenerationAppService.cs"
     },
@@ -11285,7 +11264,7 @@
     {
       "name": "PLCDataCollectorBackgroundWorker",
       "type": "class",
-      "line": 35,
+      "line": 36,
       "exported": true,
       "file": "src/SmartAbp.Application/MES/PLCDataCollectorBackgroundWorker.cs"
     },
@@ -12758,6 +12737,20 @@
       "line": 27,
       "exported": true,
       "file": "src/SmartAbp.Application/SmartAbpApplicationModule.cs"
+    },
+    {
+      "name": "ISmartTenantAppService",
+      "type": "interface",
+      "line": 9,
+      "exported": true,
+      "file": "src/SmartAbp.Application/SmartTenant/SmartTenantAppService.cs"
+    },
+    {
+      "name": "SmartTenantAppService",
+      "type": "class",
+      "line": 14,
+      "exported": true,
+      "file": "src/SmartAbp.Application/SmartTenant/SmartTenantAppService.cs"
     },
     {
       "name": "BusinessRule",
@@ -17366,6 +17359,20 @@
       "file": "src/SmartAbp.Vue/src/composables/usePerformanceMonitor.ts"
     },
     {
+      "name": "PermissionOptions",
+      "type": "interface",
+      "line": 10,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/composables/usePermission.ts"
+    },
+    {
+      "name": "usePermission",
+      "type": "function",
+      "line": 27,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/composables/usePermission.ts"
+    },
+    {
       "name": "useRBAC",
       "type": "function",
       "line": 8,
@@ -18019,21 +18026,21 @@
     {
       "name": "UserInfo",
       "type": "interface",
-      "line": 7,
+      "line": 9,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/stores/modules/auth.ts"
     },
     {
       "name": "LoginCredentials",
       "type": "interface",
-      "line": 18,
+      "line": 20,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/stores/modules/auth.ts"
     },
     {
       "name": "LoginResponse",
       "type": "interface",
-      "line": 28,
+      "line": 30,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/stores/modules/auth.ts"
     },
@@ -18862,6 +18869,34 @@
       "line": 172,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/types/router.ts"
+    },
+    {
+      "name": "SmartTenantDto",
+      "type": "interface",
+      "line": 7,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/types/smarttenant/smarttenant.ts"
+    },
+    {
+      "name": "CreateSmartTenantDto",
+      "type": "interface",
+      "line": 57,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/types/smarttenant/smarttenant.ts"
+    },
+    {
+      "name": "UpdateSmartTenantDto",
+      "type": "interface",
+      "line": 105,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/types/smarttenant/smarttenant.ts"
+    },
+    {
+      "name": "GetSmartTenantListDto",
+      "type": "interface",
+      "line": 155,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/types/smarttenant/smarttenant.ts"
     },
     {
       "name": "MDIWindowConfig",
@@ -20556,13 +20591,6 @@
       "line": 22,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/workers/data-processing.worker.ts"
-    },
-    {
-      "name": "setupMockInterceptor",
-      "type": "function",
-      "line": 275,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/packages/lowcode-api/src/__tests__/mocks/mock-server.ts"
     },
     {
       "name": "BusinessRuleApi",

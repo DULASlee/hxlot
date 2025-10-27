@@ -74,6 +74,29 @@ module.exports = {
         ],
       },
     ],
+    
+    // 🎨 设计系统规则：禁止硬编码颜色（SSOT重构 - 阶段8）
+    "no-restricted-syntax": [
+      "error",
+      {
+        selector: "Literal[value=/#[0-9A-Fa-f]{3,8}/]",
+        message:
+          "❌ 禁止硬编码颜色值！请使用设计令牌：var(--theme-*)\n" +
+          "常用变量:\n" +
+          "  --theme-brand-primary (品牌主色)\n" +
+          "  --theme-bg-component (组件背景)\n" +
+          "  --theme-text-primary (主文本)\n" +
+          "  --theme-border-base (基础边框)\n" +
+          "📖 详见: docs/二次开发/主题样式/设计令牌使用指南.md",
+      },
+      {
+        selector: "Literal[value=/rgb\\(/], Literal[value=/rgba\\(/]",
+        message:
+          "❌ 禁止使用rgb/rgba硬编码！请使用设计令牌：var(--theme-*)\n" +
+          "📖 详见: docs/二次开发/主题样式/设计令牌使用指南.md",
+      },
+    ],
+    
     // 生产代码禁止 console.*，开发期降级为警告
     "no-console": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",

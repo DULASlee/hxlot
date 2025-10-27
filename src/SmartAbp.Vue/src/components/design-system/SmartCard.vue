@@ -203,7 +203,7 @@ const handleClick = (event: MouseEvent) => {
 
   /* 焦点样式 */
   &:focus-visible {
-    outline: 2px solid var(--color-primary-500);
+    outline: 2px solid var(--theme-brand-primary);
     outline-offset: 2px;
   }
 }
@@ -324,10 +324,10 @@ const handleClick = (event: MouseEvent) => {
 */
 
 .smart-card--primary {
-  border-left: 4px solid var(--color-primary-500);
+  border-left: 4px solid var(--theme-brand-primary);
 
   .smart-card__title {
-    color: var(--color-primary-700);
+    color: var(--theme-brand-primary-active);
   }
 }
 
@@ -388,12 +388,12 @@ const handleClick = (event: MouseEvent) => {
 }
 
 .smart-card--selected {
-  border-color: var(--color-primary-500);
+  border-color: var(--theme-brand-primary);
   box-shadow: 0 0 0 2px var(--color-primary-100);
 
   &.smart-card--outlined {
-    border-color: var(--color-primary-500);
-    background-color: var(--color-primary-50);
+    border-color: var(--theme-brand-primary);
+    background-color: var(--theme-brand-primary-lighter);
   }
 }
 
@@ -432,7 +432,7 @@ const handleClick = (event: MouseEvent) => {
   justify-content: center;
   width: 1.5em;
   height: 1.5em;
-  color: var(--color-primary-600);
+  color: var(--theme-brand-primary-hover);
   margin-bottom: var(--spacing-1);
 }
 
@@ -440,7 +440,7 @@ const handleClick = (event: MouseEvent) => {
   margin: 0;
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
 
   /* 处理长文本溢出 */
   overflow: hidden;
@@ -469,7 +469,7 @@ const handleClick = (event: MouseEvent) => {
 
 .smart-card__content {
   flex: 1;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   line-height: var(--line-height-relaxed);
 
   /* 清除内容区域的上下边距 */
@@ -512,6 +512,6 @@ const handleClick = (event: MouseEvent) => {
 .smart-card__spinner {
   width: 32px;
   height: 32px;
-  color: var(--color-primary-500);
+  color: var(--theme-brand-primary);
 }
 </style>

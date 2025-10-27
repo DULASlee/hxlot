@@ -231,7 +231,7 @@ onMounted(() => {
 .page-header h1 {
   font-size: 28px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 8px;
 }
 
@@ -252,8 +252,8 @@ onMounted(() => {
   align-items: center;
   gap: 24px;
   padding: 24px;
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
+  background: var(--theme-bg-component);
+  border: 1px solid var(--theme-border-base);
   border-radius: 8px;
 }
 
@@ -289,13 +289,13 @@ onMounted(() => {
 }
 
 .change-avatar-btn:hover {
-  background: var(--color-primary-light);
+  background: var(--theme-brand-primary-light);
 }
 
 .profile-info h2 {
   font-size: 24px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 8px;
 }
 
@@ -307,7 +307,7 @@ onMounted(() => {
 
 .role-badge {
   padding: 4px 12px;
-  background: var(--color-primary-light);
+  background: var(--theme-brand-primary-light);
   color: var(--color-primary);
   border-radius: 4px;
   font-size: 14px;
@@ -317,8 +317,8 @@ onMounted(() => {
 .profile-form,
 .security-section {
   padding: 24px;
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
+  background: var(--theme-bg-component);
+  border: 1px solid var(--theme-border-base);
   border-radius: 8px;
 }
 
@@ -326,7 +326,7 @@ onMounted(() => {
 .security-section h3 {
   font-size: 20px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 20px;
 }
 
@@ -345,16 +345,16 @@ onMounted(() => {
 .form-group label {
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 6px;
 }
 
 .form-group input {
   padding: 8px 12px;
-  border: 1px solid var(--color-border-primary);
+  border: 1px solid var(--theme-border-base);
   border-radius: 6px;
-  background: var(--color-bg-primary);
-  color: var(--color-text-primary);
+  background: var(--theme-bg-component);
+  color: var(--theme-text-primary);
 }
 
 .form-actions {
@@ -385,8 +385,8 @@ onMounted(() => {
 
 .btn-secondary {
   background: transparent;
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border-primary);
+  color: var(--theme-text-primary);
+  border: 1px solid var(--theme-border-base);
 }
 
 .btn-secondary:hover {
@@ -400,7 +400,7 @@ onMounted(() => {
 }
 
 .btn-outline:hover {
-  background: var(--color-primary-light);
+  background: var(--theme-brand-primary-light);
 }
 
 .security-items {
@@ -421,7 +421,7 @@ onMounted(() => {
 .security-info h4 {
   font-size: 16px;
   font-weight: 500;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 4px;
 }
 
@@ -445,7 +445,7 @@ onMounted(() => {
 .modal {
   width: 90%;
   max-width: 400px;
-  background: var(--color-bg-primary);
+  background: var(--theme-bg-component);
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 20px 60px rgb(0 0 0 / 20%);
@@ -456,14 +456,14 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   padding: 20px;
-  border-bottom: 1px solid var(--color-border-primary);
+  border-bottom: 1px solid var(--theme-border-base);
 }
 
 .modal-header h3 {
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
 }
 
 .modal-header button {
@@ -480,7 +480,7 @@ onMounted(() => {
 
 .modal-header button:hover {
   background: var(--color-bg-secondary);
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
 }
 
 .modal-body {
@@ -492,7 +492,7 @@ onMounted(() => {
   justify-content: flex-end;
   gap: 12px;
   padding: 20px;
-  border-top: 1px solid var(--color-border-primary);
+  border-top: 1px solid var(--theme-border-base);
 }
 
 /* 响应式设计 */

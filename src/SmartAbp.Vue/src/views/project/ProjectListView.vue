@@ -329,7 +329,7 @@ const deleteProject = (project: Project) => {
 .page-header h1 {
   font-size: 28px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 8px;
 }
 
@@ -340,8 +340,8 @@ const deleteProject = (project: Project) => {
 }
 
 .page-content {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
+  background: var(--theme-bg-component);
+  border: 1px solid var(--theme-border-base);
   border-radius: 8px;
   padding: 24px;
 }
@@ -361,10 +361,10 @@ const deleteProject = (project: Project) => {
 .filter-select,
 .search-input {
   padding: 8px 12px;
-  border: 1px solid var(--color-border-primary);
+  border: 1px solid var(--theme-border-base);
   border-radius: 6px;
-  background: var(--color-bg-primary);
-  color: var(--color-text-primary);
+  background: var(--theme-bg-component);
+  color: var(--theme-text-primary);
 }
 
 .search-input {
@@ -402,7 +402,7 @@ const deleteProject = (project: Project) => {
 
 .project-card {
   background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border-primary);
+  border: 1px solid var(--theme-border-base);
   border-radius: 8px;
   padding: 20px;
   cursor: pointer;
@@ -425,7 +425,7 @@ const deleteProject = (project: Project) => {
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
 }
 
 .status-badge {
@@ -441,7 +441,7 @@ const deleteProject = (project: Project) => {
 }
 
 .status-badge.completed {
-  background: var(--color-primary-light);
+  background: var(--theme-brand-primary-light);
   color: var(--color-primary);
 }
 
@@ -526,9 +526,9 @@ const deleteProject = (project: Project) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--color-border-primary);
+  border: 1px solid var(--theme-border-base);
   border-radius: 4px;
-  background: var(--color-bg-primary);
+  background: var(--theme-bg-component);
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: all 0.3s ease;
@@ -536,7 +536,7 @@ const deleteProject = (project: Project) => {
 
 .action-btn:hover {
   background: var(--color-bg-secondary);
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
 }
 
 .action-btn.danger {
@@ -568,7 +568,7 @@ const deleteProject = (project: Project) => {
 .modal {
   width: 90%;
   max-width: 500px;
-  background: var(--color-bg-primary);
+  background: var(--theme-bg-component);
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 20px 60px rgb(0 0 0 / 20%);
@@ -579,14 +579,14 @@ const deleteProject = (project: Project) => {
   align-items: center;
   justify-content: space-between;
   padding: 20px;
-  border-bottom: 1px solid var(--color-border-primary);
+  border-bottom: 1px solid var(--theme-border-base);
 }
 
 .modal-header h3 {
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
 }
 
 .modal-header button {
@@ -603,7 +603,7 @@ const deleteProject = (project: Project) => {
 
 .modal-header button:hover {
   background: var(--color-bg-secondary);
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
 }
 
 .modal-body {
@@ -619,7 +619,7 @@ const deleteProject = (project: Project) => {
   margin-bottom: 4px;
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
 }
 
 .form-group input,
@@ -627,10 +627,10 @@ const deleteProject = (project: Project) => {
 .form-group textarea {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid var(--color-border-primary);
+  border: 1px solid var(--theme-border-base);
   border-radius: 6px;
-  background: var(--color-bg-primary);
-  color: var(--color-text-primary);
+  background: var(--theme-bg-component);
+  color: var(--theme-text-primary);
   resize: vertical;
 }
 
@@ -639,15 +639,15 @@ const deleteProject = (project: Project) => {
   justify-content: flex-end;
   gap: 12px;
   padding: 20px;
-  border-top: 1px solid var(--color-border-primary);
+  border-top: 1px solid var(--theme-border-base);
 }
 
 .btn-secondary {
   padding: 8px 16px;
-  border: 1px solid var(--color-border-primary);
+  border: 1px solid var(--theme-border-base);
   border-radius: 6px;
-  background: var(--color-bg-primary);
-  color: var(--color-text-primary);
+  background: var(--theme-bg-component);
+  color: var(--theme-text-primary);
   cursor: pointer;
   transition: all 0.3s ease;
 }
