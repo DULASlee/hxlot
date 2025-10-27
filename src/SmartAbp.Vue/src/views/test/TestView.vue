@@ -360,7 +360,7 @@ onUnmounted(() => {
 .page-header h1 {
   font-size: 28px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 8px;
 }
 
@@ -377,8 +377,8 @@ onUnmounted(() => {
 }
 
 .test-section {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
+  background: var(--theme-bg-component);
+  border: 1px solid var(--theme-border-base);
   border-radius: 8px;
   padding: 24px;
 }
@@ -386,10 +386,10 @@ onUnmounted(() => {
 .test-section h2 {
   font-size: 20px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 20px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--color-border-primary);
+  border-bottom: 1px solid var(--theme-border-base);
 }
 
 .test-grid {
@@ -400,7 +400,7 @@ onUnmounted(() => {
 
 .test-card {
   background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border-primary);
+  border: 1px solid var(--theme-border-base);
   border-radius: 6px;
   padding: 20px;
 }
@@ -408,7 +408,7 @@ onUnmounted(() => {
 .test-card h3 {
   font-size: 16px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 16px;
 }
 
@@ -423,7 +423,7 @@ onUnmounted(() => {
 }
 
 .status-info strong {
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
 }
 
 .theme-buttons,
@@ -443,10 +443,10 @@ onUnmounted(() => {
 .nav-buttons button,
 .storage-buttons button {
   padding: 6px 12px;
-  border: 1px solid var(--color-border-primary);
+  border: 1px solid var(--theme-border-base);
   border-radius: 4px;
-  background: var(--color-bg-primary);
-  color: var(--color-text-primary);
+  background: var(--theme-bg-component);
+  color: var(--theme-text-primary);
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 12px;
@@ -458,7 +458,7 @@ onUnmounted(() => {
 .tab-buttons button:hover,
 .nav-buttons button:hover,
 .storage-buttons button:hover {
-  background: var(--color-primary-light);
+  background: var(--theme-brand-primary-light);
   color: var(--color-primary);
   border-color: var(--color-primary);
 }
@@ -484,10 +484,10 @@ onUnmounted(() => {
 .test-input {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid var(--color-border-primary);
+  border: 1px solid var(--theme-border-base);
   border-radius: 4px;
-  background: var(--color-bg-primary);
-  color: var(--color-text-primary);
+  background: var(--theme-bg-component);
+  color: var(--theme-text-primary);
   margin-bottom: 12px;
 }
 
@@ -507,21 +507,21 @@ onUnmounted(() => {
 }
 
 .responsive-test strong {
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
 }
 
 .responsive-test button {
   padding: 8px 16px;
-  border: 1px solid var(--color-border-primary);
+  border: 1px solid var(--theme-border-base);
   border-radius: 4px;
-  background: var(--color-bg-primary);
-  color: var(--color-text-primary);
+  background: var(--theme-bg-component);
+  color: var(--theme-text-primary);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .responsive-test button:hover {
-  background: var(--color-primary-light);
+  background: var(--theme-brand-primary-light);
   color: var(--color-primary);
   border-color: var(--color-primary);
 }
@@ -529,7 +529,7 @@ onUnmounted(() => {
 .test-logs {
   max-height: 300px;
   overflow-y: auto;
-  border: 1px solid var(--color-border-primary);
+  border: 1px solid var(--theme-border-base);
   border-radius: 4px;
   padding: 12px;
   background: var(--color-bg-secondary);

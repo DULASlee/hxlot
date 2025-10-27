@@ -80,6 +80,7 @@ src/SmartAbp.Application/SmartAbp.Application.abppkg.analyze.json
 src/SmartAbp.Application/SmartAbpAppService.cs
 src/SmartAbp.Application/SmartAbpApplicationAutoMapperProfile.cs
 src/SmartAbp.Application/SmartAbpApplicationModule.cs
+src/SmartAbp.Application/SmartTenant/SmartTenantAppService.cs
 src/SmartAbp.Domain/BusinessRules/BusinessRule.cs
 src/SmartAbp.Domain/BusinessRules/BusinessRuleVersion.cs
 src/SmartAbp.Domain/CodeGeneration/CodeGenerationTask.cs
@@ -112,7 +113,9 @@ src/SmartAbp.Domain/SmartAbp.Domain.abppkg.analyze.json
 src/SmartAbp.Domain/SmartAbpConsts.cs
 src/SmartAbp.Domain/SmartAbpDomainModule.cs
 src/SmartAbp.Vue/src/App.vue
+src/SmartAbp.Vue/src/api/SmartTenant/smarttenant.ts
 src/SmartAbp.Vue/src/api/code-generation-api.ts
+src/SmartAbp.Vue/src/api/code-generation.spec.ts
 src/SmartAbp.Vue/src/api/generated/api-client.d.ts
 src/SmartAbp.Vue/src/api/generated/api-client.js
 src/SmartAbp.Vue/src/api/generated/api-client.ts
@@ -383,6 +386,7 @@ src/SmartAbp.Vue/src/api/generated/services/UserService.ts
 src/SmartAbp.Vue/src/api/generated/type-aliases.d.ts
 src/SmartAbp.Vue/src/api/generated/type-aliases.js
 src/SmartAbp.Vue/src/api/lowcode/entity-modeling.js
+src/SmartAbp.Vue/src/api/lowcode/entity-modeling.spec.ts
 src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts
 src/SmartAbp.Vue/src/api/lowcode/moduleApi.ts
 src/SmartAbp.Vue/src/appshell/generation-report.md
@@ -474,6 +478,7 @@ src/SmartAbp.Vue/src/composables/usePerformance.js
 src/SmartAbp.Vue/src/composables/usePerformance.ts
 src/SmartAbp.Vue/src/composables/usePerformanceMonitor.js
 src/SmartAbp.Vue/src/composables/usePerformanceMonitor.ts
+src/SmartAbp.Vue/src/composables/usePermission.ts
 src/SmartAbp.Vue/src/composables/useRBAC.js
 src/SmartAbp.Vue/src/composables/useRBAC.ts
 src/SmartAbp.Vue/src/composables/useRealTimeAlerts.js
@@ -488,6 +493,9 @@ src/SmartAbp.Vue/src/composables/useWebSocket.ts
 src/SmartAbp.Vue/src/config/index.d.ts
 src/SmartAbp.Vue/src/config/index.js
 src/SmartAbp.Vue/src/config/index.ts
+src/SmartAbp.Vue/src/config/menus/smarttenant.ts
+src/SmartAbp.Vue/src/config/menus.backup.20251026_001502.ts
+src/SmartAbp.Vue/src/config/menus.backup.20251026_004942.ts
 src/SmartAbp.Vue/src/config/menus.d.ts
 src/SmartAbp.Vue/src/config/menus.ts
 src/SmartAbp.Vue/src/config/theme-icon.config.js
@@ -767,9 +775,7 @@ src/SmartAbp.Vue/src/locales/en-US.enhanced.json
 src/SmartAbp.Vue/src/locales/en-US.json
 src/SmartAbp.Vue/src/locales/zh-CN.enhanced.json
 src/SmartAbp.Vue/src/locales/zh-CN.json
-src/SmartAbp.Vue/src/lowcode-entry.js
 src/SmartAbp.Vue/src/lowcode-entry.ts
-src/SmartAbp.Vue/src/main.js
 src/SmartAbp.Vue/src/main.ts
 src/SmartAbp.Vue/src/performance/optimization.js
 src/SmartAbp.Vue/src/performance/optimization.ts
@@ -785,6 +791,7 @@ src/SmartAbp.Vue/src/router/lazyLoad.js
 src/SmartAbp.Vue/src/router/lazyLoad.ts
 src/SmartAbp.Vue/src/router/modules/ops-monitoring.js
 src/SmartAbp.Vue/src/router/modules/ops-monitoring.ts
+src/SmartAbp.Vue/src/router/modules/smarttenant.ts
 src/SmartAbp.Vue/src/services/userService.js
 src/SmartAbp.Vue/src/services/userService.ts
 src/SmartAbp.Vue/src/shims.d.ts
@@ -822,6 +829,7 @@ src/SmartAbp.Vue/src/stores/modules/menu.ts
 src/SmartAbp.Vue/src/stores/modules/project.d.ts
 src/SmartAbp.Vue/src/stores/modules/project.js
 src/SmartAbp.Vue/src/stores/modules/project.ts
+src/SmartAbp.Vue/src/stores/modules/smarttenant/smarttenant.ts
 src/SmartAbp.Vue/src/stores/modules/studioStore.js
 src/SmartAbp.Vue/src/stores/modules/studioStore.ts
 src/SmartAbp.Vue/src/stores/modules/system.d.ts
@@ -872,6 +880,7 @@ src/SmartAbp.Vue/src/types/menu.js
 src/SmartAbp.Vue/src/types/menu.ts
 src/SmartAbp.Vue/src/types/router.js
 src/SmartAbp.Vue/src/types/router.ts
+src/SmartAbp.Vue/src/types/smarttenant/smarttenant.ts
 src/SmartAbp.Vue/src/types/ui.js
 src/SmartAbp.Vue/src/types/ui.ts
 src/SmartAbp.Vue/src/types/user.d.ts
@@ -1010,6 +1019,7 @@ src/SmartAbp.Vue/src/views/ops/LogsDashboard.vue
 src/SmartAbp.Vue/src/views/ops/OpsMonitoringLayout.vue
 src/SmartAbp.Vue/src/views/project/ProjectAnalysisView.vue
 src/SmartAbp.Vue/src/views/project/ProjectListView.vue
+src/SmartAbp.Vue/src/views/smarttenant/SmartTenantManagement.vue
 src/SmartAbp.Vue/src/views/system/PerformanceMonitorView.vue
 src/SmartAbp.Vue/src/views/system/performance/CoreWebVitalsPanel.vue
 src/SmartAbp.Vue/src/views/system/performance/NavigationTimingPanel.vue
@@ -1025,10 +1035,6 @@ src/SmartAbp.Vue/packages/README.md
 src/SmartAbp.Vue/packages/lowcode-api/README.md
 src/SmartAbp.Vue/packages/lowcode-api/nswag.json
 src/SmartAbp.Vue/packages/lowcode-api/package.json
-src/SmartAbp.Vue/packages/lowcode-api/src/__tests__/code-generator.test.ts
-src/SmartAbp.Vue/packages/lowcode-api/src/__tests__/mocks/api-responses.ts
-src/SmartAbp.Vue/packages/lowcode-api/src/__tests__/mocks/index.ts
-src/SmartAbp.Vue/packages/lowcode-api/src/__tests__/mocks/mock-server.ts
 src/SmartAbp.Vue/packages/lowcode-api/src/business-rule.ts
 src/SmartAbp.Vue/packages/lowcode-api/src/client.generated.ts
 src/SmartAbp.Vue/packages/lowcode-api/src/code-gen-stats.ts
@@ -1212,7 +1218,6 @@ src/SmartAbp.Vue/packages/lowcode-core/tsconfig.json
 src/SmartAbp.Vue/packages/lowcode-core/tsup.config.ts
 src/SmartAbp.Vue/packages/lowcode-designer/README.md
 src/SmartAbp.Vue/packages/lowcode-designer/index.d.ts
-src/SmartAbp.Vue/packages/lowcode-designer/index.js
 src/SmartAbp.Vue/packages/lowcode-designer/index.ts
 src/SmartAbp.Vue/packages/lowcode-designer/package.json
 src/SmartAbp.Vue/packages/lowcode-designer/src/__tests__/CodeGenerationWizard.e2e.test.ts
@@ -1364,15 +1369,12 @@ src/SmartAbp.Vue/packages/lowcode-designer/src/views/dev/EntityDesignerTestView.
 src/SmartAbp.Vue/packages/lowcode-designer/src/views/index.ts
 src/SmartAbp.Vue/packages/lowcode-designer/src/views/newUltraSimpleStudio.vue
 src/SmartAbp.Vue/packages/lowcode-designer/tsconfig.json
-src/SmartAbp.Vue/packages/lowcode-designer/tsup.config.js
 src/SmartAbp.Vue/packages/lowcode-designer/tsup.config.ts
-src/SmartAbp.Vue/packages/lowcode-designer/types/security.js
 src/SmartAbp.Vue/packages/lowcode-designer/types/security.ts
 src/SmartAbp.Vue/packages/lowcode-designer/types/wizard.ts
 src/SmartAbp.Vue/packages/lowcode-quality-guardian/LINT_FIX_PROGRESS.md
 src/SmartAbp.Vue/packages/lowcode-quality-guardian/PHASE2_PROGRESS.md
 src/SmartAbp.Vue/packages/lowcode-quality-guardian/README.md
-src/SmartAbp.Vue/packages/lowcode-quality-guardian/esbuild.config.js
 src/SmartAbp.Vue/packages/lowcode-quality-guardian/package.json
 src/SmartAbp.Vue/packages/lowcode-quality-guardian/reports/quality/quality-report-2025-10-09.json
 src/SmartAbp.Vue/packages/lowcode-quality-guardian/reports/quality/quality-report-2025-10-09.md
@@ -1504,6 +1506,7 @@ src/SmartAbp.Vue/packages/lowcode-shared/src/utils/index.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/object.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/schema-converter.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/string.ts
+src/SmartAbp.Vue/packages/lowcode-shared/src/utils/type-mapping.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/validation/__tests__/unified-validator.spec.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/validation/entity-validator.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/validation/error-map.ts
@@ -1525,7 +1528,6 @@ src/SmartAbp.Vue/packages/lowcode-shared/tsup.config.ts
 src/SmartAbp.Vue/packages/lowcode-shared/types/env.d.ts
 src/SmartAbp.Vue/packages/lowcode-tools/README.md
 src/SmartAbp.Vue/packages/lowcode-tools/index.d.ts
-src/SmartAbp.Vue/packages/lowcode-tools/index.js
 src/SmartAbp.Vue/packages/lowcode-tools/package.json
 src/SmartAbp.Vue/packages/lowcode-tools/src/cli/commands/codegen.ts
 src/SmartAbp.Vue/packages/lowcode-tools/src/execution/README.md
@@ -1543,16 +1545,11 @@ src/SmartAbp.Vue/packages/lowcode-tools/src/execution/simple-logger.ts
 src/SmartAbp.Vue/packages/lowcode-tools/src/execution/smart-check.ts
 src/SmartAbp.Vue/packages/lowcode-tools/src/execution/types.ts
 src/SmartAbp.Vue/packages/lowcode-tools/src/index.ts
-src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/build-template-index.js
-src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/simple-template-index.js
 src/SmartAbp.Vue/packages/lowcode-tools/src/vite/index.ts
 src/SmartAbp.Vue/packages/lowcode-tools/tsconfig.json
 src/SmartAbp.Vue/packages/lowcode-tools/tsup.config.ts
 src/SmartAbp.Vue/packages/lowcode-ui-vue/index.ts
 src/SmartAbp.Vue/packages/lowcode-ui-vue/src/index.ts
-src/SmartAbp.Vue/packages/quality-guardian/checkers/check-all.js
-src/SmartAbp.Vue/packages/quality-guardian/checkers/check-component-registration.js
-src/SmartAbp.Vue/packages/quality-guardian/checkers/check-config-consistency.js
 src/SmartAbp.Vue/packages/quality-guardian/package.json
 src/SmartAbp.Vue/packages/quality-guardian/tsconfig.json
 src/SmartAbp.Vue/packages/reports/quality/quality-report-2025-10-09.json

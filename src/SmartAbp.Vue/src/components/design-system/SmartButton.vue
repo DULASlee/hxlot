@@ -185,18 +185,18 @@ function handleClick(event: MouseEvent) {
 .smart-button--secondary {
   background: var(--color-bg-elevated);
   border-color: var(--color-border-base);
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
 }
 
 .smart-button--secondary:hover:not(.is-disabled):not(.is-loading) {
-  border-color: var(--color-primary-500);
-  color: var(--color-primary-500);
+  border-color: var(--theme-brand-primary);
+  color: var(--theme-brand-primary);
 }
 
 .smart-button--secondary:active:not(.is-disabled):not(.is-loading) {
-  background: var(--color-primary-50);
-  border-color: var(--color-primary-600);
-  color: var(--color-primary-600);
+  background: var(--theme-brand-primary-lighter);
+  border-color: var(--theme-brand-primary-hover);
+  color: var(--theme-brand-primary-hover);
 }
 
 .smart-button--secondary:focus-visible {
@@ -281,20 +281,20 @@ function handleClick(event: MouseEvent) {
 
 .smart-button--ghost {
   background: transparent;
-  border-color: var(--color-primary-500);
-  color: var(--color-primary-500);
+  border-color: var(--theme-brand-primary);
+  color: var(--theme-brand-primary);
 }
 
 .smart-button--ghost:hover:not(.is-disabled):not(.is-loading) {
-  background: var(--color-primary-50);
-  border-color: var(--color-primary-600);
-  color: var(--color-primary-600);
+  background: var(--theme-brand-primary-lighter);
+  border-color: var(--theme-brand-primary-hover);
+  color: var(--theme-brand-primary-hover);
 }
 
 .smart-button--ghost:active:not(.is-disabled):not(.is-loading) {
   background: var(--color-primary-100);
-  border-color: var(--color-primary-700);
-  color: var(--color-primary-700);
+  border-color: var(--theme-brand-primary-active);
+  color: var(--theme-brand-primary-active);
 }
 
 .smart-button--ghost:focus-visible {
@@ -308,21 +308,21 @@ function handleClick(event: MouseEvent) {
 .smart-button--text {
   background: transparent;
   border-color: transparent;
-  color: var(--color-primary-500);
+  color: var(--theme-brand-primary);
 }
 
 .smart-button--text:hover:not(.is-disabled):not(.is-loading) {
-  background: var(--color-primary-50);
-  color: var(--color-primary-600);
+  background: var(--theme-brand-primary-lighter);
+  color: var(--theme-brand-primary-hover);
 }
 
 .smart-button--text:active:not(.is-disabled):not(.is-loading) {
   background: var(--color-primary-100);
-  color: var(--color-primary-700);
+  color: var(--theme-brand-primary-active);
 }
 
 .smart-button--text:focus-visible {
-  background: var(--color-primary-50);
+  background: var(--theme-brand-primary-lighter);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

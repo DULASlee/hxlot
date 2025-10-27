@@ -107,12 +107,12 @@ export default {
     getThemeVariables(theme: ThemeKey): ThemeVars {
       const themes: Record<ThemeKey, ThemeVars> = {
         classic: {
-          "--primary-color": "#2563eb",
+          "--theme-brand-primary": "#2563eb",
           "--primary-hover": "#1d4ed8",
-          "--bg-color": "#ffffff",
-          "--text-color": "#1f2937",
-          "--border-color": "#e5e7eb",
-          "--card-bg": "#ffffff",
+          "--theme-bg-body": "#ffffff",
+          "--theme-text-primary": "#1f2937",
+          "--theme-border-base": "#e5e7eb",
+          "--theme-bg-component": "#ffffff",
           "--hover-bg": "#f3f4f6",
           "--sidebar-bg": "#001529",
           "--sidebar-text": "rgba(255, 255, 255, 0.85)",
@@ -127,12 +127,12 @@ export default {
           "--tab-hover-bg": "#f1f5f9",
         },
         tech: {
-          "--primary-color": "#059669",
+          "--theme-brand-primary": "#059669",
           "--primary-hover": "#047857",
-          "--bg-color": "#ffffff",
-          "--text-color": "#1f2937",
-          "--border-color": "#d1d5db",
-          "--card-bg": "#ffffff",
+          "--theme-bg-body": "#ffffff",
+          "--theme-text-primary": "#1f2937",
+          "--theme-border-base": "#d1d5db",
+          "--theme-bg-component": "#ffffff",
           "--hover-bg": "#f0fdf4",
           "--sidebar-bg": "#002329",
           "--sidebar-text": "rgba(255, 255, 255, 0.85)",
@@ -147,12 +147,12 @@ export default {
           "--tab-hover-bg": "#ecfdf5",
         },
         elegant: {
-          "--primary-color": "#7c3aed",
+          "--theme-brand-primary": "#7c3aed",
           "--primary-hover": "#6d28d9",
-          "--bg-color": "#ffffff",
-          "--text-color": "#1f2937",
-          "--border-color": "#e5e7eb",
-          "--card-bg": "#ffffff",
+          "--theme-bg-body": "#ffffff",
+          "--theme-text-primary": "#1f2937",
+          "--theme-border-base": "#e5e7eb",
+          "--theme-bg-component": "#ffffff",
           "--hover-bg": "#faf5ff",
           "--sidebar-bg": "#2d1b69",
           "--sidebar-text": "rgba(255, 255, 255, 0.85)",
@@ -167,12 +167,12 @@ export default {
           "--tab-hover-bg": "#f3e8ff",
         },
         dark: {
-          "--primary-color": "#3b82f6",
+          "--theme-brand-primary": "#3b82f6",
           "--primary-hover": "#2563eb",
-          "--bg-color": "#1a1a2e",
-          "--text-color": "#e5e7eb",
-          "--border-color": "#374151",
-          "--card-bg": "#16213e",
+          "--theme-bg-body": "#1a1a2e",
+          "--theme-text-primary": "#e5e7eb",
+          "--theme-border-base": "#374151",
+          "--theme-bg-component": "#16213e",
           "--hover-bg": "#1f2937",
           "--sidebar-bg": "#0f1419",
           "--sidebar-text": "rgba(255, 255, 255, 0.85)",
@@ -212,9 +212,9 @@ export default {
   gap: 8px;
   padding: 8px 12px;
   background: transparent;
-  border: 1px solid var(--border-color, #e5e7eb);
+  border: 1px solid var(--theme-border-base, #e5e7eb);
   border-radius: 6px;
-  color: var(--text-color, #1f2937);
+  color: var(--theme-text-primary, #1f2937);
   cursor: pointer;
   font-size: 14px;
   transition: all 0.2s ease;
@@ -222,7 +222,7 @@ export default {
 
 .theme-button:hover {
   background: var(--hover-bg, #f3f4f6);
-  border-color: var(--primary-color, #2563eb);
+  border-color: var(--theme-brand-primary, #2563eb);
 }
 
 .theme-icon {
@@ -243,8 +243,8 @@ export default {
   top: 100%;
   right: 0;
   margin-top: 4px;
-  background: var(--card-bg, #fff);
-  border: 1px solid var(--border-color, #e5e7eb);
+  background: var(--theme-bg-component, #fff);
+  border: 1px solid var(--theme-border-base, #e5e7eb);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
   z-index: 1000;
@@ -259,7 +259,7 @@ export default {
   padding: 10px 12px;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  color: var(--text-color, #1f2937);
+  color: var(--theme-text-primary, #1f2937);
 }
 
 .theme-option:hover {
@@ -267,7 +267,7 @@ export default {
 }
 
 .theme-option.active {
-  background: var(--primary-color, #2563eb);
+  background: var(--theme-brand-primary, #2563eb);
   color: white;
 }
 

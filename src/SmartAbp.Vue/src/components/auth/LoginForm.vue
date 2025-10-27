@@ -524,9 +524,9 @@ watchEffect(() => {
   position: relative;
   width: 18px;
   height: 18px;
-  border: 2px solid var(--color-border-primary);
+  border: 2px solid var(--theme-border-base);
   border-radius: 4px;
-  background: var(--color-bg-primary);
+  background: var(--theme-bg-component);
   transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -550,19 +550,19 @@ watchEffect(() => {
 }
 
 .checkbox-input:focus+.checkbox-custom {
-  box-shadow: 0 0 0 3px rgb(var(--color-primary-500) / 10%);
+  box-shadow: 0 0 0 3px rgb(var(--theme-brand-primary) / 10%);
 }
 
 .checkbox-label {
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
 }
 
 /* 忘记密码链接 */
 .forgot-link {
   font-size: 14px;
-  color: var(--color-primary-500);
+  color: var(--theme-brand-primary);
   text-decoration: none;
   font-weight: 600;
   transition: all var(--duration-base) var(--ease);
@@ -576,12 +576,12 @@ watchEffect(() => {
   left: 0;
   width: 0;
   height: 2px;
-  background: var(--color-primary-500);
+  background: var(--theme-brand-primary);
   transition: width var(--duration-base) var(--ease);
 }
 
 .forgot-link:hover {
-  color: var(--color-primary-600);
+  color: var(--theme-brand-primary-hover);
 }
 
 .forgot-link:hover::after {
