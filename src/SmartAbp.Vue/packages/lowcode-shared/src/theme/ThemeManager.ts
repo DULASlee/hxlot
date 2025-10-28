@@ -18,7 +18,7 @@ export class ThemeManager {
   constructor() {
     // 从存储中恢复主题
     this.restoreTheme()
-    
+
     // 监听系统主题变化
     this.watchSystemTheme()
   }
@@ -42,7 +42,7 @@ export class ThemeManager {
    */
   setTheme(mode: ThemeMode) {
     this.currentMode.value = mode
-    
+
     // 根据模式选择令牌
     if (mode === 'auto') {
       // 自动模式，根据系统主题选择
@@ -54,7 +54,7 @@ export class ThemeManager {
 
     // 应用CSS变量
     this.applyCSSVariables()
-    
+
     // 保存到存储
     this.saveTheme()
   }
@@ -84,45 +84,33 @@ export class ThemeManager {
       root.style.setProperty(`--spacing-${key}`, value)
     })
 
-    // 应用字体变量
-    root.style.setProperty('--font-family-base', tokens.typography.fontFamily.base)
-    root.style.setProperty('--font-family-mono', tokens.typography.fontFamily.mono)
-    
-    Object.entries(tokens.typography.fontSize).forEach(([key, value]) => {
-      root.style.setProperty(`--font-size-${key}`, value)
-    })
-    
-    Object.entries(tokens.typography.fontWeight).forEach(([key, value]) => {
-      root.style.setProperty(`--font-weight-${key}`, value.toString())
-    })
-    
-    Object.entries(tokens.typography.lineHeight).forEach(([key, value]) => {
-      root.style.setProperty(`--line-height-${key}`, value.toString())
-    })
+    // 应用字体变量（暂时注释 - tokens中不包含typography）
+    // root.style.setProperty('--font-family-base', tokens.typography?.fontFamily?.base ?? 'inherit')
+    // root.style.setProperty('--font-family-mono', tokens.typography?.fontFamily?.mono ?? 'monospace')
 
-    // 应用圆角变量
-    Object.entries(tokens.borderRadius).forEach(([key, value]) => {
-      root.style.setProperty(`--radius-${key}`, value)
-    })
+    // 应用圆角变量（暂时注释 - tokens中不包含borderRadius）
+    // Object.entries(tokens.borderRadius ?? {}).forEach(([key, value]) => {
+    //   root.style.setProperty(`--radius-${key}`, value)
+    // })
 
     // 应用阴影变量
     Object.entries(tokens.shadows).forEach(([key, value]) => {
       root.style.setProperty(`--shadow-${key}`, value)
     })
 
-    // 应用过渡变量
-    Object.entries(tokens.transitions.duration).forEach(([key, value]) => {
-      root.style.setProperty(`--duration-${key}`, value)
-    })
-    
-    Object.entries(tokens.transitions.timing).forEach(([key, value]) => {
-      root.style.setProperty(`--timing-${key}`, value)
-    })
+    // 应用过渡变量（暂时注释 - tokens中不包含transitions）
+    // Object.entries(tokens.transitions?.duration ?? {}).forEach(([key, value]) => {
+    //   root.style.setProperty(`--duration-${key}`, value)
+    // })
 
-    // 应用z-index变量
-    Object.entries(tokens.zIndex).forEach(([key, value]) => {
-      root.style.setProperty(`--z-${this.kebabCase(key)}`, value.toString())
-    })
+    // Object.entries(tokens.transitions?.timing ?? {}).forEach(([key, value]) => {
+    //   root.style.setProperty(`--timing-${key}`, value)
+    // })
+
+    // 应用z-index变量（暂时注释 - tokens中不包含zIndex）
+    // Object.entries(tokens.zIndex ?? {}).forEach(([key, value]) => {
+    //   root.style.setProperty(`--z-${this.kebabCase(key)}`, value.toString())
+    // })
   }
 
   /**
@@ -150,7 +138,7 @@ export class ThemeManager {
    */
   private watchSystemTheme() {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    
+
     mediaQuery.addEventListener('change', (e) => {
       if (this.currentMode.value === 'auto') {
         this.currentTokens.value = e.matches ? darkTokens : lightTokens
@@ -198,19 +186,19 @@ export function getThemeManager(): ThemeManager {
 
 /**
  * 主题管理组合式函数
- * 
+ *
  * @example
  * ```typescript
  * import { useTheme } from '@smartabp/lowcode-shared/theme'
- * 
+ *
  * const { mode, tokens, setTheme, toggleTheme } = useTheme()
- * 
+ *
  * // 切换主题
  * toggleTheme()
- * 
+ *
  * // 设置为暗色主题
  * setTheme('dark')
- * 
+ *
  * // 使用设计令牌
  * const primaryColor = tokens.value.colors.primary
  * ```

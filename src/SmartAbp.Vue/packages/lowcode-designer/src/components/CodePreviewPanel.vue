@@ -1,3 +1,11 @@
+<!--
+  ⚠️ 已废弃 (DEPRECATED)
+  此文件已被 CodePreview/CodePreviewPanel.vue (v2.0) 替代
+  请使用新版本：import { CodePreviewPanel } from './CodePreview'
+  标记日期：2025-10-28
+  保留原因：遵循第0条铁律，暂时保留以备回滚
+-->
+
 <template>
   <div class="code-preview-panel">
     <div class="preview-header">

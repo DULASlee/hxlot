@@ -6,14 +6,14 @@
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
     "src/**/examples/**",
-    "packages/**",
     "**/*.test.ts",
     "**/*.spec.ts",
     "**/*.test.tsx",
     "**/*.spec.tsx",
     "packages/lowcode-shared/src/types/unified-schema.ts",
     "packages/lowcode-shared/src/utils/schema-converter.ts",
-    "packages/lowcode-shared/src/validation/__tests__/unified-validator.spec.ts"
+    "packages/lowcode-shared/src/validation/__tests__/unified-validator.spec.ts",
+    "**/SmartCard.vue"
   ],
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",

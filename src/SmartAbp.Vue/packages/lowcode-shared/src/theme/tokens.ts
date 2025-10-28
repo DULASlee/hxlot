@@ -1,10 +1,10 @@
 /**
  * 设计令牌系统 - 与CSS完全同步
- * 
+ *
  * 基准文件: src/styles/design-system/themes/theme-base.css
  * 同步日期: 2025-10-27
  * SSOT重构: 阶段5 - TypeScript同步
- * 
+ *
  * ⚠️ 重要：修改此文件时必须同步更新CSS文件
  */
 
@@ -20,7 +20,7 @@ export interface DesignTokens {
     brandPrimaryFocus: string
     brandPrimaryLight: string
     brandPrimaryLighter: string
-    
+
     // 功能色
     success: string
     successHover: string
@@ -34,7 +34,7 @@ export interface DesignTokens {
     info: string
     infoHover: string
     infoLight: string
-    
+
     // 背景色
     bgBody: string
     bgBase: string
@@ -46,20 +46,20 @@ export interface DesignTokens {
     bgSidebar: string
     bgHover: string
     bgAccent: string
-    
+
     // 文本色
     textPrimary: string
     textSecondary: string
     textTertiary: string
     textDisabled: string
     textInverse: string
-    
+
     // 边框色
     borderBase: string
     borderLight: string
     borderDark: string
   }
-  
+
   spacing: {
     1: string
     2: string
@@ -75,7 +75,7 @@ export interface DesignTokens {
     24: string
     32: string
   }
-  
+
   shadows: {
     sm: string
     md: string
@@ -96,7 +96,7 @@ export const lightTokens: DesignTokens = {
     brandPrimaryFocus: '#38bdf8',
     brandPrimaryLight: '#e0f2fe',
     brandPrimaryLighter: '#f0f9ff',
-    
+
     // 功能色
     success: '#10b981',
     successHover: '#059669',
@@ -110,7 +110,7 @@ export const lightTokens: DesignTokens = {
     info: '#3b82f6',
     infoHover: '#2563eb',
     infoLight: 'rgba(59, 130, 246, 0.1)',
-    
+
     // 背景色 - 清新蓝白
     bgBody: '#f8fafc',
     bgBase: '#f8fafc',
@@ -122,20 +122,20 @@ export const lightTokens: DesignTokens = {
     bgSidebar: '#ffffff',
     bgHover: 'rgba(14, 165, 233, 0.08)',
     bgAccent: '#f1f5f9',
-    
+
     // 文本色
     textPrimary: '#0f172a',
     textSecondary: '#334155',
     textTertiary: '#64748b',
     textDisabled: '#94a3b8',
     textInverse: '#ffffff',
-    
+
     // 边框色
     borderBase: '#e2e8f0',
     borderLight: '#f1f5f9',
     borderDark: '#cbd5e1'
   },
-  
+
   spacing: {
     1: '4px',
     2: '8px',
@@ -151,7 +151,7 @@ export const lightTokens: DesignTokens = {
     24: '96px',
     32: '128px'
   },
-  
+
   shadows: {
     sm: '0 1px 2px 0 rgba(14, 165, 233, 0.08)',
     md: '0 4px 6px -1px rgba(14, 165, 233, 0.12), 0 2px 4px -1px rgba(14, 165, 233, 0.08)',
@@ -172,7 +172,7 @@ export const darkTokens: DesignTokens = {
     brandPrimaryFocus: '#93c5fd',
     brandPrimaryLight: 'rgba(96, 165, 250, 0.15)',
     brandPrimaryLighter: 'rgba(96, 165, 250, 0.08)',
-    
+
     // 功能色
     success: '#34d399',
     successHover: '#10b981',
@@ -186,7 +186,7 @@ export const darkTokens: DesignTokens = {
     info: '#60a5fa',
     infoHover: '#3b82f6',
     infoLight: 'rgba(96, 165, 250, 0.15)',
-    
+
     // 背景色 - 深色系
     bgBody: '#0f172a',
     bgBase: '#0f172a',
@@ -198,20 +198,20 @@ export const darkTokens: DesignTokens = {
     bgSidebar: '#1e293b',
     bgHover: 'rgba(96, 165, 250, 0.12)',
     bgAccent: '#334155',
-    
+
     // 文本色
     textPrimary: '#f8fafc',
     textSecondary: '#cbd5e1',
     textTertiary: '#94a3b8',
     textDisabled: '#64748b',
     textInverse: '#0f172a',
-    
+
     // 边框色
     borderBase: '#374151',
     borderLight: '#334155',
     borderDark: '#4b5563'
   },
-  
+
   spacing: lightTokens.spacing,
   shadows: {
     sm: '0 1px 2px 0 rgba(0, 0, 0, 0.3)',
@@ -224,7 +224,7 @@ export const darkTokens: DesignTokens = {
 /**
  * 主题类型
  */
-export type ThemeMode = 'light' | 'dark' | 'tech-blue' | 'deep-green' | 'light-purple'
+export type ThemeMode = 'light' | 'dark' | 'auto' | 'tech-blue' | 'deep-green' | 'light-purple'
 
 /**
  * 主题配置
@@ -258,18 +258,18 @@ export const DesignTokensDefault = lightTokens
  */
 export function applyTokensToCSS(tokens: DesignTokens): void {
   const root = document.documentElement
-  
+
   // 应用颜色
   Object.entries(tokens.colors).forEach(([key, value]) => {
     const cssVarName = `--theme-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`
     root.style.setProperty(cssVarName, value)
   })
-  
+
   // 应用间距
   Object.entries(tokens.spacing).forEach(([key, value]) => {
     root.style.setProperty(`--spacing-${key}`, value)
   })
-  
+
   // 应用阴影
   Object.entries(tokens.shadows).forEach(([key, value]) => {
     root.style.setProperty(`--shadow-${key}`, value)

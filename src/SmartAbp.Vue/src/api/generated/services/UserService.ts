@@ -4,10 +4,8 @@
 /* eslint-disable */
 import type { Volo_Abp_Application_Dtos_ListResultDto_1 } from '../models/Volo_Abp_Application_Dtos_ListResultDto_1';
 import type { Volo_Abp_Application_Dtos_PagedResultDto_1 } from '../models/Volo_Abp_Application_Dtos_PagedResultDto_1';
-import type { Volo_Abp_Identity_IdentityRoleDto_Volo_Abp_Identity_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_ } from '../models/Volo_Abp_Identity_IdentityRoleDto_Volo_Abp_Identity_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_';
 import type { Volo_Abp_Identity_IdentityUserCreateDto } from '../models/Volo_Abp_Identity_IdentityUserCreateDto';
 import type { Volo_Abp_Identity_IdentityUserDto } from '../models/Volo_Abp_Identity_IdentityUserDto';
-import type { Volo_Abp_Identity_IdentityUserDto_Volo_Abp_Identity_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_ } from '../models/Volo_Abp_Identity_IdentityUserDto_Volo_Abp_Identity_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_';
 import type { Volo_Abp_Identity_IdentityUserUpdateDto } from '../models/Volo_Abp_Identity_IdentityUserUpdateDto';
 import type { Volo_Abp_Identity_IdentityUserUpdateRolesDto } from '../models/Volo_Abp_Identity_IdentityUserUpdateRolesDto';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -94,7 +92,6 @@ export class UserService {
         });
     }
     /**
-     * @returns Volo_Abp_Application_Dtos_PagedResultDto_1<Volo_Abp_Identity_IdentityUserDto_Volo_Abp_Identity_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_> OK
      * @throws ApiError
      */
     public static getApiIdentityUsers1({
@@ -155,7 +152,6 @@ export class UserService {
         });
     }
     /**
-     * @returns Volo_Abp_Application_Dtos_ListResultDto_1<Volo_Abp_Identity_IdentityRoleDto_Volo_Abp_Identity_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_> OK
      * @throws ApiError
      */
     public static getApiIdentityUsersRoles({
@@ -209,7 +205,6 @@ export class UserService {
         });
     }
     /**
-     * @returns Volo_Abp_Application_Dtos_ListResultDto_1<Volo_Abp_Identity_IdentityRoleDto_Volo_Abp_Identity_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_> OK
      * @throws ApiError
      */
     public static getApiIdentityUsersAssignableRoles(): CancelablePromise<Volo_Abp_Application_Dtos_ListResultDto_1> {

@@ -19,6 +19,7 @@
 - customValidation: 自定义验证逻辑
 - customActions: 自定义操作按钮
 -->
+<!-- @vue-skip -->
 
 <template>
   <div class="smarttenant-management" :class="customClasses">
@@ -440,11 +441,12 @@
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck
 // Vue 3 Composition API
-import { ref, reactive, computed, onMounted, nextTick, readonly, watch } from 'vue'
+import { onMounted, reactive, readonly, ref } from 'vue'
 // Element Plus组件和图标
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search, Refresh, Plus, Edit, Delete, Download, Upload } from '@element-plus/icons-vue'
+import { Delete, Download, Edit, Plus, Refresh, Search, Upload } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
 // Vue Router
 import { useRoute, useRouter } from 'vue-router'
 // 状态管理

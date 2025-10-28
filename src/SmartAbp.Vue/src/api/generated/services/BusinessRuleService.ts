@@ -4,7 +4,6 @@
 /* eslint-disable */
 import type { SmartAbp_Application_BusinessRules_Services_ScriptValidationResult } from '../models/SmartAbp_Application_BusinessRules_Services_ScriptValidationResult';
 import type { SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleDto } from '../models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleDto';
-import type { SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleDto_SmartAbp_Application_Contracts_Version_1_0_0_0_Culture_neutral_PublicKeyToken_null_ } from '../models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleDto_SmartAbp_Application_Contracts_Version_1_0_0_0_Culture_neutral_PublicKeyToken_null_';
 import type { SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleExecutionResultDto } from '../models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleExecutionResultDto';
 import type { SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleStatsDto } from '../models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleStatsDto';
 import type { SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleValidationResultDto } from '../models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleValidationResultDto';
@@ -24,7 +23,6 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class BusinessRuleService {
     /**
-     * @returns Volo_Abp_Application_Dtos_PagedResultDto_1<SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleDto_SmartAbp_Application_Contracts_Version_1_0_0_0_Culture_neutral_PublicKeyToken_null_> OK
      * @throws ApiError
      */
     public static getApiBusinessRules({

@@ -6,14 +6,12 @@ import type { Volo_Abp_Application_Dtos_ListResultDto_1 } from '../models/Volo_A
 import type { Volo_Abp_Application_Dtos_PagedResultDto_1 } from '../models/Volo_Abp_Application_Dtos_PagedResultDto_1';
 import type { Volo_Abp_Identity_IdentityRoleCreateDto } from '../models/Volo_Abp_Identity_IdentityRoleCreateDto';
 import type { Volo_Abp_Identity_IdentityRoleDto } from '../models/Volo_Abp_Identity_IdentityRoleDto';
-import type { Volo_Abp_Identity_IdentityRoleDto_Volo_Abp_Identity_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_ } from '../models/Volo_Abp_Identity_IdentityRoleDto_Volo_Abp_Identity_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_';
 import type { Volo_Abp_Identity_IdentityRoleUpdateDto } from '../models/Volo_Abp_Identity_IdentityRoleUpdateDto';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class RoleService {
     /**
-     * @returns Volo_Abp_Application_Dtos_ListResultDto_1<Volo_Abp_Identity_IdentityRoleDto_Volo_Abp_Identity_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_> OK
      * @throws ApiError
      */
     public static getApiIdentityRolesAll(): CancelablePromise<Volo_Abp_Application_Dtos_ListResultDto_1> {
@@ -31,7 +29,6 @@ export class RoleService {
         });
     }
     /**
-     * @returns Volo_Abp_Application_Dtos_PagedResultDto_1<Volo_Abp_Identity_IdentityRoleDto_Volo_Abp_Identity_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_> OK
      * @throws ApiError
      */
     public static getApiIdentityRoles({

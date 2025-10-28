@@ -22,15 +22,11 @@ export type OpenAPIConfig = {
 export const OpenAPI: OpenAPIConfig = {
     BASE: '',
     VERSION: '1',
-    WITH_CREDENTIALS: true,
+    WITH_CREDENTIALS: false,
     CREDENTIALS: 'include',
     TOKEN: undefined,
     USERNAME: undefined,
     PASSWORD: undefined,
-    HEADERS: {
-        // ABP框架相关头
-        'X-Requested-With': 'XMLHttpRequest',
-        'Accept-Language': 'zh-CN',
-    },
+    HEADERS: undefined,
     ENCODE_PATH: undefined,
 };

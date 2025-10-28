@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.app.json",
+  "exclude": [
+    "src/**/__tests__/**",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/examples/**",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.test.tsx",
+    "**/*.spec.tsx",
+    "packages/lowcode-shared/src/types/unified-schema.ts",
+    "packages/lowcode-shared/src/utils/schema-converter.ts",
+    "packages/lowcode-shared/src/validation/__tests__/unified-validator.spec.ts",
+    "src/components/design-system/SmartCard.vue",
+    "src/components/design-system/SmartCard.d.ts"
+  ]
+}
+

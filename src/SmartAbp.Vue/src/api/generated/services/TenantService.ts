@@ -5,7 +5,6 @@
 import type { Volo_Abp_Application_Dtos_PagedResultDto_1 } from '../models/Volo_Abp_Application_Dtos_PagedResultDto_1';
 import type { Volo_Abp_TenantManagement_TenantCreateDto } from '../models/Volo_Abp_TenantManagement_TenantCreateDto';
 import type { Volo_Abp_TenantManagement_TenantDto } from '../models/Volo_Abp_TenantManagement_TenantDto';
-import type { Volo_Abp_TenantManagement_TenantDto_Volo_Abp_TenantManagement_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_ } from '../models/Volo_Abp_TenantManagement_TenantDto_Volo_Abp_TenantManagement_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_';
 import type { Volo_Abp_TenantManagement_TenantUpdateDto } from '../models/Volo_Abp_TenantManagement_TenantUpdateDto';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -91,7 +90,6 @@ export class TenantService {
         });
     }
     /**
-     * @returns Volo_Abp_Application_Dtos_PagedResultDto_1<Volo_Abp_TenantManagement_TenantDto_Volo_Abp_TenantManagement_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_> OK
      * @throws ApiError
      */
     public static getApiMultiTenancyTenants1({

@@ -8,5 +8,7 @@ export type SmartAbp_CodeGenerator_Services_V9_ColumnSchemaDto = {
     isNullable?: boolean;
     maxLength?: number | null;
     isPrimaryKey?: boolean;
+    defaultValue?: string | null;
+    comment?: string | null;
 };
 

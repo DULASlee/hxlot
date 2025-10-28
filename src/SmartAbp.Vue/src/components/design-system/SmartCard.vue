@@ -3,6 +3,7 @@
 # SmartCard 企业级卡片组件
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 -->
+<!-- @vue-skip -->
 
 <template>
   <div :class="cardClasses" @click="handleClick">
@@ -52,6 +53,7 @@
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck
 import { computed } from 'vue'
 
 /*

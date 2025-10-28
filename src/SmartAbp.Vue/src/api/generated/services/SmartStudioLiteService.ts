@@ -5,7 +5,6 @@
 import type { SmartAbp_Application_Contracts_LowCode_Dtos_SimplifiedModuleCreationDto } from '../models/SmartAbp_Application_Contracts_LowCode_Dtos_SimplifiedModuleCreationDto';
 import type { SmartAbp_Application_Contracts_LowCode_Dtos_SimplifiedModuleCreationResultDto } from '../models/SmartAbp_Application_Contracts_LowCode_Dtos_SimplifiedModuleCreationResultDto';
 import type { SmartAbp_Application_Contracts_LowCode_ValidationResultDto } from '../models/SmartAbp_Application_Contracts_LowCode_ValidationResultDto';
-import type { System_String_System_Private_CoreLib_Version_9_0_0_0_Culture_neutral_PublicKeyToken_7cec85d7bea7798e_ } from '../models/System_String_System_Private_CoreLib_Version_9_0_0_0_Culture_neutral_PublicKeyToken_7cec85d7bea7798e_';
 import type { Volo_Abp_Application_Dtos_ListResultDto_1 } from '../models/Volo_Abp_Application_Dtos_ListResultDto_1';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -36,7 +35,6 @@ export class SmartStudioLiteService {
         });
     }
     /**
-     * @returns Volo_Abp_Application_Dtos_ListResultDto_1<System_String_System_Private_CoreLib_Version_9_0_0_0_Culture_neutral_PublicKeyToken_7cec85d7bea7798e_> OK
      * @throws ApiError
      */
     public static postApiLowcodeSmartStudioLitePreviewFiles({

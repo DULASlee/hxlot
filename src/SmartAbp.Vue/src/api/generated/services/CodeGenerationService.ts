@@ -2,6 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { SmartAbp_Application_Contracts_CodeGeneration_Dtos_CodeGenerationResultDto } from '../models/SmartAbp_Application_Contracts_CodeGeneration_Dtos_CodeGenerationResultDto';
+import type { SmartAbp_Application_Contracts_CodeGeneration_Dtos_CodeGenerationTaskDto } from '../models/SmartAbp_Application_Contracts_CodeGeneration_Dtos_CodeGenerationTaskDto';
+import type { SmartAbp_Application_Contracts_CodeGeneration_Dtos_MESGeneratorConfigDto } from '../models/SmartAbp_Application_Contracts_CodeGeneration_Dtos_MESGeneratorConfigDto';
+import type { SmartAbp_Application_Contracts_CodeGeneration_Dtos_UniAppGeneratorConfigDto } from '../models/SmartAbp_Application_Contracts_CodeGeneration_Dtos_UniAppGeneratorConfigDto';
 import type { SmartAbp_Application_Contracts_CodeGenerator_CqrsValidationResultDto } from '../models/SmartAbp_Application_Contracts_CodeGenerator_CqrsValidationResultDto';
 import type { SmartAbp_Application_LowCode_CodeGenerationTaskResponse } from '../models/SmartAbp_Application_LowCode_CodeGenerationTaskResponse';
 import type { SmartAbp_Application_LowCode_CodeGenerationTaskStatus } from '../models/SmartAbp_Application_LowCode_CodeGenerationTaskStatus';
@@ -20,6 +24,7 @@ import type { SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto } from '../mo
 import type { SmartAbp_CodeGenerator_Services_V9_SchemaVersionManifestDto } from '../models/SmartAbp_CodeGenerator_Services_V9_SchemaVersionManifestDto';
 import type { SmartAbp_CodeGenerator_Services_V9_UnifiedModuleSchemaDto } from '../models/SmartAbp_CodeGenerator_Services_V9_UnifiedModuleSchemaDto';
 import type { SmartAbp_CodeGenerator_Services_V9_ValidationReportDto } from '../models/SmartAbp_CodeGenerator_Services_V9_ValidationReportDto';
+import type { Volo_Abp_Application_Dtos_PagedResultDto_1 } from '../models/Volo_Abp_Application_Dtos_PagedResultDto_1';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -511,6 +516,134 @@ export class CodeGenerationService {
             path: {
                 'taskId': taskId,
             },
+            errors: {
+                400: `Bad Request`,
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
+                501: `Not Implemented`,
+            },
+        });
+    }
+    /**
+     * @throws ApiError
+     */
+    public static getApiAppCodeGenerationTasks({
+        sorting,
+        skipCount,
+        maxResultCount,
+    }: {
+        sorting?: string,
+        skipCount?: number,
+        maxResultCount?: number,
+    }): CancelablePromise<Volo_Abp_Application_Dtos_PagedResultDto_1> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/app/code-generation/tasks',
+            query: {
+                'Sorting': sorting,
+                'SkipCount': skipCount,
+                'MaxResultCount': maxResultCount,
+            },
+            errors: {
+                400: `Bad Request`,
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
+                501: `Not Implemented`,
+            },
+        });
+    }
+    /**
+     * @returns SmartAbp_Application_Contracts_CodeGeneration_Dtos_CodeGenerationTaskDto OK
+     * @throws ApiError
+     */
+    public static getApiAppCodeGenerationTasks1({
+        id,
+    }: {
+        id: string,
+    }): CancelablePromise<SmartAbp_Application_Contracts_CodeGeneration_Dtos_CodeGenerationTaskDto> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/app/code-generation/tasks/{id}',
+            path: {
+                'id': id,
+            },
+            errors: {
+                400: `Bad Request`,
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
+                501: `Not Implemented`,
+            },
+        });
+    }
+    /**
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static deleteApiAppCodeGenerationTasks({
+        id,
+    }: {
+        id: string,
+    }): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/app/code-generation/tasks/{id}',
+            path: {
+                'id': id,
+            },
+            errors: {
+                400: `Bad Request`,
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
+                501: `Not Implemented`,
+            },
+        });
+    }
+    /**
+     * @returns SmartAbp_Application_Contracts_CodeGeneration_Dtos_CodeGenerationResultDto OK
+     * @throws ApiError
+     */
+    public static postApiAppCodeGenerationGenerateMesDashboard({
+        requestBody,
+    }: {
+        requestBody?: SmartAbp_Application_Contracts_CodeGeneration_Dtos_MESGeneratorConfigDto,
+    }): CancelablePromise<SmartAbp_Application_Contracts_CodeGeneration_Dtos_CodeGenerationResultDto> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/app/code-generation/generate/mes-dashboard',
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
+                400: `Bad Request`,
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
+                501: `Not Implemented`,
+            },
+        });
+    }
+    /**
+     * @returns SmartAbp_Application_Contracts_CodeGeneration_Dtos_CodeGenerationResultDto OK
+     * @throws ApiError
+     */
+    public static postApiAppCodeGenerationGenerateUniapp({
+        requestBody,
+    }: {
+        requestBody?: SmartAbp_Application_Contracts_CodeGeneration_Dtos_UniAppGeneratorConfigDto,
+    }): CancelablePromise<SmartAbp_Application_Contracts_CodeGeneration_Dtos_CodeGenerationResultDto> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/app/code-generation/generate/uniapp',
+            body: requestBody,
+            mediaType: 'application/json',
             errors: {
                 400: `Bad Request`,
                 401: `Unauthorized`,

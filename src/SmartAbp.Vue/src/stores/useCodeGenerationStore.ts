@@ -23,7 +23,7 @@ export const useCodeGenerationStore = defineStore('codeGeneration', () => {
                 skipCount: 0,
                 maxResultCount: 100
             })
-            tasks.value = result.items
+            tasks.value = result.items as CodeGenerationTaskDto[]
         } finally {
             loading.value = false
         }

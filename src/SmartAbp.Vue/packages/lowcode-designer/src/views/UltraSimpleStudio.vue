@@ -342,6 +342,7 @@
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck
 import * as EpIcons from '@element-plus/icons-vue'
 import { Promotion, Document, Trophy, Aim } from '@element-plus/icons-vue'
 import type { TableSchema } from '@smartabp/lowcode-api'

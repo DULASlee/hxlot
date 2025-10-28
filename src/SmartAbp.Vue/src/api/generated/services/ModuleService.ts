@@ -4,14 +4,12 @@
 /* eslint-disable */
 import type { SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateModuleDto } from '../models/SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateModuleDto';
 import type { SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto } from '../models/SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto';
-import type { SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto_SmartAbp_Application_Contracts_Version_1_0_0_0_Culture_neutral_PublicKeyToken_null_ } from '../models/SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto_SmartAbp_Application_Contracts_Version_1_0_0_0_Culture_neutral_PublicKeyToken_null_';
 import type { Volo_Abp_Application_Dtos_PagedResultDto_1 } from '../models/Volo_Abp_Application_Dtos_PagedResultDto_1';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class ModuleService {
     /**
-     * @returns Volo_Abp_Application_Dtos_PagedResultDto_1<SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto_SmartAbp_Application_Contracts_Version_1_0_0_0_Culture_neutral_PublicKeyToken_null_> OK
      * @throws ApiError
      */
     public static getApiLowcodeModules({

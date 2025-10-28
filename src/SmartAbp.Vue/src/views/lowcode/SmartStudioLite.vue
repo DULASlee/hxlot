@@ -385,7 +385,7 @@ function addCommonFields() {
       displayName: '状态',
       type: 'int',
       isRequired: true,
-      defaultValue: 0,
+      defaultValue: '0',
       uiControl: 'select',
       order: 3,
       comment: '状态（0:草稿 1:启用 2:停用）'

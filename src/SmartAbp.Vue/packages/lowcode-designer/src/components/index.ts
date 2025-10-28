@@ -77,14 +77,14 @@
 // ✅ 已实现的核心组件
 export { default as LdBusinessRulesEngine } from './BusinessRulesEngine.vue'
 // export { default as LdCodeGenerationWizard } from './CodeGenerationWizard.vue'
-export { default as LdCodePreviewPanel } from './CodePreviewPanel.vue'
+// export { default as LdCodePreviewPanel } from './CodePreviewPanel.vue' // ⚠️ 旧版本已弃用，使用v2.0版本（./CodePreview/CodePreviewPanel.vue）
 export { default as LdComponentPropertyPanel } from './ComponentPropertyPanel.vue'
 export { default as LdEntityDesigner } from './EntityDesigner.vue'
 export { default as LdTemplateManager } from './TemplateManager.vue'
 export { default as LdVisualComponentPalette } from './VisualComponentPalette.vue'
 export { default as LdVisualDesignCanvas } from './VisualDesignCanvas.vue'
 
-// ✅ Code Preview Components v2.0
+// ✅ Code Preview Components v2.0（推荐使用）
 export { CodeDiffViewer, CodePreviewPanel } from './CodePreview'
 
 // ✅ Template Management Components v1.0 (Phase 3 - Task 3.1)

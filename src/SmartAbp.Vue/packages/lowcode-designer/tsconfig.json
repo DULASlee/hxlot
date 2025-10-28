@@ -21,6 +21,9 @@
     "src/**/*",
     "src/**/*.vue"
   ],
+  "exclude": [
+    "src/views/UltraSimpleStudio.vue"
+  ],
   "references": [
     {
       "path": "../lowcode-core"

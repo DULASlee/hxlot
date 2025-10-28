@@ -1,11 +1,21 @@
+import type { Volo_Abp_Application_Dtos_PagedResultDto_1 } from '@/api/generated'
 import type {
     CodeGenerationResultDto,
     CodeGenerationTaskDto,
     MESGeneratorConfigDto,
     UniAppGeneratorConfigDto
 } from '@/types/code-generation.types'
-import type { PagedAndSortedResultRequestDto, PagedResultDto } from '@/types/common.types'
 import http from '@/utils/http'
+
+// 定义通用分页请求参数类型
+export interface PagedAndSortedResultRequestDto {
+    skipCount?: number
+    maxResultCount?: number
+    sorting?: string
+}
+
+// 类型别名
+export type PagedResultDto<T> = Volo_Abp_Application_Dtos_PagedResultDto_1
 
 /**
  * 代码生成API

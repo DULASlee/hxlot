@@ -3,9 +3,6 @@
 /* 导入主题基础 - 包含所有四个主题定义 */
 @import "./theme-base.css";
 
-/* 导入主题别名映射 - 解决颜色割裂问题 */
-@import "./theme-aliases.css";
-
 /* 默认使用浅色主题 */
 :root {
   color-scheme: light;

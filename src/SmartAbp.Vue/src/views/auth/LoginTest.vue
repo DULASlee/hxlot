@@ -126,7 +126,7 @@
 </template>
 
 <script setup lang="ts">
-import { SmartCard } from "@/components/design-system"
+import SmartCard from "@/components/design-system/SmartCard.vue"
 import { useAuthStore } from "@/stores"
 import { api } from "@/utils/api"
 import dayjs from "dayjs"

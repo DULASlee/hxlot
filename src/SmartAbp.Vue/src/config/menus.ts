@@ -216,7 +216,6 @@ export const menuConfig: MenuConfig = {
             menuKey: "admin-performance",
           },
         },
-      ,
         {
           key: "smarttenant-management",
           title: "租户管理",
@@ -233,7 +232,7 @@ export const menuConfig: MenuConfig = {
             menuKey: "smarttenant-management",
           },
         }
-        ],
+      ],
     },
 
     // 测试功能模块 (开发环境)

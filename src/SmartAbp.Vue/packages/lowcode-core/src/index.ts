@@ -32,8 +32,8 @@ export * from './runtime/index.js'
 // Stores re-exports for designer consumption (Layer 2 -> 1)
 export { useEnhancedStateMachineStore } from './stores/enhancedStateMachine.js'
 export { useEnhancedThemeStore } from './stores/enhancedTheme.js'
-export { useEntityModelingStore } from './stores/entityModeling.js'
-export type { EntityDefinition, EntityField, EntityRelation } from './stores/entityModeling.js'
+export { injectEntityModelingApi, useEntityModelingStore } from './stores/entityModeling.js'
+export type { EntityDefinition, EntityField, EntityModelingApiBridge, EntityRelation } from './stores/entityModeling.js'
 export { usePageDesignStore } from './stores/pageDesign.js'
 // Types for business-rule (expose for designer nodes to avoid /src path)
 export { isRuleEndNodeData } from './types/business-rule.js'

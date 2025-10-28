@@ -1,21 +1,32 @@
 ﻿// 🔥 自动生成的菜单配置 - Vue3路由集成
 // 支持权限控制和国际化
 
-import type { MenuConfig } from '@/types/menu'
+import type { FolderMenuItem } from '@/types/menu'
 
-export const smarttenantMenuConfig: MenuConfig = {
-  name: 'SmartTenant',
-  displayName: '租户管理',
+export const smarttenantMenuConfig: FolderMenuItem = {
+  key: 'SmartTenant',
+  title: '租户管理',
   icon: 'el-icon-s-data',
+  type: 'folder',
   order: 100,
+  visible: true,
+  requiredRoles: [],
   children: [
     {
-      name: 'SmartTenantManagement',
-      displayName: '租户管理管理',
+      key: 'SmartTenantManagement',
+      title: '租户管理管理',
+      type: 'page',
       path: '/smarttenant/smarttenant',
       component: 'SmartTenantManagement',
-      permission: 'SmartAbp.SmartTenant.Default',
-      icon: 'el-icon-menu'
+      icon: 'el-icon-menu',
+      order: 1,
+      visible: true,
+      requiredRoles: [],
+      closable: true,
+      meta: {
+        title: '租户管理管理',
+        menuKey: 'SmartTenantManagement'
+      }
     },
   ]
 }

@@ -1,9 +1,8 @@
 
-import './plugins/dayjs'
-import './styles/main-theme.css' // 设计令牌系统（必须最先导入）
-import './styles/design-system/index.css' // 统一设计系统
-import './styles/enterprise-icons.css' // 企业级图标系统样式
-import './styles/main.css' // 基础样式和工具类
+import './plugins/dayjs';
+import './styles/design-system/index.css'; // 统一设计系统（包含令牌、主题、组件）
+import './styles/enterprise-icons.css'; // 企业级图标系统样式
+import './styles/main.css'; // 基础样式和工具类
 
 /**
  * 全局Promise rejection处理器
@@ -282,7 +281,7 @@ async function bootstrap() {
 
   // 🔥 初始化实体建模API桥接 - 修复花瓶式实现
   const { initializeEntityModelingApiBridge } = await import("./core/api/entity-modeling-bridge")
-  initializeEntityModelingApiBridge()
+  await initializeEntityModelingApiBridge()
   logger.info("[EntityModeling] API桥接已初始化，Store现在使用真实API")
 
   // 🎨 初始化图标风格 - 从localStorage恢复图标风格偏好

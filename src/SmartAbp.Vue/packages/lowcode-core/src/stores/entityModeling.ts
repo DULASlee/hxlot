@@ -3,7 +3,7 @@ import { defineStore } from "pinia"
 import { ref } from "vue"
 
 // 🔥 v10.0修复：通过桥接层导入API，避免循环依赖
-type EntityModelingApiBridge = {
+export type EntityModelingApiBridge = {
   createEntity: (...args: any[]) => Promise<any>
   deleteEntity: (...args: any[]) => Promise<any>
   updateEntity: (...args: any[]) => Promise<any>

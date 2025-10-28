@@ -36,12 +36,12 @@ export function usePermission() {
         }
 
         // 管理员拥有所有权限
-        if (authStore.user?.roles?.includes('admin')) {
+        if (authStore.userInfo?.roles?.includes('admin')) {
             return true
         }
 
         // 检查用户权限
-        return authStore.user?.permissions?.includes(permission) ?? false
+        return authStore.userInfo?.permissions?.includes(permission) ?? false
     }
 
     /**
@@ -52,7 +52,7 @@ export function usePermission() {
             return false
         }
 
-        return authStore.user?.roles?.includes(role) ?? false
+        return authStore.userInfo?.roles?.includes(role) ?? false
     }
 
     /**
@@ -134,7 +134,7 @@ export function usePermission() {
      * 是否是管理员
      */
     const isAdmin = computed(() => {
-        return authStore.user?.roles?.includes('admin') ?? false
+        return authStore.userInfo?.roles?.includes('admin') ?? false
     })
 
     /**
