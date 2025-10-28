@@ -2,8 +2,9 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src",
-    "types": ["vite/client"]
+    "rootDir": "src"
+    // ⚠️ 移除types限制，让TypeScript自动扫描Vue等类型
+    // "types": ["vite/client"]
   },
   "include": ["src/**/*"],
   "exclude": ["dist", "node_modules", "**/*.spec.ts", "**/*.test.ts"],

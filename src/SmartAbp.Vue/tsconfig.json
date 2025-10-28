@@ -11,7 +11,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "types": ["./types/components.d.ts"],
+    // ⚠️ 移除types限制，让TypeScript自动扫描node_modules/@types
+    // "types": ["./types/components.d.ts"],
     "strict": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -82,7 +83,8 @@
     "*.config.ts",
     "*.config.js",
     "src/tools/**",
-    "src/views/library/**",
-    "packages/**"
+    "src/views/library/**"
+    // ⚠️ 移除packages/**排除，使用tsconfig.references.json管理
+    // "packages/**"
   ]
 }
