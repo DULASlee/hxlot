@@ -2,6 +2,7 @@
   "name": "@smartabp/lowcode-core",
   "version": "1.0.0",
   "description": "SmartAbp LowCode Core Engine - State Management and Core Logic",
+  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -38,21 +39,23 @@
   "author": "SmartAbp Team",
   "license": "MIT",
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "vite build",
+    "dev": "vite build --watch",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "vue": "^3.3.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vue": "^3.3.0"
   },
   "peerDependencies": {
-    "@smartabp/lowcode-shared": "workspace:*",
-    "@smartabp/lowcode-api": "workspace:*"
+    "@smartabp/lowcode-api": "workspace:*",
+    "@smartabp/lowcode-shared": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "tsup": "^8.0.0"
+    "@vitejs/plugin-vue": "^6.0.1",
+    "tsup": "^8.0.0",
+    "vite": "7.1.12"
   }
 }
