@@ -343,7 +343,7 @@ const deleteProject = (project: Project) => {
   background: var(--theme-bg-component);
   border: 1px solid var(--theme-border-base);
   border-radius: 8px;
-  padding: 24px;
+  padding: var(--spacing-6);
 }
 
 .toolbar {
@@ -360,7 +360,7 @@ const deleteProject = (project: Project) => {
 
 .filter-select,
 .search-input {
-  padding: 8px 12px;
+  padding: var(--spacing-2) 12px;
   border: 1px solid var(--theme-border-base);
   border-radius: 6px;
   background: var(--theme-bg-component);
@@ -375,7 +375,7 @@ const deleteProject = (project: Project) => {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
+  padding: var(--spacing-2) 16px;
   background: var(--color-primary);
   color: white;
   border: none;
@@ -404,7 +404,7 @@ const deleteProject = (project: Project) => {
   background: var(--color-bg-secondary);
   border: 1px solid var(--theme-border-base);
   border-radius: 8px;
-  padding: 20px;
+  padding: var(--spacing-5);
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -429,7 +429,7 @@ const deleteProject = (project: Project) => {
 }
 
 .status-badge {
-  padding: 4px 8px;
+  padding: var(--spacing-1) 8px;
   border-radius: 4px;
   font-size: 12px;
   font-weight: 500;
@@ -578,7 +578,7 @@ const deleteProject = (project: Project) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px;
+  padding: var(--spacing-5);
   border-bottom: 1px solid var(--theme-border-base);
 }
 
@@ -607,7 +607,7 @@ const deleteProject = (project: Project) => {
 }
 
 .modal-body {
-  padding: 20px;
+  padding: var(--spacing-5);
 }
 
 .form-group {
@@ -626,7 +626,7 @@ const deleteProject = (project: Project) => {
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 8px 12px;
+  padding: var(--spacing-2) 12px;
   border: 1px solid var(--theme-border-base);
   border-radius: 6px;
   background: var(--theme-bg-component);
@@ -638,12 +638,12 @@ const deleteProject = (project: Project) => {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  padding: 20px;
+  padding: var(--spacing-5);
   border-top: 1px solid var(--theme-border-base);
 }
 
 .btn-secondary {
-  padding: 8px 16px;
+  padding: var(--spacing-2) 16px;
   border: 1px solid var(--theme-border-base);
   border-radius: 6px;
   background: var(--theme-bg-component);

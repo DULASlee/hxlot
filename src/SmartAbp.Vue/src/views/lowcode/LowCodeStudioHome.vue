@@ -526,7 +526,7 @@ const deleteProject = async (project: GenerationHistoryDto) => {
 
 <style scoped lang="scss">
 .lowcode-studio-home {
-  padding: 24px;
+  padding: var(--spacing-6);
   background: var(--el-bg-color-page);
   min-height: 100%;
 }
@@ -543,7 +543,7 @@ const deleteProject = async (project: GenerationHistoryDto) => {
   font-size: 32px;
   font-weight: 600;
   color: var(--el-text-color-primary);
-  margin: 16px 0 8px;
+  margin: var(--spacing-4) 0 8px;
 }
 
 .welcome-desc {
@@ -571,7 +571,7 @@ const deleteProject = async (project: GenerationHistoryDto) => {
 
 .stat-card {
   background: white;
-  padding: 20px;
+  padding: var(--spacing-5);
   border-radius: 8px;
   text-align: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -616,7 +616,7 @@ const deleteProject = async (project: GenerationHistoryDto) => {
 .section-title p {
   font-size: 14px;
   color: var(--el-text-color-regular);
-  margin: 4px 0 0;
+  margin: var(--spacing-1) 0 0;
 }
 
 .nav-cards {
@@ -628,7 +628,7 @@ const deleteProject = async (project: GenerationHistoryDto) => {
 .nav-card {
   display: flex;
   align-items: center;
-  padding: 20px;
+  padding: var(--spacing-5);
   background: var(--el-bg-color);
   border: 1px solid var(--el-border-color);
   border-radius: 8px;
@@ -683,7 +683,7 @@ const deleteProject = async (project: GenerationHistoryDto) => {
   background: var(--el-bg-color);
   border: 1px solid var(--el-border-color);
   border-radius: 8px;
-  padding: 24px;
+  padding: var(--spacing-6);
 }
 
 .recent-projects {
@@ -700,7 +700,7 @@ const deleteProject = async (project: GenerationHistoryDto) => {
   background: var(--el-bg-color);
   border: 1px solid var(--el-border-color);
   border-radius: 8px;
-  padding: 16px;
+  padding: var(--spacing-4);
   transition: all 0.3s ease;
 
   &:hover {

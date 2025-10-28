@@ -180,7 +180,7 @@
 
           <el-skeleton v-if="generatingPreview" :rows="5" animated />
           <div v-else>
-            <el-tag v-for="(file, index) in previewFiles" :key="index" type="success" size="small" style="margin: 4px">
+            <el-tag v-for="(file, index) in previewFiles" :key="index" type="success" size="small" style="margin: var(--spacing-1)">
               {{ file }}
             </el-tag>
           </div>
@@ -504,13 +504,13 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .smart-studio-lite {
-  padding: 24px;
+  padding: var(--spacing-6);
   background-color: #f5f7fa;
   min-height: calc(100vh - 60px);
 
   .studio-header {
     background-color: #fff;
-    padding: 16px 24px;
+    padding: var(--spacing-4) 24px;
     border-radius: 4px;
     margin-bottom: 24px;
 
@@ -523,7 +523,7 @@ onMounted(() => {
 
   .studio-steps {
     background-color: #fff;
-    padding: 32px 24px;
+    padding: var(--spacing-8) 24px;
     border-radius: 4px;
     margin-bottom: 24px;
   }
@@ -554,7 +554,7 @@ onMounted(() => {
 
   .studio-footer {
     background-color: #fff;
-    padding: 16px 24px;
+    padding: var(--spacing-4) 24px;
     border-radius: 4px;
     text-align: center;
 

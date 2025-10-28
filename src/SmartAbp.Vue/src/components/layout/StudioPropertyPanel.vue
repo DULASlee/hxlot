@@ -32,6 +32,6 @@ const closePanel = () => {
 
 <style scoped>
 .property-panel-content {
-  padding: 20px;
+  padding: var(--spacing-5);
 }
 </style>

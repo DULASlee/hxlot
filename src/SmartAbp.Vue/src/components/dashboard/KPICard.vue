@@ -126,7 +126,7 @@ const trendClass = computed(() => {
   &__header {
     display: flex;
     align-items: center;
-    padding: 16px;
+    padding: var(--spacing-4);
     border-radius: 8px 8px 0 0;
     color: white;
     margin: -20px -20px 16px -20px;
@@ -153,7 +153,7 @@ const trendClass = computed(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 0;
+    padding: var(--spacing-2) 0;
   }
 
   &__value {
@@ -179,7 +179,7 @@ const trendClass = computed(() => {
     align-items: center;
     font-size: 14px;
     font-weight: 600;
-    padding: 4px 12px;
+    padding: var(--spacing-1) 12px;
     border-radius: 20px;
 
     .trend-icon {

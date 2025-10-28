@@ -116,7 +116,7 @@ const handleClick = (event: MouseEvent) => {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 8px 16px;
+  padding: var(--spacing-2) 16px;
   font-size: 14px;
   font-weight: 500;
   line-height: 1.5;
@@ -193,7 +193,7 @@ const handleClick = (event: MouseEvent) => {
   color: #409eff;
   background-color: transparent;
   border-color: transparent;
-  padding: 4px 8px;
+  padding: var(--spacing-1) 8px;
 }
 
 .base-button--text:hover:not(.is-disabled) {
@@ -203,7 +203,7 @@ const handleClick = (event: MouseEvent) => {
 
 /* 尺寸样式 */
 .base-button--large {
-  padding: 12px 20px;
+  padding: var(--spacing-3) 20px;
   font-size: 16px;
 }
 
@@ -228,7 +228,7 @@ const handleClick = (event: MouseEvent) => {
 
 .base-button.is-circle {
   border-radius: 50%;
-  padding: 8px;
+  padding: var(--spacing-2);
 }
 
 .base-button__loading {

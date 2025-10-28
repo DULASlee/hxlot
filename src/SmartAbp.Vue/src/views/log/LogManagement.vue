@@ -419,7 +419,7 @@ onMounted(() => {
 
 <style scoped>
 .log-management {
-  padding: 24px;
+  padding: var(--spacing-6);
   background: #f5f5f5;
   min-height: 100vh;
 }
@@ -430,7 +430,7 @@ onMounted(() => {
   align-items: flex-start;
   margin-bottom: 32px;
   background: white;
-  padding: 24px;
+  padding: var(--spacing-6);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 }
@@ -506,7 +506,7 @@ onMounted(() => {
 .feature-card {
   background: white;
   border-radius: 12px;
-  padding: 24px;
+  padding: var(--spacing-6);
   cursor: pointer;
   transition: all 0.3s;
   box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
@@ -587,7 +587,7 @@ onMounted(() => {
 .overview-section {
   background: white;
   border-radius: 12px;
-  padding: 24px;
+  padding: var(--spacing-6);
   box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 }
 
@@ -619,7 +619,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px;
+  padding: var(--spacing-3);
   background: #f8f9fa;
   border-radius: 8px;
 }
@@ -670,7 +670,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 24px;
+  padding: var(--spacing-5) 24px;
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -700,7 +700,7 @@ onMounted(() => {
 }
 
 .modal-body {
-  padding: 24px;
+  padding: var(--spacing-6);
   overflow-y: auto;
   flex: 1;
 }

@@ -314,7 +314,7 @@ const getPhaseWidth = (duration: number) => {
     .timing-item {
       display: flex;
       gap: 12px;
-      padding: 16px;
+      padding: var(--spacing-4);
       background: #F5F7FA;
       border-radius: 8px;
       margin-bottom: 16px;

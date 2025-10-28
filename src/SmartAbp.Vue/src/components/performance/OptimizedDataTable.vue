@@ -490,7 +490,7 @@ onBeforeUnmount(() => {
 .performance-panel {
   background: #f5f7fa;
   border-bottom: 1px solid #ebeef5;
-  padding: 12px 16px;
+  padding: var(--spacing-3) 16px;
 }
 
 .performance-metrics {
@@ -536,7 +536,7 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: var(--spacing-3) 16px;
   border-bottom: 1px solid #ebeef5;
 }
 
@@ -563,7 +563,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   height: 100%;
-  padding: 0 16px;
+  padding: 0 var(--spacing-4);
   transition: background-color 0.3s;
 }
 
@@ -576,7 +576,7 @@ onBeforeUnmount(() => {
 }
 
 .table-cell {
-  padding: 8px 12px;
+  padding: var(--spacing-2) 12px;
   border-right: 1px solid #ebeef5;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -615,7 +615,7 @@ onBeforeUnmount(() => {
 }
 
 .infinite-scroll-trigger {
-  padding: 16px;
+  padding: var(--spacing-4);
   text-align: center;
 }
 

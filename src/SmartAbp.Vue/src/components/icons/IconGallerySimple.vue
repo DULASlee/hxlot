@@ -364,7 +364,7 @@ onMounted(() => {
 
 <style scoped>
 .enterprise-icon-gallery {
-  padding: 20px;
+  padding: var(--spacing-5);
 }
 
 .gallery-header {

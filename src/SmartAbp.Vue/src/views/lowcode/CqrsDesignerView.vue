@@ -805,7 +805,7 @@ onMounted(() => {
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: var(--spacing-5);
   background: #f5f7fa;
 }
 
@@ -887,7 +887,7 @@ onMounted(() => {
 }
 
 .result-files {
-  margin: 20px 0;
+  margin: var(--spacing-5) 0;
 
   h4 {
     margin-bottom: 10px;
@@ -895,7 +895,7 @@ onMounted(() => {
 }
 
 .code-preview {
-  margin: 20px 0;
+  margin: var(--spacing-5) 0;
   padding: 15px;
   background: #f5f7fa;
   border-radius: 4px;

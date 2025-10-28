@@ -207,7 +207,7 @@ onMounted(() => {
 
 <style scoped>
 .user-management-view {
-  padding: 20px;
+  padding: var(--spacing-5);
 }
 
 .custom-tree-node {

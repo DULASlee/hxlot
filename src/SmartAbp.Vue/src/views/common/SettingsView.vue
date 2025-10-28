@@ -370,7 +370,7 @@ const resetSettings = () => {
   background: var(--theme-bg-component);
   border: 1px solid var(--theme-border-base);
   border-radius: 8px;
-  padding: 24px;
+  padding: var(--spacing-6);
 }
 
 .settings-section h2 {
@@ -394,7 +394,7 @@ const resetSettings = () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 0;
+  padding: var(--spacing-4) 0;
   border-bottom: 1px solid var(--color-border-secondary);
 }
 
@@ -422,7 +422,7 @@ const resetSettings = () => {
 
 .setting-input,
 .setting-select {
-  padding: 8px 12px;
+  padding: var(--spacing-2) 12px;
   border: 1px solid var(--theme-border-base);
   border-radius: 6px;
   background: var(--theme-bg-component);
@@ -440,7 +440,7 @@ const resetSettings = () => {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  padding: 12px;
+  padding: var(--spacing-3);
   border: 2px solid var(--theme-border-base);
   border-radius: 8px;
   background: var(--color-bg-secondary);
@@ -475,7 +475,7 @@ const resetSettings = () => {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
+  padding: var(--spacing-2) 16px;
   background: var(--color-primary);
   color: white;
   border: none;
@@ -541,7 +541,7 @@ input:checked + .slider::before {
   display: flex;
   gap: 16px;
   justify-content: center;
-  padding: 24px;
+  padding: var(--spacing-6);
   background: var(--theme-bg-component);
   border: 1px solid var(--theme-border-base);
   border-radius: 8px;
@@ -549,7 +549,7 @@ input:checked + .slider::before {
 
 .btn-primary,
 .btn-secondary {
-  padding: 12px 24px;
+  padding: var(--spacing-3) 24px;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;

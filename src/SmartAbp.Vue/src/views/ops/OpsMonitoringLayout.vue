@@ -15,7 +15,7 @@
 .ops-monitoring-layout {
   width: 100%;
   height: 100%;
-  padding: 20px;
+  padding: var(--spacing-5);
   background-color: var(--el-bg-color-page);
 }
 </style>

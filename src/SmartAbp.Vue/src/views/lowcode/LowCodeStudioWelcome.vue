@@ -215,7 +215,7 @@ onMounted(() => {
 /* 响应式设计 */
 @media (max-width: 768px) {
   .lowcode-studio-welcome {
-    padding: 20px 16px;
+    padding: var(--spacing-5) 16px;
 
     .welcome-header h1 {
       font-size: 28px;

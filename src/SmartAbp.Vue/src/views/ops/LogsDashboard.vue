@@ -641,7 +641,7 @@ onUnmounted(() => {
 }
 
 .stats-cards {
-  margin: 20px 0;
+  margin: var(--spacing-5) 0;
 }
 
 .stat-item {
@@ -667,7 +667,7 @@ onUnmounted(() => {
 }
 
 .charts-row {
-  margin: 20px 0;
+  margin: var(--spacing-5) 0;
 }
 
 .chart-container {

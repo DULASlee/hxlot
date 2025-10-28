@@ -315,7 +315,7 @@ const getStatusText = (status: string) => {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 24px;
+  padding: var(--spacing-6);
   background: var(--theme-bg-component);
   border: 1px solid var(--theme-border-base);
   border-radius: 8px;
@@ -366,7 +366,7 @@ const getStatusText = (status: string) => {
   background: var(--theme-bg-component);
   border: 1px solid var(--theme-border-base);
   border-radius: 8px;
-  padding: 24px;
+  padding: var(--spacing-6);
 }
 
 .chart-card h3 {
@@ -468,7 +468,7 @@ const getStatusText = (status: string) => {
   background: var(--theme-bg-component);
   border: 1px solid var(--theme-border-base);
   border-radius: 8px;
-  padding: 24px;
+  padding: var(--spacing-6);
 }
 
 .projects-table-section h3 {
@@ -489,7 +489,7 @@ const getStatusText = (status: string) => {
 
 .projects-table th,
 .projects-table td {
-  padding: 12px;
+  padding: var(--spacing-3);
   text-align: left;
   border-bottom: 1px solid var(--theme-border-base);
 }
@@ -516,7 +516,7 @@ const getStatusText = (status: string) => {
 }
 
 .status-badge {
-  padding: 4px 8px;
+  padding: var(--spacing-1) 8px;
   border-radius: 4px;
   font-size: 12px;
   font-weight: 500;
@@ -574,7 +574,7 @@ const getStatusText = (status: string) => {
 
   .projects-table th,
   .projects-table td {
-    padding: 8px;
+    padding: var(--spacing-2);
   }
 }
 </style>

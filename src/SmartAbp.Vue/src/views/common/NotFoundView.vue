@@ -84,7 +84,7 @@ p {
 
 .btn-primary,
 .btn-secondary {
-  padding: 12px 24px;
+  padding: var(--spacing-3) 24px;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;

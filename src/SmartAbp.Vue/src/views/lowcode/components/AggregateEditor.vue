@@ -358,6 +358,6 @@ const removeProperty = (index: number) => {
 
 <style scoped lang="scss">
 .aggregate-editor {
-  padding: 12px;
+  padding: var(--spacing-3);
 }
 </style>

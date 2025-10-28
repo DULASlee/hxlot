@@ -134,7 +134,7 @@ const cardClasses = computed(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: var(--spacing-4) 20px;
   border-bottom: 1px solid #e4e7ed;
 }
 
@@ -156,7 +156,7 @@ const cardClasses = computed(() => {
 }
 
 .base-card__footer {
-  padding: 16px 20px;
+  padding: var(--spacing-4) 20px;
   border-top: 1px solid #e4e7ed;
   background-color: #fafafa;
 }

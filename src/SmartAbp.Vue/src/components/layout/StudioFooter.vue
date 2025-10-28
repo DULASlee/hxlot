@@ -23,7 +23,7 @@ const { errors } = storeToRefs(studioStore)
   justify-content: space-between;
   align-items: center;
   height: 30px;
-  padding: 0 20px;
+  padding: 0 var(--spacing-5);
   border-top: 1px solid var(--el-border-color);
   font-size: 12px;
   color: var(--el-text-color-secondary);

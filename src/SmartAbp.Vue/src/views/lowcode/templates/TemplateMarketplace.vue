@@ -109,7 +109,7 @@ const selectTemplate = (template: Template) => {
 
 <style scoped>
 .template-marketplace {
-  padding: 20px;
+  padding: var(--spacing-5);
 }
 .card-header {
   font-size: 1.2em;

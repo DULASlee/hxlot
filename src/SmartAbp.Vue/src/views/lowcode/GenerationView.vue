@@ -549,14 +549,14 @@ const generateCode = async () => {
 
       preview += `</div>`
       preview += `<style>
-        .generation-result { padding: 20px; }
+        .generation-result { padding: var(--spacing-5); }
         .generation-result h2 { color: #67C23A; margin-bottom: 20px; }
         .stats { background: #f0f9ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
         .stat-item { display: flex; justify-content: space-between; margin-bottom: 10px; }
         .stat-item .label { font-weight: 600; color: #606266; }
         .stat-item .value { color: #409EFF; }
         .file-list { max-height: 500px; overflow-y: auto; }
-        .file-item { background: #fff; border: 1px solid #DCDFE6; border-radius: 4px; padding: 12px; margin-bottom: 10px; }
+        .file-item { background: #fff; border: 1px solid #DCDFE6; border-radius: 4px; padding: var(--spacing-3); margin-bottom: 10px; }
         .file-path { font-weight: 600; color: #409EFF; margin-bottom: 8px; }
         .file-content { background: #f5f7fa; padding: 10px; border-radius: 4px; font-size: 12px; overflow-x: auto; }
       </style>`
@@ -624,7 +624,7 @@ const createDefaultProject = () => {
 
 <style scoped>
 .generation-view {
-  padding: 24px;
+  padding: var(--spacing-6);
   height: 100%;
 }
 

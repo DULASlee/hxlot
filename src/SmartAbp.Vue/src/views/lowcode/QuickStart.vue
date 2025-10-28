@@ -437,7 +437,7 @@ onMounted(() => {
 
 <style scoped>
 .lowcode-quick-start {
-  padding: 20px;
+  padding: var(--spacing-5);
 }
 
 .header-card {
@@ -465,7 +465,7 @@ onMounted(() => {
   max-height: 600px;
   overflow-y: auto;
   background: #f5f5f5;
-  padding: 16px;
+  padding: var(--spacing-4);
   border-radius: 4px;
 }
 
@@ -482,7 +482,7 @@ onMounted(() => {
 }
 
 .loading-container {
-  padding: 20px;
+  padding: var(--spacing-5);
 }
 
 .mt-4 {

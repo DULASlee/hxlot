@@ -380,7 +380,7 @@ onUnmounted(() => {
   background: var(--theme-bg-component);
   border: 1px solid var(--theme-border-base);
   border-radius: 8px;
-  padding: 24px;
+  padding: var(--spacing-6);
 }
 
 .test-section h2 {
@@ -402,7 +402,7 @@ onUnmounted(() => {
   background: var(--color-bg-secondary);
   border: 1px solid var(--theme-border-base);
   border-radius: 6px;
-  padding: 20px;
+  padding: var(--spacing-5);
 }
 
 .test-card h3 {
@@ -417,7 +417,7 @@ onUnmounted(() => {
 }
 
 .status-info p {
-  margin: 8px 0;
+  margin: var(--spacing-2) 0;
   font-size: 14px;
   color: var(--color-text-secondary);
 }
@@ -483,7 +483,7 @@ onUnmounted(() => {
 
 .test-input {
   width: 100%;
-  padding: 8px 12px;
+  padding: var(--spacing-2) 12px;
   border: 1px solid var(--theme-border-base);
   border-radius: 4px;
   background: var(--theme-bg-component);
@@ -493,7 +493,7 @@ onUnmounted(() => {
 
 .storage-result {
   margin-top: 12px;
-  padding: 8px 12px;
+  padding: var(--spacing-2) 12px;
   background: var(--color-bg-tertiary);
   border-radius: 4px;
   font-size: 14px;
@@ -501,7 +501,7 @@ onUnmounted(() => {
 }
 
 .responsive-test p {
-  margin: 8px 0;
+  margin: var(--spacing-2) 0;
   font-size: 14px;
   color: var(--color-text-secondary);
 }
@@ -511,7 +511,7 @@ onUnmounted(() => {
 }
 
 .responsive-test button {
-  padding: 8px 16px;
+  padding: var(--spacing-2) 16px;
   border: 1px solid var(--theme-border-base);
   border-radius: 4px;
   background: var(--theme-bg-component);
@@ -531,7 +531,7 @@ onUnmounted(() => {
   overflow-y: auto;
   border: 1px solid var(--theme-border-base);
   border-radius: 4px;
-  padding: 12px;
+  padding: var(--spacing-3);
   background: var(--color-bg-secondary);
   margin-bottom: 16px;
 }
@@ -573,7 +573,7 @@ onUnmounted(() => {
 }
 
 .clear-logs-btn {
-  padding: 8px 16px;
+  padding: var(--spacing-2) 16px;
   border: 1px solid var(--color-error-500);
   border-radius: 4px;
   background: transparent;

@@ -644,7 +644,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
+  padding: var(--spacing-2) 16px;
   height: 36px;
   background: transparent;
   border-right: 1px solid var(--el-border-color-lighter);
@@ -764,13 +764,13 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 0 8px;
+  padding: 0 var(--spacing-2);
   border-left: 1px solid var(--el-border-color-lighter);
 }
 
 /* 标签操作栏 */
 .tabs-actions {
-  padding: 0 16px;
+  padding: 0 var(--spacing-4);
   border-left: 1px solid var(--el-border-color-lighter);
 }
 
@@ -817,7 +817,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 12px;
+  padding: var(--spacing-2) 12px;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -889,7 +889,7 @@ onUnmounted(() => {
 @media (max-width: 768px) {
   .tab-item {
     min-width: 80px;
-    padding: 8px 12px;
+    padding: var(--spacing-2) 12px;
   }
   
   .tab-title {
@@ -898,7 +898,7 @@ onUnmounted(() => {
   
   .tabs-nav-controls,
   .tabs-actions {
-    padding: 0 4px;
+    padding: 0 var(--spacing-1);
   }
 }
 </style>

@@ -127,7 +127,7 @@ const navigateTo = (path: string) => {
 
 <style scoped>
 .lowcode-studio-content {
-  padding: 24px;
+  padding: var(--spacing-6);
   background: var(--el-bg-color-page);
   min-height: calc(100vh - 120px);
 }
@@ -144,7 +144,7 @@ const navigateTo = (path: string) => {
   font-size: 32px;
   font-weight: 600;
   color: var(--el-text-color-primary);
-  margin: 16px 0 8px;
+  margin: var(--spacing-4) 0 8px;
 }
 
 .welcome-desc {
@@ -178,7 +178,7 @@ const navigateTo = (path: string) => {
 .section-title p {
   font-size: 14px;
   color: var(--el-text-color-regular);
-  margin: 4px 0 0;
+  margin: var(--spacing-1) 0 0;
 }
 
 .nav-cards {
@@ -190,7 +190,7 @@ const navigateTo = (path: string) => {
 .nav-card {
   display: flex;
   align-items: center;
-  padding: 20px;
+  padding: var(--spacing-5);
   background: var(--el-bg-color);
   border: 1px solid var(--el-border-color);
   border-radius: 8px;
@@ -234,7 +234,7 @@ const navigateTo = (path: string) => {
   background: var(--el-bg-color);
   border: 1px solid var(--el-border-color);
   border-radius: 8px;
-  padding: 24px;
+  padding: var(--spacing-6);
 }
 
 .recent-projects {

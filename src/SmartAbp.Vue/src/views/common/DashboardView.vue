@@ -247,7 +247,7 @@ const exportReport = () => {
   margin-bottom: 32px;
   background: var(--theme-bg-component);
   border-radius: 12px;
-  padding: 24px;
+  padding: var(--spacing-6);
   box-shadow: var(--theme-shadow-sm);
 }
 
@@ -327,7 +327,7 @@ const exportReport = () => {
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 24px;
+  padding: var(--spacing-6);
   background: var(--theme-bg-component);
   border: 1px solid var(--theme-border-base);
   border-radius: 12px;
@@ -447,7 +447,7 @@ const exportReport = () => {
   background: var(--theme-bg-component);
   border: 1px solid var(--theme-border-base);
   border-radius: 12px;
-  padding: 24px;
+  padding: var(--spacing-6);
   box-shadow: var(--theme-shadow-sm);
 }
 
@@ -476,7 +476,7 @@ const exportReport = () => {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 20px;
+  padding: var(--spacing-5);
   background: var(--theme-bg-sunken);
   border: 1px solid var(--theme-border-base);
   border-radius: 10px;
@@ -524,7 +524,7 @@ const exportReport = () => {
   background: var(--theme-bg-component);
   border: 1px solid var(--theme-border-base);
   border-radius: 12px;
-  padding: 24px;
+  padding: var(--spacing-6);
   box-shadow: var(--theme-shadow-sm);
 }
 
@@ -553,7 +553,7 @@ const exportReport = () => {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 16px;
+  padding: var(--spacing-4);
   background: var(--theme-bg-sunken);
   border: 1px solid var(--theme-border-light);
   border-radius: 10px;
@@ -613,7 +613,7 @@ const exportReport = () => {
 .status-value {
   font-size: 14px;
   font-weight: 600;
-  padding: 4px 8px;
+  padding: var(--spacing-1) 8px;
   border-radius: 4px;
   flex-shrink: 0;
 }
@@ -658,15 +658,15 @@ const exportReport = () => {
   }
 
   .action-btn {
-    padding: 16px;
+    padding: var(--spacing-4);
   }
 
   .status-item {
-    padding: 12px;
+    padding: var(--spacing-3);
   }
 
   .stat-card {
-    padding: 20px;
+    padding: var(--spacing-5);
   }
 }
 </style>

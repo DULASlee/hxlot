@@ -121,7 +121,7 @@ import IconMdiAccount from '~icons/mdi/account'
 
 <style scoped>
 .icon-demo {
-  padding: 20px;
+  padding: var(--spacing-5);
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -147,7 +147,7 @@ import IconMdiAccount from '~icons/mdi/account'
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px;
+  padding: var(--spacing-4);
   border: 1px solid var(--el-border-color);
   border-radius: 8px;
   transition: all 0.3s ease;
@@ -174,7 +174,7 @@ import IconMdiAccount from '~icons/mdi/account'
 
 .usage-guide {
   background: var(--el-bg-color-page);
-  padding: 20px;
+  padding: var(--spacing-5);
   border-radius: 8px;
   margin-top: 40px;
 }
@@ -186,16 +186,16 @@ import IconMdiAccount from '~icons/mdi/account'
 
 .code-example h4 {
   color: var(--el-text-color-primary);
-  margin: 16px 0 8px 0;
+  margin: var(--spacing-4) 0 8px 0;
   font-size: 14px;
 }
 
 .code-example pre {
   background: var(--el-fill-color-darker);
-  padding: 12px;
+  padding: var(--spacing-3);
   border-radius: 4px;
   overflow-x: auto;
-  margin: 8px 0;
+  margin: var(--spacing-2) 0;
 }
 
 .code-example code {
@@ -205,12 +205,12 @@ import IconMdiAccount from '~icons/mdi/account'
 }
 
 .code-example ul {
-  margin: 8px 0;
+  margin: var(--spacing-2) 0;
   padding-left: 20px;
 }
 
 .code-example li {
-  margin: 4px 0;
+  margin: var(--spacing-1) 0;
   color: var(--el-text-color-regular);
 }
 </style>

@@ -705,7 +705,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   height: 64px;
-  padding: 0 24px;
+  padding: 0 var(--spacing-6);
   background: var(--theme-header-bg);
   border-bottom: 1px solid var(--theme-header-border);
   box-shadow: var(--theme-header-shadow);
@@ -747,7 +747,7 @@ onBeforeUnmount(() => {
 
 .nav-link {
   padding: 10px 16px;
-  margin: 0 4px;
+  margin: 0 var(--spacing-1);
   color: var(--theme-header-text);
   text-decoration: none;
   border-radius: 8px;
@@ -804,7 +804,7 @@ onBeforeUnmount(() => {
   top: 100%;
   right: 0;
   margin-top: 8px;
-  padding: 8px;
+  padding: var(--spacing-2);
   background-color: var(--theme-bg-component);
   border: 1px solid var(--theme-border-base);
   border-radius: 8px;
@@ -817,7 +817,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
+  padding: var(--spacing-2) 12px;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -835,7 +835,7 @@ onBeforeUnmount(() => {
 .theme-divider {
   height: 1px;
   background-color: var(--theme-border-base);
-  margin: 4px 0;
+  margin: var(--spacing-1) 0;
 }
 
 /* 图标按钮 */
@@ -882,7 +882,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 14px;
+  padding: var(--spacing-2) 14px;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -941,7 +941,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: flex-end;
   height: 56px;
-  padding: 0 20px;
+  padding: 0 var(--spacing-5);
   border-bottom: 1px solid var(--theme-sidebar-border);
   background: var(--theme-bg-component);
 }
@@ -968,12 +968,12 @@ onBeforeUnmount(() => {
 
 /* 侧边栏导航 */
 .sidebar-nav {
-  padding: 20px 12px;
+  padding: var(--spacing-5) 12px;
 }
 
 .menu-divider {
   height: 12px;
-  margin: 8px 4px;
+  margin: var(--spacing-2) 4px;
   border-bottom: 1px dashed var(--theme-border-light);
   opacity: 0.7;
 }
@@ -1127,7 +1127,7 @@ onBeforeUnmount(() => {
 /* 标签页导航 */
 /* 🧭 面包屑导航 - 2025企业系统标准 */
 .breadcrumb-nav {
-  padding: 12px 24px;
+  padding: var(--spacing-3) 24px;
   background: var(--theme-bg-component);
   border-bottom: 1px solid var(--theme-border-light);
 }
@@ -1171,7 +1171,7 @@ onBeforeUnmount(() => {
 .tabs-container {
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  padding: 0 var(--spacing-4);
   overflow-x: auto;
   justify-content: flex-start;
   gap: 0;
@@ -1204,7 +1204,7 @@ onBeforeUnmount(() => {
   white-space: nowrap;
   color: var(--theme-text-tertiary);
   background-color: transparent;
-  margin: 4px 2px 0 0;
+  margin: var(--spacing-1) 2px 0 0;
   flex-shrink: 0;
   font-weight: 500;
   position: relative;
@@ -1287,7 +1287,7 @@ onBeforeUnmount(() => {
 /* 页面内容 */
 .page-content {
   flex: 1;
-  padding: 32px;
+  padding: var(--spacing-8);
   overflow-y: auto;
   background: var(--theme-bg-base);
   border-radius: 16px 0 0;
@@ -1457,7 +1457,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px;
+  padding: var(--spacing-5);
   border-bottom: 1px solid var(--theme-border-base);
   background: var(--theme-header-bg);
   position: relative;
@@ -1486,7 +1486,7 @@ onBeforeUnmount(() => {
   border: none;
   color: var(--theme-text-tertiary);
   cursor: pointer;
-  padding: 8px;
+  padding: var(--spacing-2);
   border-radius: 8px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
@@ -1501,7 +1501,7 @@ onBeforeUnmount(() => {
 }
 
 .submenu-content {
-  padding: 16px 0;
+  padding: var(--spacing-4) 0;
   flex: 1;
   overflow-y: auto;
 }

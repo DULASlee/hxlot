@@ -255,7 +255,7 @@ const getProgressColor = (type: string, value: number | undefined) => {
   .metric-card {
     background: white;
     border-radius: 12px;
-    padding: 20px;
+    padding: var(--spacing-5);
     margin-bottom: 20px;
     transition: all 0.3s;
     border: 2px solid transparent;

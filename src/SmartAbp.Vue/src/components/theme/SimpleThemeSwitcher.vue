@@ -210,7 +210,7 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
+  padding: var(--spacing-2) 12px;
   background: transparent;
   border: 1px solid var(--theme-border-base, #e5e7eb);
   border-radius: 6px;

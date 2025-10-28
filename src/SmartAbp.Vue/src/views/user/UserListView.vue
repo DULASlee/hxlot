@@ -148,7 +148,7 @@ onMounted(() => {
 
 <style scoped>
 .user-list-view {
-  padding: 20px;
+  padding: var(--spacing-5);
 }
 
 .card-header {

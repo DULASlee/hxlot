@@ -809,7 +809,7 @@ onMounted(async () => {
 
 <style scoped>
 .permission-matrix {
-  padding: 20px;
+  padding: var(--spacing-5);
   background: var(--el-bg-color, #ffffff);
 }
 
@@ -846,7 +846,7 @@ onMounted(async () => {
 }
 
 .priority-item {
-  padding: 4px 8px;
+  padding: var(--spacing-1) 8px;
   border-radius: 4px;
   font-weight: 500;
 }
@@ -993,7 +993,7 @@ onMounted(async () => {
 
 .operation-preview {
   margin-top: 20px;
-  padding: 16px;
+  padding: var(--spacing-4);
   background: var(--el-fill-color-lighter, #fafcff);
   border-radius: 6px;
 }

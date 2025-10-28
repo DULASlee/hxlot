@@ -691,7 +691,7 @@ onUnmounted(() => {
 
 <style scoped>
 .log-dashboard {
-  padding: 20px;
+  padding: var(--spacing-5);
   background-color: #f5f7fa;
   min-height: 100vh;
 }
@@ -702,7 +702,7 @@ onUnmounted(() => {
   align-items: flex-start;
   margin-bottom: 20px;
   background: white;
-  padding: 20px;
+  padding: var(--spacing-5);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 }
@@ -833,7 +833,7 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px;
+  padding: var(--spacing-3);
   border-bottom: 1px solid #f0f0f0;
 }
 

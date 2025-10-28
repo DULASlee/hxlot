@@ -241,7 +241,7 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .performance-monitor-view {
-  padding: 24px;
+  padding: var(--spacing-6);
   background: #f5f7fa;
   min-height: calc(100vh - 120px);
 
@@ -289,7 +289,7 @@ onUnmounted(() => {
         display: flex;
         align-items: center;
         gap: 16px;
-        padding: 16px;
+        padding: var(--spacing-4);
         border-radius: 8px;
         margin-bottom: 24px;
 
@@ -339,7 +339,7 @@ onUnmounted(() => {
           display: flex;
           flex-direction: column;
           align-items: center;
-          padding: 16px;
+          padding: var(--spacing-4);
           background: #f5f7fa;
           border-radius: 8px;
           transition: all 0.3s;
@@ -375,7 +375,7 @@ onUnmounted(() => {
   .monitor-tabs {
     background: white;
     border-radius: 8px;
-    padding: 16px;
+    padding: var(--spacing-4);
     margin-bottom: 24px;
   }
 

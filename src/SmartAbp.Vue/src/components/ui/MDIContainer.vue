@@ -488,7 +488,7 @@ onUnmounted(() => {
   align-items: center;
   justify-content: space-between;
   height: 32px;
-  padding: 0 8px;
+  padding: 0 var(--spacing-2);
   background: var(--el-bg-color-light);
   border-bottom: 1px solid var(--el-border-color);
   cursor: move;
@@ -638,7 +638,7 @@ onUnmounted(() => {
   border-top: 1px solid var(--el-border-color);
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  padding: 0 var(--spacing-3);
   gap: 8px;
   overflow-x: auto;
 }

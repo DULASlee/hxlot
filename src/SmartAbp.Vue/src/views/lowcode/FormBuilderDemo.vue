@@ -576,7 +576,7 @@ const goToFullDesigner = () => {
 
 <style scoped>
 .form-builder-demo {
-    padding: 20px;
+    padding: var(--spacing-5);
 }
 
 .demo-header {
@@ -591,7 +591,7 @@ const goToFullDesigner = () => {
 }
 
 .demo-section {
-    padding: 20px;
+    padding: var(--spacing-5);
 }
 
 .demo-section h3 {
@@ -605,7 +605,7 @@ const goToFullDesigner = () => {
 }
 
 .demo-section ul li {
-    padding: 8px 0;
+    padding: var(--spacing-2) 0;
     border-bottom: 1px solid #f0f0f0;
 }
 
@@ -614,7 +614,7 @@ const goToFullDesigner = () => {
 }
 
 .code-block {
-    padding: 16px;
+    padding: var(--spacing-4);
     background: #f5f7fa;
     border-radius: 4px;
     overflow-x: auto;

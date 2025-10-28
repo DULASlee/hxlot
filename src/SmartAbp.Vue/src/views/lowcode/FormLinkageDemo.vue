@@ -655,7 +655,7 @@ const switchRule = LINKAGE_TEMPLATES.formTypeSwitch(
 
 <style scoped>
 .form-linkage-demo {
-  padding: 20px;
+  padding: var(--spacing-5);
 }
 
 .card-header {
@@ -670,7 +670,7 @@ const switchRule = LINKAGE_TEMPLATES.formTypeSwitch(
 }
 
 .demo-section {
-  padding: 20px;
+  padding: var(--spacing-5);
 }
 
 .demo-section h3 {

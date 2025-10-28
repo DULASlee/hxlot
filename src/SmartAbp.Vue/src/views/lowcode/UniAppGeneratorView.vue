@@ -379,7 +379,7 @@ const startGeneration = async () => {
 
 <style scoped lang="scss">
 .uniapp-generator-view {
-  padding: 20px;
+  padding: var(--spacing-5);
   background: var(--el-bg-color-page);
   min-height: 100vh;
 
@@ -391,7 +391,7 @@ const startGeneration = async () => {
 
 .generator-container {
   max-width: 1200px;
-  margin: 20px auto;
+  margin: var(--spacing-5) auto;
 }
 
 .intro-card {
@@ -426,7 +426,7 @@ const startGeneration = async () => {
         gap: 10px;
 
         li {
-          padding: 8px 12px;
+          padding: var(--spacing-2) 12px;
           background: var(--el-fill-color-light);
           border-radius: 4px;
           font-size: 14px;
@@ -517,7 +517,7 @@ const startGeneration = async () => {
     margin: 0 0 24px;
 
     li {
-      padding: 8px 0;
+      padding: var(--spacing-2) 0;
       font-size: 15px;
       color: var(--el-text-color-regular);
     }
@@ -531,11 +531,11 @@ const startGeneration = async () => {
     }
 
     ul {
-      margin: 8px 0;
+      margin: var(--spacing-2) 0;
       padding-left: 20px;
 
       li {
-        margin: 4px 0;
+        margin: var(--spacing-1) 0;
         font-size: 13px;
 
         code {
@@ -553,7 +553,7 @@ const startGeneration = async () => {
   display: flex;
   justify-content: center;
   gap: 16px;
-  padding: 20px 0;
+  padding: var(--spacing-5) 0;
 }
 </style>
 

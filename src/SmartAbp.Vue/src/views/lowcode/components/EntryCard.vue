@@ -91,7 +91,7 @@ const handleClick = () => {
     align-items: center;
     justify-content: space-between;
     height: 100%;
-    padding: 20px;
+    padding: var(--spacing-5);
   }
 
   .icon-wrapper {
@@ -113,7 +113,7 @@ const handleClick = () => {
     font-size: 18px;
     font-weight: 600;
     color: #303133;
-    margin: 12px 0 8px;
+    margin: var(--spacing-3) 0 8px;
     text-align: center;
     line-height: 1.4;
   }

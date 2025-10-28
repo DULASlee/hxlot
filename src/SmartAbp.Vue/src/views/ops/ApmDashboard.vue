@@ -511,7 +511,7 @@ onUnmounted(() => {
 }
 
 .metrics-cards {
-  margin: 20px 0;
+  margin: var(--spacing-5) 0;
 }
 
 .card-header {
@@ -546,7 +546,7 @@ onUnmounted(() => {
 }
 
 .charts-row {
-  margin: 20px 0;
+  margin: var(--spacing-5) 0;
 }
 
 .chart-container {

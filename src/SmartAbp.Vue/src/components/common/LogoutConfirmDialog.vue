@@ -132,7 +132,7 @@ const handleOverlayClick = () => {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 24px 24px 16px;
+  padding: var(--spacing-6) 24px 16px;
   border-bottom: 1px solid var(--theme-border-light);
 }
 
@@ -149,7 +149,7 @@ const handleOverlayClick = () => {
 }
 
 .dialog-content {
-  padding: 20px 24px;
+  padding: var(--spacing-5) 24px;
 }
 
 .dialog-message {
@@ -163,7 +163,7 @@ const handleOverlayClick = () => {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px;
+  padding: var(--spacing-4);
   background: var(--theme-bg-component);
   border-radius: 12px;
   border: 1px solid var(--theme-border-light);
@@ -196,7 +196,7 @@ const handleOverlayClick = () => {
 .dialog-actions {
   display: flex;
   gap: 12px;
-  padding: 16px 24px 24px;
+  padding: var(--spacing-4) 24px 24px;
   justify-content: flex-end;
 }
 
@@ -204,7 +204,7 @@ const handleOverlayClick = () => {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 20px;
+  padding: var(--spacing-3) 20px;
   border: none;
   border-radius: 8px;
   font-size: 14px;
@@ -273,7 +273,7 @@ const handleOverlayClick = () => {
 @media (max-width: 480px) {
   .logout-dialog {
     width: 95%;
-    margin: 20px;
+    margin: var(--spacing-5);
   }
 
   .dialog-actions {

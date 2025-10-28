@@ -270,7 +270,7 @@ const clearFilters = () => {
 
 <style scoped>
 .log-example {
-  padding: 20px;
+  padding: var(--spacing-5);
 }
 
 .example-card {
@@ -293,7 +293,7 @@ const clearFilters = () => {
 .example-section {
   border: 1px solid var(--el-border-color-lighter);
   border-radius: 6px;
-  padding: 16px;
+  padding: var(--spacing-4);
 }
 
 .example-section h4 {

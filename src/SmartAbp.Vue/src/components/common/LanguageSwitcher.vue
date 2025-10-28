@@ -229,12 +229,12 @@ export default defineComponent({
 .language-dropdown-item {
   display: flex;
   align-items: center;
-  padding: 12px 18px;
+  padding: var(--spacing-3) 18px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   border-radius: 8px;
-  margin: 4px 8px;
+  margin: var(--spacing-1) 8px;
   gap: 12px;
 }
 

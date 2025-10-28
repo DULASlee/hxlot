@@ -185,12 +185,42 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
     return data
   }
 
-  const generateMockRiskDistribution = (): RiskDistributionData[] => [
-    { risk: "Low", level: "Low", count: 150, percentage: 60, color: "#67C23A" },
-    { risk: "Medium", level: "Medium", count: 75, percentage: 30, color: "#E6A23C" },
-    { risk: "High", level: "High", count: 20, percentage: 8, color: "#F56C6C" },
-    { risk: "Critical", level: "Critical", count: 5, percentage: 2, color: "#909399" },
-  ]
+  const generateMockRiskDistribution = (): RiskDistributionData[] => {
+    // ✅ 使用SSOT设计令牌系统的颜色（从CSS变量获取）
+    const getComputedColor = (varName: string) => 
+      getComputedStyle(document.documentElement).getPropertyValue(varName).trim()
+
+    return [
+      { 
+        risk: "Low", 
+        level: "Low", 
+        count: 150, 
+        percentage: 60, 
+        color: getComputedColor('--theme-success') || '#10b981' 
+      },
+      { 
+        risk: "Medium", 
+        level: "Medium", 
+        count: 75, 
+        percentage: 30, 
+        color: getComputedColor('--theme-warning') || '#f59e0b' 
+      },
+      { 
+        risk: "High", 
+        level: "High", 
+        count: 20, 
+        percentage: 8, 
+        color: getComputedColor('--theme-danger') || '#ef4444' 
+      },
+      { 
+        risk: "Critical", 
+        level: "Critical", 
+        count: 5, 
+        percentage: 2, 
+        color: getComputedColor('--theme-text-tertiary') || '#64748b' 
+      },
+    ]
+  }
 
   const generateMockAbnormalBehaviors = (): AbnormalBehavior[] => [
     {

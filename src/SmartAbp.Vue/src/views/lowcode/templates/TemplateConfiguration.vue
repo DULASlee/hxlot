@@ -154,7 +154,7 @@ const resetForm = () => {
 
 <style scoped>
 .template-configuration {
-  padding: 20px;
+  padding: var(--spacing-5);
 }
 .card-header {
   display: flex;

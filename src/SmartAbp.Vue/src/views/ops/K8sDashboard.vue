@@ -568,7 +568,7 @@ onMounted(() => {
 }
 
 .cluster-summary {
-  margin: 20px 0;
+  margin: var(--spacing-5) 0;
 }
 
 .summary-item {
@@ -611,7 +611,7 @@ onMounted(() => {
 
 .logs-content {
   flex: 1;
-  padding: 16px;
+  padding: var(--spacing-4);
   margin: 0;
   overflow-y: auto;
   background-color: #1e1e1e;

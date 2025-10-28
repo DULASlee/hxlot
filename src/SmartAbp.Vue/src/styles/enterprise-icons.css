@@ -454,7 +454,7 @@
   right: -8px;
   min-width: 16px;
   height: 16px;
-  padding: 0 4px;
+  padding: 0 var(--spacing-1);
   border-radius: 8px;
   background-color: var(--enterprise-icon-color-danger);
   color: white;

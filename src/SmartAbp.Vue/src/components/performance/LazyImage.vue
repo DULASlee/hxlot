@@ -226,7 +226,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 16px;
+  padding: var(--spacing-4);
   text-align: center;
 }
 
@@ -260,7 +260,7 @@ onMounted(() => {
 
 .retry-button {
   margin-top: 8px;
-  padding: 4px 8px;
+  padding: var(--spacing-1) 8px;
   border: 1px solid #dcdfe6;
   border-radius: 4px;
   background: #fff;
@@ -280,7 +280,7 @@ onMounted(() => {
   .loading-indicator,
   .error-indicator,
   .placeholder {
-    padding: 8px;
+    padding: var(--spacing-2);
   }
 
   .loading-text,

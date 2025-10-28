@@ -194,7 +194,7 @@ const renderSimpleChart = () => {
   }
 
   .chart-container {
-    padding: 20px;
+    padding: var(--spacing-5);
     background: #F5F7FA;
     border-radius: 8px;
 

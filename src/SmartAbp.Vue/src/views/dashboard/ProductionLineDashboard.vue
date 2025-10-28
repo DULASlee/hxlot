@@ -423,7 +423,7 @@ onUnmounted(() => {
 <style scoped lang="scss">
 .dashboard-container {
   min-height: 100vh;
-  padding: 20px;
+  padding: var(--spacing-5);
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -435,7 +435,7 @@ onUnmounted(() => {
   justify-content: space-between;
   align-items: center;
   background: white;
-  padding: 20px 30px;
+  padding: var(--spacing-5) 30px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;

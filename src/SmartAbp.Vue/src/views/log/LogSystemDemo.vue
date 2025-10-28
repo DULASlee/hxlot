@@ -401,7 +401,7 @@ const generateBatchLogs = () => {
 
 <style scoped>
 .log-system-demo {
-  padding: 20px;
+  padding: var(--spacing-5);
   max-width: 1400px;
   margin: 0 auto;
 }

@@ -511,7 +511,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: var(--spacing-3) 16px;
   background: var(--el-bg-color-page);
   border-bottom: 1px solid var(--el-border-color);
   min-height: 60px;
@@ -538,7 +538,7 @@ onMounted(() => {
 .error-panel {
   height: 100%;
   overflow-y: auto;
-  padding: 16px;
+  padding: var(--spacing-4);
 }
 
 .stats-card {
@@ -566,7 +566,7 @@ onMounted(() => {
 }
 
 .error-item {
-  padding: 12px;
+  padding: var(--spacing-3);
   border: 1px solid var(--el-border-color-lighter);
   border-radius: 6px;
   margin-bottom: 12px;
@@ -601,7 +601,7 @@ onMounted(() => {
   font-size: 12px;
   line-height: 1.4;
   background: var(--el-bg-color-page);
-  padding: 8px;
+  padding: var(--spacing-2);
   border-radius: 4px;
   overflow: auto;
   max-height: 200px;
@@ -622,7 +622,7 @@ onMounted(() => {
 
   .performance-panel,
   .error-panel {
-    padding: 8px;
+    padding: var(--spacing-2);
   }
 }
 </style>

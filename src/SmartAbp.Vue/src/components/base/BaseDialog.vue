@@ -181,7 +181,7 @@ watch(() => props.modelValue, (visible) => {
   align-items: center;
   justify-content: center;
   z-index: 2000;
-  padding: 20px;
+  padding: var(--spacing-5);
 }
 
 .base-dialog {
@@ -200,7 +200,7 @@ watch(() => props.modelValue, (visible) => {
 
 .base-dialog__header {
   position: relative;
-  padding: 20px;
+  padding: var(--spacing-5);
   border-bottom: 1px solid #e4e7ed;
 }
 
@@ -236,12 +236,12 @@ watch(() => props.modelValue, (visible) => {
 
 .base-dialog__body {
   flex: 1;
-  padding: 20px;
+  padding: var(--spacing-5);
   overflow-y: auto;
 }
 
 .base-dialog__footer {
-  padding: 16px 20px;
+  padding: var(--spacing-4) 20px;
   border-top: 1px solid #e4e7ed;
   display: flex;
   align-items: center;

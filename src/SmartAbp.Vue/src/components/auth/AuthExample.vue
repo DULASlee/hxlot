@@ -177,7 +177,7 @@ const testApi = async () => {
 .auth-example {
   max-width: 600px;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--spacing-5);
   background: var(--theme-bg-base);
   color: var(--theme-text-primary);
 }
@@ -187,7 +187,7 @@ const testApi = async () => {
 .theme-section,
 .api-section {
   margin-bottom: 30px;
-  padding: 20px;
+  padding: var(--spacing-5);
   border: 1px solid var(--theme-border-base);
   border-radius: 8px;
   background: var(--theme-bg-component);
@@ -215,7 +215,7 @@ const testApi = async () => {
 
 .form-group input {
   width: 100%;
-  padding: 8px 12px;
+  padding: var(--spacing-2) 12px;
   border: 1px solid var(--theme-border-base);
   border-radius: 6px;
   background: var(--theme-bg-component);
@@ -238,7 +238,7 @@ const testApi = async () => {
 .logout-btn {
   background: var(--theme-brand-primary);
   color: var(--theme-text-inverse);
-  padding: 12px 24px;
+  padding: var(--spacing-3) 24px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -280,7 +280,7 @@ const testApi = async () => {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
+  padding: var(--spacing-2) 12px;
   border: 1px solid var(--theme-border-base);
   border-radius: 6px;
   background: var(--theme-bg-sunken);
@@ -300,7 +300,7 @@ const testApi = async () => {
 
 .api-result {
   margin-top: 15px;
-  padding: 16px;
+  padding: var(--spacing-4);
   background: var(--theme-bg-sunken);
   border: 1px solid var(--theme-border-base);
   border-radius: 6px;
@@ -312,13 +312,13 @@ const testApi = async () => {
 
 .user-info {
   background: var(--theme-bg-sunken);
-  padding: 16px;
+  padding: var(--spacing-4);
   border-radius: 6px;
   margin-bottom: 16px;
 }
 
 .user-info p {
-  margin: 8px 0;
+  margin: var(--spacing-2) 0;
   color: var(--theme-text-secondary);
 }
 
@@ -344,8 +344,8 @@ h3 {
 /* 响应式设计 */
 @media (width <= 768px) {
   .auth-example {
-    padding: 16px;
-    margin: 0 16px;
+    padding: var(--spacing-4);
+    margin: 0 var(--spacing-4);
   }
 
   .theme-controls {

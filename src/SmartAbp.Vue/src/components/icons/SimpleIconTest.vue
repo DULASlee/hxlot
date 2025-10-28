@@ -123,7 +123,7 @@ onMounted(() => {
 
 <style scoped>
 .simple-icon-test {
-  padding: 20px;
+  padding: var(--spacing-5);
   max-width: 800px;
   margin: 0 auto;
 }
@@ -154,7 +154,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px;
+  padding: var(--spacing-4);
   border: 1px solid var(--el-border-color);
   border-radius: 8px;
   min-width: 100px;

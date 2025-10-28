@@ -951,7 +951,7 @@ const useRecommendedTemplate = () => {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 0;
+  padding: var(--spacing-2) 0;
 
   .template-info {
     flex: 1;

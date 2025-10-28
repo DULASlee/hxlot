@@ -216,7 +216,7 @@ const handleResize = () => {
 
       .stat-card {
         text-align: center;
-        padding: 16px;
+        padding: var(--spacing-4);
         background: linear-gradient(135deg, #f5f7fa 0%, #e8edf3 100%);
         border-radius: 8px;
         transition: all 0.3s ease;

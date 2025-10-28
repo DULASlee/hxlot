@@ -226,7 +226,7 @@ const contactAdmin = () => {
     var(--theme-brand-primary) 0%,
     var(--theme-brand-primary-hover) 100%
   );
-  padding: 20px;
+  padding: var(--spacing-5);
   position: relative;
   overflow: hidden;
   transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -406,7 +406,7 @@ const contactAdmin = () => {
 
 // 错误代码
 .error-code-wrapper {
-  margin: 24px 0;
+  margin: var(--spacing-6) 0;
 }
 
 .error-code {
@@ -450,7 +450,7 @@ const contactAdmin = () => {
 .error-title {
   font-size: 28px;
   color: var(--theme-text-inverse);
-  margin: 16px 0;
+  margin: var(--spacing-4) 0;
   font-weight: 700;
   letter-spacing: 0.5px;
   animation: fadeIn 0.8s ease-out 0.4s backwards;
@@ -480,7 +480,7 @@ const contactAdmin = () => {
 .role-card {
   background: var(--theme-bg-component);
   border-radius: 16px;
-  padding: 24px;
+  padding: var(--spacing-6);
   margin-bottom: 32px;
   border: 1px solid var(--theme-border-light);
   box-shadow: var(--theme-shadow-md);
@@ -541,7 +541,7 @@ const contactAdmin = () => {
 .role-divider {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent);
-  margin: 16px 0;
+  margin: var(--spacing-4) 0;
 }
 
 // 操作按钮
@@ -607,7 +607,7 @@ const contactAdmin = () => {
     var(--theme-brand-primary-hover)
   );
   border-radius: 2px;
-  margin: 32px auto 0;
+  margin: var(--spacing-8) auto 0;
   animation: slideIn 0.8s ease-out 0.8s backwards;
   transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -642,7 +642,7 @@ const contactAdmin = () => {
   }
   
   .role-card {
-    padding: 20px;
+    padding: var(--spacing-5);
   }
   
   .action-buttons {
@@ -657,7 +657,7 @@ const contactAdmin = () => {
 
 @media (max-width: 480px) {
   .forbidden-container {
-    padding: 12px;
+    padding: var(--spacing-3);
   }
   
   .error-content {

@@ -515,7 +515,7 @@ const startGeneration = async () => {
 
 <style scoped lang="scss">
 .industry-template-config {
-  padding: 20px;
+  padding: var(--spacing-5);
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -641,7 +641,7 @@ const startGeneration = async () => {
     margin-bottom: 30px;
     
     li {
-      padding: 8px 0;
+      padding: var(--spacing-2) 0;
       font-size: 15px;
     }
   }

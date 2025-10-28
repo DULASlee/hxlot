@@ -344,7 +344,7 @@ const formatTime = (time: string): string => {
 
 <style scoped lang="scss">
 .workflows-view {
-  padding: 20px;
+  padding: var(--spacing-5);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -376,7 +376,7 @@ const formatTime = (time: string): string => {
   flex: 1;
   background: white;
   border-radius: 8px;
-  padding: 20px;
+  padding: var(--spacing-5);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 </style>

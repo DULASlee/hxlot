@@ -60,7 +60,7 @@ const togglePropertyPanel = () => {
   justify-content: space-between;
   align-items: center;
   height: 60px;
-  padding: 0 20px;
+  padding: 0 var(--spacing-5);
   border-bottom: 1px solid var(--el-border-color);
 }
 .header-left, .header-right {

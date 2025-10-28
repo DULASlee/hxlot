@@ -258,12 +258,12 @@ export default defineComponent({
 .theme-dropdown-item {
   display: flex;
   align-items: center;
-  padding: 12px 18px;
+  padding: var(--spacing-3) 18px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   border-radius: 8px;
-  margin: 4px 8px;
+  margin: var(--spacing-1) 8px;
 }
 
 .theme-dropdown-item::before {
@@ -351,7 +351,7 @@ export default defineComponent({
 .theme-dropdown-divider {
   height: 1px;
   background-color: var(--theme-border-base);
-  margin: 8px 0;
+  margin: var(--spacing-2) 0;
 }
 
 .icon-style-row {
