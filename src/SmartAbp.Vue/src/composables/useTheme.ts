@@ -8,7 +8,7 @@
  * ⚠️ 重要：此文件使用SSOT设计令牌系统的主题配置
  */
 
-import { lightTokens, darkTokens, type DesignTokens } from '@smartabp/lowcode-shared'
+import { lightTokens, darkTokens, type DesignTokens } from '@smartabp/lowcode-shared/theme'
 import { computed, ref, watch } from 'vue'
 
 /**

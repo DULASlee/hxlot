@@ -9,12 +9,9 @@
 export { ThemeManager, useTheme } from './ThemeManager'
 
 export {
-  type ColorTokens,
-  type SpacingTokens,
-  type TypographyTokens,
-  type ShadowTokens,
-  type ZIndexTokens,
-  type TransitionTokens,
-  type ThemeMode,
-  type DesignTokens
+  // Types
+  type DesignTokens,
+  // Tokens (必须导出，供主项目使用)
+  lightTokens,
+  darkTokens
 } from './tokens'

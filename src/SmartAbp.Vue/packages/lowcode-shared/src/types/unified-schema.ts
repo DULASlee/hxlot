@@ -985,5 +985,4 @@ export function isSchemaVersionCompatible(version: string): boolean {
     return SUPPORTED_SCHEMA_VERSIONS.includes(version as typeof SUPPORTED_SCHEMA_VERSIONS[number])
 }
 
-*/
 // End of archived code

@@ -70,7 +70,8 @@ export default defineConfig({
   format: ['esm', 'cjs'],
 
   // 生成TypeScript类型声明文件
-  dts: true,
+  // ⚠️ 暂时禁用：tsconfig和类型导出问题待修复
+  dts: false,
 
   // 代码分割（优化包体积，提升加载性能）
   splitting: true,
