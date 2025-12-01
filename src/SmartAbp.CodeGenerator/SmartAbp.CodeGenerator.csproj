@@ -55,7 +55,7 @@
     <!-- Other Dependencies -->
     <PackageReference Include="System.Threading.Channels" Version="9.0.0" />
     <PackageReference Include="System.Text.Json" Version="9.0.0" />
-    <PackageReference Include="JetBrains.Annotations" Version="2024.2.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
     <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="FluentValidation" Version="11.8.1" />
     <PackageReference Include="AutoMapper" Version="13.0.1" />

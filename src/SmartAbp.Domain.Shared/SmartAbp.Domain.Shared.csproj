@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.10" />
     <EmbeddedResource Include="Localization\SmartAbp\*.json" />
     <Content Remove="Localization\SmartAbp\*.json" />
