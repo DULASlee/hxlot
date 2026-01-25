@@ -120,6 +120,11 @@ $RECYCLE.BIN/
 *.d.ts.map
 *.js.map
 
+# 🔥 重要：忽略主应用 src/ 目录下的 .js 编译产物
+# 这些是 TypeScript 编译产物，Vite 会直接使用 .ts 源文件
+# 如果存在同名 .js 和 .ts 文件，Vite 会优先加载 .js，导致导出不一致的问题
+src/**/*.js
+
 # 但保留重要的类型声明文件
 !src/vite-env.d.ts
 !src/env.d.ts

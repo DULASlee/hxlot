@@ -50,7 +50,10 @@
       "@smartabp/lowcode-shared/*": ["packages/lowcode-shared/src/*"]
     },
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    // 🔥 防止 tsc 编译输出 .js 文件到源目录
+    // Vite 会直接使用 .ts 源文件，不需要编译产物
+    "noEmit": true
   },
   "include": [
     "env.d.ts",
@@ -59,7 +62,8 @@
     "src/icon-types.d.ts",
     "src/**/*.vue",
     "src/**/*.tsx",
-    "src/**/*.js",
+    // 🔥 移除 src/**/*.js - 不应该在源目录中包含编译产物
+    // 如果存在同名 .js 和 .ts 文件，会导致模块解析冲突
     "types/**/*.d.ts"
   ],
   "exclude": [
