@@ -169,11 +169,14 @@ public class SmartAbpHttpApiHostModule : AbpModule
             options.SchemaFilter<RequireNonNullablePropertiesSchemaFilter>();
         });
 
-        // Configure JWT Bearer authentication
+        // Configure OpenIddict Validation as default authentication scheme
         context.Services.Configure<Microsoft.AspNetCore.Authentication.AuthenticationOptions>(authOptions =>
         {
-            authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            // 🔥 使用 OpenIddict Validation 方案（本地验证 JWT token）
+            // 方案名称常量值为 "OpenIddict.Validation.AspNetCore"
+            const string OpenIddictValidationScheme = "OpenIddict.Validation.AspNetCore";
+            authOptions.DefaultAuthenticateScheme = OpenIddictValidationScheme;
+            authOptions.DefaultChallengeScheme = OpenIddictValidationScheme;
         });
     }
 

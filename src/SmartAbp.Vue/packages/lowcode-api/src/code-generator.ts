@@ -120,6 +120,10 @@ export const codeGeneratorApi: CodeGeneratorApi = {
    * 测试数据库连接
    * @param connection 数据库连接配置
    * @returns 连接测试结果
+   *
+   * 环境说明：
+   * - 开发环境 (DEV=true): 直接调用后端 HTTPS，绕过 Vite 代理的 POST JSON 问题
+   * - 生产环境 (DEV=false): 使用相对路径 /api/...，依赖同域部署或反向代理
    */
   async testDatabaseConnection(connection: {
     provider: string;
@@ -132,16 +136,42 @@ export const codeGeneratorApi: CodeGeneratorApi = {
     databaseName?: string;
     schemaCount?: number;
     tableCount?: number;
-    tables?: string[]; // 🔥 关键修复：添加表名列表
+    tables?: string[];
   }> {
-    return http.post<{
-      success: boolean;
-      message: string;
-      serverVersion?: string;
-      databaseName?: string;
-      schemaCount?: number;
-      tableCount?: number;
-      tables?: string[]; // 🔥 关键修复：添加表名列表
-    }>('/api/code-generator/test-connection', connection)
+    const requestBody = {
+      provider: connection.provider,
+      connectionString: connection.connectionString
+    }
+
+    // Vite 构建时会将 import.meta.env.DEV 替换为字面量 false
+    // 这确保生产代码不会包含开发环境的 localhost 调用
+    const isDev = import.meta.env?.DEV === true
+
+    if (isDev) {
+      // 开发环境：直接调用后端 HTTPS（绕过 Vite 代理的 POST JSON 问题）
+      const response = await fetch('https://localhost:9002/api/code-generator/test-connection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody)
+      })
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        throw new Error(`数据库连接测试失败: ${response.status} - ${errorText}`)
+      }
+
+      return await response.json()
+    } else {
+      // 生产环境：使用相对路径（同域部署或 nginx 反向代理）
+      return http.post<{
+        success: boolean;
+        message: string;
+        serverVersion?: string;
+        databaseName?: string;
+        schemaCount?: number;
+        tableCount?: number;
+        tables?: string[];
+      }>('/api/code-generator/test-connection', requestBody)
+    }
   }
 };

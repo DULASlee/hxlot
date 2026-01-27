@@ -213,20 +213,20 @@ export default defineConfig(async ({ mode }) => {
       },
       proxy: {
         "^/(connect|api|abp|swagger|health-status|Account|codegen|metadata|database|db|hubs|signalr)(/.*)?": {
-          target: "http://localhost:9002", // ✅ 正确端口（HTTP协议）
+          target: "https://localhost:9002", // ✅ HTTPS端口9002（OpenIddict要求）
           changeOrigin: true,
-          secure: false,
+          secure: false, // 开发环境允许自签名证书
           ws: true,
-          timeout: 10000, // 增加超时时间
+          timeout: 30000,
           configure: (proxy, _options) => {
-            proxy.on("error", (err, _req, _res) => {
-              console.log("proxy error", err)
-            })
-            proxy.on("proxyReq", (_proxyReq, req, _res) => {
-              console.log("Sending Request to the Target:", req.method, req.url)
+            proxy.on("proxyReq", (proxyReq, req, _res) => {
+              console.log("Proxy Request:", req.method, req.url, "Content-Type:", req.headers['content-type'])
             })
             proxy.on("proxyRes", (proxyRes, req, _res) => {
-              console.log("Received Response from the Target:", proxyRes.statusCode, req.url)
+              console.log("Proxy Response:", proxyRes.statusCode, req.url)
+            })
+            proxy.on("error", (err, _req, _res) => {
+              console.error("Proxy Error:", err.message)
             })
           },
         },

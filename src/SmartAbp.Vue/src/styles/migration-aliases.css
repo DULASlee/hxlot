@@ -1,12 +1,47 @@
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    迁移兼容层 - 仅在SSOT重构期间使用
-   
+
    计划删除时间: 2025-11-15
    创建日期: 2025-10-27
    用途: 将旧变量映射到新的--theme-*变量，确保向后兼容
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 :root {
+  /* ===== 间距兼容映射 ===== */
+  --spacing-xs: var(--spacing-1);   /* 4px */
+  --spacing-sm: var(--spacing-2);   /* 8px */
+  --spacing-md: var(--spacing-4);   /* 16px */
+  --spacing-lg: var(--spacing-6);   /* 24px */
+  --spacing-xl: var(--spacing-8);   /* 32px */
+  --spacing-2xl: var(--spacing-12); /* 48px */
+
+  /* ===== 圆角兼容映射 ===== */
+  --radius-base: var(--radius-md);  /* 4px */
+  --radius-large: var(--radius-lg); /* 8px */
+
+  /* ===== 背景色额外映射 ===== */
+  --color-bg-primary: var(--theme-bg-component);
+  --color-bg-tertiary: var(--theme-bg-body);
+
+  /* ===== 边框色额外映射 ===== */
+  --color-border-primary: var(--theme-border-base);
+  --color-border-subtle: var(--theme-border-light);
+  --color-border-strong: var(--theme-border-base);
+
+  /* ===== 文本色额外映射 ===== */
+  --color-text-primary: var(--theme-text-primary);
+  --color-text-placeholder: var(--theme-text-disabled);
+  --color-text-inverse: #ffffff;
+
+  /* ===== 主色额外映射 ===== */
+  --color-primary-light: var(--theme-brand-primary-light);
+  --color-primary-500: var(--theme-brand-primary);
+  --color-danger-500: var(--theme-danger);
+  --color-danger-light: var(--theme-danger-light);
+  --color-info-light: var(--theme-info-light, rgba(24, 144, 255, 0.1));
+  --color-success-light: var(--theme-success-light, rgba(82, 196, 26, 0.1));
+  --color-warning-light: var(--theme-warning-light, rgba(250, 173, 20, 0.1));
+
   /* ===== 品牌色兼容映射 ===== */
   --theme-brand-primary: var(--theme-brand-primary);
   --color-primary: var(--theme-brand-primary);
@@ -17,7 +52,7 @@
   --theme-brand-primary-light: var(--theme-brand-primary-light);
   --theme-brand-primary-light: var(--theme-brand-primary-light);
   --color-primary-hover: var(--theme-brand-primary-hover);
-  
+
   /* ===== 背景色兼容映射 ===== */
   --theme-bg-body: var(--theme-bg-body);
   --theme-bg-component: var(--theme-bg-component);
@@ -30,7 +65,7 @@
   --navbar-bg: var(--theme-bg-navbar);
   --sidebar-bg: var(--theme-bg-sidebar);
   --color-bg-elevated: var(--theme-bg-elevated);
-  
+
   /* ===== 文本色兼容映射 ===== */
   --theme-text-primary: var(--theme-text-primary);
   --theme-text-primary: var(--theme-text-primary);
@@ -40,7 +75,7 @@
   --color-text-tertiary: var(--theme-text-tertiary);
   --theme-text-secondary: var(--theme-text-secondary);
   --color-text-disabled: var(--theme-text-disabled);
-  
+
   /* ===== 边框色兼容映射 ===== */
   --theme-border-base: var(--theme-border-base);
   --theme-border-base: var(--theme-border-base);
@@ -49,18 +84,18 @@
   --color-border-base: var(--theme-border-base);
   --color-border-hover: var(--theme-border-base);
   --color-border-focus: var(--theme-brand-primary);
-  
+
   /* ===== 功能色兼容映射 ===== */
   --theme-success: var(--theme-success);
   --color-success: var(--theme-success);
   --color-success-500: var(--theme-success);
   --color-success-50: var(--theme-success-light);
-  
+
   --theme-warning: var(--theme-warning);
   --color-warning: var(--theme-warning);
   --color-warning-500: var(--theme-warning);
   --color-warning-50: var(--theme-warning-light);
-  
+
   --theme-danger: var(--theme-danger);
   --theme-danger: var(--theme-danger);
   --color-error: var(--theme-danger);
@@ -68,15 +103,15 @@
   --color-error-500: var(--theme-danger);
   --color-error-50: var(--theme-danger-light);
   --error-light: var(--theme-danger-light);
-  
+
   --info-color: var(--theme-info);
   --color-info: var(--theme-info);
   --color-info-500: var(--theme-info);
-  
+
   /* ===== 交互色兼容映射 ===== */
   --hover-bg: var(--theme-bg-hover);
   --color-bg-overlay: var(--theme-bg-overlay, rgba(0, 0, 0, 0.5));
-  
+
   /* ===== 阴影兼容映射 ===== */
   --shadow-base: var(--shadow-md);
   --shadow-light: var(--shadow-sm);

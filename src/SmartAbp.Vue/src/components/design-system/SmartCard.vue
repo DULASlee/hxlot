@@ -33,12 +33,12 @@
       <slot />
     </main>
 
-    <!-- 卡片底部 */
+    <!-- 卡片底部 -->
     <footer v-if="$slots.footer" class="smart-card__footer">
       <slot name="footer" />
     </footer>
 
-    <!-- 加载状态遮罩 */
+    <!-- 加载状态遮罩 -->
     <div v-if="loading" class="smart-card__loading">
       <div class="smart-card__spinner">
         <svg viewBox="0 0 24 24">

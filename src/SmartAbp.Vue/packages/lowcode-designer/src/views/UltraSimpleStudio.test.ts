@@ -1,10 +1,12 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+// @ts-nocheck
+// 测试文件：跳过类型检查（mock对象类型与实际API类型可能不完全一致）
+import type { ModuleMetadata, TableSchema } from '@smartabp/lowcode-api'
+import { codeGeneratorApi } from '@smartabp/lowcode-api'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import UltraSimpleStudio from './UltraSimpleStudio.vue'
-import { codeGeneratorApi } from '@smartabp/lowcode-api'
-import type { ModuleMetadata, TableSchema } from '@smartabp/lowcode-api'
 
 // ============================================================================
 // Mock 设置
@@ -56,7 +58,7 @@ vi.mock('vue-i18n', () => ({
         'ultraSimple.validation.noCodeToView': '没有可查看的代码',
         'ultraSimple.validation.noCodeToDownload': '没有可下载的代码'
       }
-      
+
       if (params) {
         let result = translations[key] || key
         Object.entries(params).forEach(([k, v]) => {
@@ -64,7 +66,7 @@ vi.mock('vue-i18n', () => ({
         })
         return result
       }
-      
+
       return translations[key] || key
     }
   })
@@ -149,7 +151,7 @@ async function waitForAsyncUpdate() {
 // ============================================================================
 
 describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () => {
-  
+
   beforeEach(() => {
     setActivePinia(createPinia())
     vi.clearAllMocks()
@@ -162,7 +164,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
   // ==========================================================================
   // 1. 组件渲染测试
   // ==========================================================================
-  
+
   describe('组件渲染测试', () => {
     it('应该正确渲染主容器和标题', async () => {
       const wrapper = createWrapper()
@@ -196,16 +198,16 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
 
       // 数据库表选择
       expect(wrapper.html()).toContain('选择数据库表')
-      
+
       // 系统基础信息
       expect(wrapper.html()).toContain('系统名称')
       expect(wrapper.html()).toContain('模块名称')
       expect(wrapper.html()).toContain('显示名称')
-      
+
       // 代码生成配置
       expect(wrapper.html()).toContain('架构模式')
       expect(wrapper.html()).toContain('数据库类型')
-      
+
       // 前端界面配置
       expect(wrapper.html()).toContain('父级菜单')
       expect(wrapper.html()).toContain('菜单图标')
@@ -215,7 +217,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
   // ==========================================================================
   // 2. 数据库连接测试
   // ==========================================================================
-  
+
   describe('数据库连接测试', () => {
     it('应该在组件挂载时测试数据库连接', async () => {
       const mockConnection = {
@@ -225,7 +227,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
         tableCount: 10,
         tables: ['Projects', 'Tasks', 'Users']
       }
-      
+
       vi.mocked(codeGeneratorApi.testDatabaseConnection).mockResolvedValue(mockConnection)
 
       const wrapper = createWrapper()
@@ -245,7 +247,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
         tableCount: 3,
         tables: ['Projects', 'Tasks', 'Users']
       }
-      
+
       vi.mocked(codeGeneratorApi.testDatabaseConnection).mockResolvedValue(mockConnection)
 
       const wrapper = createWrapper()
@@ -265,14 +267,14 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
         message: '连接成功',
         tableCount: 2
       }
-      
+
       const mockSchema = {
         tables: [
           createMockTableSchema('Projects'),
           createMockTableSchema('Tasks')
         ]
       }
-      
+
       vi.mocked(codeGeneratorApi.testDatabaseConnection).mockResolvedValue(mockConnection)
       vi.mocked(codeGeneratorApi.introspectDatabase).mockResolvedValue(mockSchema)
 
@@ -299,7 +301,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
   // ==========================================================================
   // 3. 表单输入和验证测试
   // ==========================================================================
-  
+
   describe('表单输入和验证测试', () => {
     beforeEach(async () => {
       const mockConnection = {
@@ -314,7 +316,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
-      
+
       // 模拟表选择
       vm.handleTableSelected('Projects')
       await nextTick()
@@ -328,7 +330,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
-      
+
       // 初始状态应该无效（缺少必填字段）
       expect(vm.isConfigValid).toBe(false)
 
@@ -340,9 +342,9 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       vm.config.architecturePattern = 'Crud'
       vm.config.databaseProvider = 'SqlServer'
       vm.config.parentMenuId = 'business'
-      
+
       await nextTick()
-      
+
       // 现在应该有效
       expect(vm.isConfigValid).toBe(true)
     })
@@ -352,10 +354,10 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
-      
+
       vm.config.systemName = 'SmartConstruction'
       vm.config.moduleName = 'ProjectManagement'
-      
+
       await nextTick()
 
       expect(vm.derivedNamespace).toBe('SmartConstruction.ProjectManagement')
@@ -369,7 +371,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
 
       const generateBtn = wrapper.find('.generate-btn')
       expect(generateBtn.exists()).toBe(true)
-      
+
       // 表单无效时应该禁用
       const vm = wrapper.vm as any
       expect(vm.isConfigValid).toBe(false)
@@ -380,7 +382,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
   // ==========================================================================
   // 4. 代码生成流程测试
   // ==========================================================================
-  
+
   describe('代码生成流程测试', () => {
     beforeEach(async () => {
       const mockConnection = {
@@ -397,14 +399,14 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
         message: '生成成功',
         generatedFiles: ['ProjectAppService.cs', 'ProjectDto.cs', 'ProjectManagement.vue']
       }
-      
+
       const mockStatus = {
         status: 'completed',
         percentage: 100,
         currentStep: '完成',
         completedFiles: ['ProjectAppService.cs', 'ProjectDto.cs']
       }
-      
+
       vi.mocked(codeGeneratorApi.generateModule).mockResolvedValue(mockGenerationResult)
       vi.mocked(codeGeneratorApi.getGenerationStatus).mockResolvedValue(mockStatus)
 
@@ -412,7 +414,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
-      
+
       // 填写表单
       vm.selectedTable = 'Projects'
       vm.config.systemName = 'SmartConstruction'
@@ -421,7 +423,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       vm.config.architecturePattern = 'Crud'
       vm.config.databaseProvider = 'SqlServer'
       vm.config.parentMenuId = 'business'
-      
+
       await nextTick()
 
       // 开始生成
@@ -431,12 +433,12 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       // 验证API调用
       expect(codeGeneratorApi.generateModule).toHaveBeenCalled()
       const callArg = vi.mocked(codeGeneratorApi.generateModule).mock.calls[0][0] as ModuleMetadata
-      
+
       expect(callArg.systemName).toBe('SmartConstruction')
       expect(callArg.name).toBe('ProjectManagement')
       expect(callArg.displayName).toBe('项目管理')
       expect(callArg.architecturePattern).toBe('Crud')
-      
+
       // 验证生成状态
       expect(vm.generating).toBe(false)
       expect(vm.generationComplete).toBe(true)
@@ -451,7 +453,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
-      
+
       // 填写表单
       vm.selectedTable = 'Projects'
       vm.config.systemName = 'SmartConstruction'
@@ -460,7 +462,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       vm.config.architecturePattern = 'Crud'
       vm.config.databaseProvider = 'SqlServer'
       vm.config.parentMenuId = 'business'
-      
+
       await nextTick()
 
       // 开始生成
@@ -478,7 +480,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
         success: true,
         sessionId: 'session-123'
       }
-      
+
       let callCount = 0
       vi.mocked(codeGeneratorApi.generateModule).mockResolvedValue(mockGenerationResult)
       vi.mocked(codeGeneratorApi.getGenerationStatus).mockImplementation(async () => {
@@ -501,7 +503,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
-      
+
       // 填写表单
       vm.selectedTable = 'Projects'
       vm.config.systemName = 'SmartConstruction'
@@ -510,7 +512,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       vm.config.architecturePattern = 'Crud'
       vm.config.databaseProvider = 'SqlServer'
       vm.config.parentMenuId = 'business'
-      
+
       await nextTick()
 
       // 开始生成
@@ -526,7 +528,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
   // ==========================================================================
   // 5. 生成后操作测试
   // ==========================================================================
-  
+
   describe('生成后操作测试', () => {
     beforeEach(async () => {
       const mockConnection = {
@@ -541,7 +543,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
         status: 'completed',
         completedFiles: ['ProjectAppService.cs', 'ProjectDto.cs', 'ProjectManagement.vue']
       }
-      
+
       vi.mocked(codeGeneratorApi.getGenerationStatus).mockResolvedValue(mockStatus)
 
       const wrapper = createWrapper()
@@ -550,7 +552,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       const vm = wrapper.vm as any
       vm.generationSessionId = 'session-123'
       vm.generationComplete = true
-      
+
       await vm.viewGeneratedCode()
       await waitForAsyncUpdate()
 
@@ -571,7 +573,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       const appendChildSpy = vi.spyOn(document.body, 'appendChild').mockImplementation(() => mockLink as any)
       const removeChildSpy = vi.spyOn(document.body, 'removeChild').mockImplementation(() => mockLink as any)
       const createObjectURLSpy = vi.spyOn(window.URL, 'createObjectURL').mockReturnValue('blob:mock-url')
-      const revokeObjectURLSpy = vi.spyOn(window.URL, 'revokeObjectURL').mockImplementation(() => {})
+      const revokeObjectURLSpy = vi.spyOn(window.URL, 'revokeObjectURL').mockImplementation(() => { })
 
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
@@ -580,7 +582,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       vm.generationSessionId = 'session-123'
       vm.generationComplete = true
       vm.config.moduleName = 'ProjectManagement'
-      
+
       await vm.downloadGeneratedCode()
       await waitForAsyncUpdate()
 
@@ -601,7 +603,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
-      
+
       // 设置一些状态
       vm.selectedTable = 'Projects'
       vm.generating = false
@@ -609,7 +611,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       vm.generationProgress = 100
       vm.generationSessionId = 'session-123'
       vm.config.systemName = 'TestSystem'
-      
+
       await nextTick()
 
       // 重置
@@ -629,19 +631,19 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
   // ==========================================================================
   // 6. 日志系统测试
   // ==========================================================================
-  
+
   describe('日志系统测试', () => {
     it('应该正确添加不同类型的日志', async () => {
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
-      
+
       vm.addLog('信息日志', 'info')
       vm.addLog('成功日志', 'success')
       vm.addLog('警告日志', 'warning')
       vm.addLog('错误日志', 'error')
-      
+
       await nextTick()
 
       expect(vm.generationLogs).toHaveLength(4)
@@ -656,7 +658,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
-      
+
       vm.addLog('测试日志', 'info')
       await nextTick()
 
@@ -670,7 +672,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
         tables: ['Projects']
       }
       vi.mocked(codeGeneratorApi.testDatabaseConnection).mockResolvedValue(mockConnection)
-      
+
       const mockGenerationResult = {
         success: true,
         sessionId: 'session-123'
@@ -686,12 +688,12 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
-      
+
       // 添加一些日志
       vm.addLog('旧日志1', 'info')
       vm.addLog('旧日志2', 'info')
       expect(vm.generationLogs).toHaveLength(2)
-      
+
       // 填写表单并开始生成
       vm.selectedTable = 'Projects'
       vm.config.systemName = 'SmartConstruction'
@@ -700,7 +702,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       vm.config.architecturePattern = 'Crud'
       vm.config.databaseProvider = 'SqlServer'
       vm.config.parentMenuId = 'business'
-      
+
       await nextTick()
       await vm.startGeneration()
       await waitForAsyncUpdate()
@@ -714,7 +716,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
   // ==========================================================================
   // 7. 边界条件和错误处理测试
   // ==========================================================================
-  
+
   describe('边界条件和错误处理测试', () => {
     it('应该处理空表名列表', async () => {
       const mockConnection = {
@@ -737,7 +739,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
         tables: ['Projects']
       }
       vi.mocked(codeGeneratorApi.testDatabaseConnection).mockResolvedValue(mockConnection)
-      
+
       const mockGenerationResult = {
         success: false,
         message: '生成失败：缺少必需参数'
@@ -748,7 +750,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
-      
+
       vm.selectedTable = 'Projects'
       vm.config.systemName = 'SmartConstruction'
       vm.config.moduleName = 'ProjectManagement'
@@ -756,7 +758,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       vm.config.architecturePattern = 'Crud'
       vm.config.databaseProvider = 'SqlServer'
       vm.config.parentMenuId = 'business'
-      
+
       await nextTick()
 
       // 开始生成
@@ -774,13 +776,13 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
         tables: ['Projects']
       }
       vi.mocked(codeGeneratorApi.testDatabaseConnection).mockResolvedValue(mockConnection)
-      
+
       const mockGenerationResult = {
         success: true,
         sessionId: 'session-123'
       }
       vi.mocked(codeGeneratorApi.generateModule).mockResolvedValue(mockGenerationResult)
-      
+
       // 模拟永远不完成的进度查询
       vi.mocked(codeGeneratorApi.getGenerationStatus).mockResolvedValue({
         status: 'processing',
@@ -792,7 +794,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
-      
+
       vm.selectedTable = 'Projects'
       vm.config.systemName = 'SmartConstruction'
       vm.config.moduleName = 'ProjectManagement'
@@ -800,7 +802,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       vm.config.architecturePattern = 'Crud'
       vm.config.databaseProvider = 'SqlServer'
       vm.config.parentMenuId = 'business'
-      
+
       await nextTick()
 
       // 开始生成
@@ -814,13 +816,13 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
 
     it('应该处理没有sessionId时的查看代码操作', async () => {
       const { ElMessage } = await import('element-plus')
-      
+
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
       vm.generationSessionId = ''
-      
+
       await vm.viewGeneratedCode()
       await nextTick()
 
@@ -829,13 +831,13 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
 
     it('应该处理没有sessionId时的下载操作', async () => {
       const { ElMessage } = await import('element-plus')
-      
+
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
       vm.generationSessionId = ''
-      
+
       await vm.downloadGeneratedCode()
       await nextTick()
 
@@ -846,25 +848,25 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
   // ==========================================================================
   // 8. 响应式数据测试
   // ==========================================================================
-  
+
   describe('响应式数据测试', () => {
     it('生成按钮状态应该响应表单验证结果', async () => {
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
-      
+
       // 初始状态：按钮禁用
       expect(vm.isConfigValid).toBe(false)
-      
+
       // 填写部分字段
       vm.selectedTable = 'Projects'
       vm.config.systemName = 'SmartConstruction'
       await nextTick()
-      
+
       // 仍然无效（缺少其他必填字段）
       expect(vm.isConfigValid).toBe(false)
-      
+
       // 填写所有必填字段
       vm.config.moduleName = 'ProjectManagement'
       vm.config.displayName = '项目管理'
@@ -872,7 +874,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       vm.config.databaseProvider = 'SqlServer'
       vm.config.parentMenuId = 'business'
       await nextTick()
-      
+
       // 现在应该有效
       expect(vm.isConfigValid).toBe(true)
     })
@@ -882,21 +884,21 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
-      
+
       // 初始状态
       expect(vm.derivedNamespace).toBe('')
       expect(vm.derivedRoutePrefix).toBe('')
       expect(vm.derivedApiEndpoint).toBe('')
-      
+
       // 设置系统名称
       vm.config.systemName = 'SmartConstruction'
       await nextTick()
       expect(vm.derivedNamespace).toBe('')  // 还需要模块名称
-      
+
       // 设置模块名称
       vm.config.moduleName = 'ProjectManagement'
       await nextTick()
-      
+
       expect(vm.derivedNamespace).toBe('SmartConstruction.ProjectManagement')
       expect(vm.derivedRoutePrefix).toBe('/projectmanagement')
       expect(vm.derivedApiEndpoint).toBe('/api/app/projectmanagement')
@@ -907,16 +909,16 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
-      
+
       // 设置不同的进度值
       vm.generationProgress = 0
       await nextTick()
       expect(vm.generationProgress).toBe(0)
-      
+
       vm.generationProgress = 50
       await nextTick()
       expect(vm.generationProgress).toBe(50)
-      
+
       vm.generationProgress = 100
       await nextTick()
       expect(vm.generationProgress).toBe(100)
@@ -926,7 +928,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
   // ==========================================================================
   // 9. 用户交互测试
   // ==========================================================================
-  
+
   describe('用户交互测试', () => {
     it('应该响应主题切换', async () => {
       const wrapper = createWrapper()
@@ -934,7 +936,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
 
       const vm = wrapper.vm as any
       const themeToggle = vm.toggleTheme
-      
+
       expect(themeToggle).toBeDefined()
       expect(typeof themeToggle).toBe('function')
     })
@@ -944,12 +946,12 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       await waitForAsyncUpdate()
 
       const vm = wrapper.vm as any
-      
+
       // 未完成时不显示
       vm.generationComplete = false
       await nextTick()
       expect(wrapper.find('.action-buttons').exists()).toBe(false)
-      
+
       // 完成后显示
       vm.generationComplete = true
       await nextTick()
@@ -960,7 +962,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
   // ==========================================================================
   // 10. 集成测试 - 完整用户流程
   // ==========================================================================
-  
+
   describe('集成测试 - 完整用户流程', () => {
     it('应该完成从选表到生成成功的完整流程', async () => {
       // 准备Mock数据
@@ -970,7 +972,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
         databaseName: 'SmartAbpDb',
         tableCount: 2
       }
-      
+
       const mockGenerationResult = {
         success: true,
         sessionId: 'session-complete-flow',
@@ -982,14 +984,14 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
           'ProjectManagement.vue'
         ]
       }
-      
+
       const mockStatus = {
         status: 'completed',
         percentage: 100,
         currentStep: '全部完成',
         completedFiles: mockGenerationResult.generatedFiles
       }
-      
+
       vi.mocked(codeGeneratorApi.testDatabaseConnection).mockResolvedValue(mockConnection)
       vi.mocked(codeGeneratorApi.generateModule).mockResolvedValue(mockGenerationResult)
       vi.mocked(codeGeneratorApi.getGenerationStatus).mockResolvedValue(mockStatus)
@@ -997,22 +999,22 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       // 步骤1：挂载组件，等待数据库连接
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
-      
+
       const vm = wrapper.vm as any
-      
+
       // 验证：数据库连接成功，表列表已加载
       expect(vm.availableTables).toHaveLength(2)
       expect(vm.availableTables[0].name).toBe('Projects')
-      
+
       // 步骤2：选择表
       vm.handleTableSelected('Projects')
       await nextTick()
-      
+
       // 验证：表选择后自动填充了模块名和显示名
       expect(vm.selectedTable).toBe('Projects')
       expect(vm.config.moduleName).toBe('Projects')
       expect(vm.config.displayName).toBe('Projects')
-      
+
       // 步骤3：填写其他必填配置
       vm.config.systemName = 'SmartConstruction'
       vm.config.architecturePattern = 'DDD'
@@ -1020,29 +1022,29 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       vm.config.parentMenuId = 'business'
       vm.config.menuIcon = 'project'
       await nextTick()
-      
+
       // 验证：表单有效，可以生成
       expect(vm.isConfigValid).toBe(true)
       expect(vm.derivedNamespace).toBe('SmartConstruction.Projects')
-      
+
       // 步骤4：开始生成
       await vm.startGeneration()
       await waitForAsyncUpdate()
-      
+
       // 验证：生成成功
       expect(vm.generationComplete).toBe(true)
       expect(vm.generationProgress).toBe(100)
       expect(vm.generationSessionId).toBe('session-complete-flow')
       expect(vm.generating).toBe(false)
-      
+
       // 验证：日志中包含成功信息
       const successLogs = vm.generationLogs.filter((log: any) => log.type === 'success')
       expect(successLogs.length).toBeGreaterThan(0)
-      
+
       // 步骤5：重置并准备下一次生成
       vm.resetToStart()
       await nextTick()
-      
+
       // 验证：所有状态已重置
       expect(vm.selectedTable).toBe('')
       expect(vm.generationComplete).toBe(false)
@@ -1054,17 +1056,17 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
   // ==========================================================================
   // 11. 高级边界条件测试（扩展覆盖率）
   // ==========================================================================
-  
+
   describe('高级边界条件测试', () => {
     it('应该处理特殊字符的系统名称', async () => {
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
       const vm = wrapper.vm as any
-      
+
       vm.config.systemName = 'Smart@Construction#2024'
       vm.config.moduleName = 'Project'
       await nextTick()
-      
+
       expect(vm.derivedNamespace).toContain('Smart@Construction#2024')
     })
 
@@ -1074,11 +1076,11 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
         tables: ['A'.repeat(200)]
       }
       vi.mocked(codeGeneratorApi.testDatabaseConnection).mockResolvedValue(mockConnection)
-      
+
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
       const vm = wrapper.vm as any
-      
+
       expect(vm.availableTables[0].name).toHaveLength(200)
     })
 
@@ -1089,11 +1091,11 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
         tables: Array.from({ length: 1000 }, (_, i) => `Table${i + 1}`)
       }
       vi.mocked(codeGeneratorApi.testDatabaseConnection).mockResolvedValue(mockConnection)
-      
+
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
       const vm = wrapper.vm as any
-      
+
       expect(vm.availableTables).toHaveLength(1000)
     })
 
@@ -1118,7 +1120,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
       const vm = wrapper.vm as any
-      
+
       vm.selectedTable = 'Projects'
       vm.config.systemName = 'Test'
       vm.config.moduleName = 'Test'
@@ -1126,10 +1128,10 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       vm.config.architecturePattern = 'Crud'
       vm.config.databaseProvider = 'SqlServer'
       vm.config.parentMenuId = 'business'
-      
-      await vm.startGeneration().catch(() => {})
+
+      await vm.startGeneration().catch(() => { })
       await waitForAsyncUpdate()
-      
+
       const errorLogs = vm.generationLogs.filter((log: any) => log.type === 'error')
       expect(errorLogs.length).toBeGreaterThan(0)
     })
@@ -1138,7 +1140,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
       const vm = wrapper.vm as any
-      
+
       const patterns = ['Crud', 'DDD', 'CQRS']
       for (const pattern of patterns) {
         vm.config.architecturePattern = pattern
@@ -1151,7 +1153,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
       const vm = wrapper.vm as any
-      
+
       const providers = ['SqlServer', 'MySql', 'PostgreSql']
       for (const provider of providers) {
         vm.config.databaseProvider = provider
@@ -1172,11 +1174,11 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
       const vm = wrapper.vm as any
-      
+
       vm.generationSessionId = 'test-session'
       await vm.viewGeneratedCode()
       await nextTick()
-      
+
       expect(ElMessage.info).toHaveBeenCalled()
     })
 
@@ -1187,13 +1189,13 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
       const vm = wrapper.vm as any
-      
+
       vm.generationSessionId = 'test-session'
       vm.config.moduleName = 'Test'
-      
+
       await vm.downloadGeneratedCode()
       await nextTick()
-      
+
       expect(ElMessage.error).toHaveBeenCalled()
     })
 
@@ -1201,10 +1203,10 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
       const vm = wrapper.vm as any
-      
+
       vm.handleTableSelected('')
       await nextTick()
-      
+
       expect(vm.config.moduleName).toBe('')
     })
 
@@ -1218,10 +1220,10 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
       const vm = wrapper.vm as any
-      
+
       vm.handleTableSelected('NonExistent')
       await nextTick()
-      
+
       expect(vm.config.moduleName).toBe('NonExistent')
     })
   })
@@ -1229,19 +1231,19 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
   // ==========================================================================
   // 12. 性能和并发测试
   // ==========================================================================
-  
+
   describe('性能和并发测试', () => {
     it('应该能快速处理大量日志', async () => {
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
       const vm = wrapper.vm as any
-      
+
       const startTime = Date.now()
       for (let i = 0; i < 100; i++) {
         vm.addLog(`日志 ${i}`, 'info')
       }
       const endTime = Date.now()
-      
+
       expect(vm.generationLogs).toHaveLength(100)
       expect(endTime - startTime).toBeLessThan(100)
     })
@@ -1256,12 +1258,12 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
       const vm = wrapper.vm as any
-      
+
       vm.handleTableSelected('Table1')
       vm.handleTableSelected('Table2')
       vm.handleTableSelected('Table3')
       await nextTick()
-      
+
       expect(vm.selectedTable).toBe('Table3')
     })
 
@@ -1269,13 +1271,13 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
       const vm = wrapper.vm as any
-      
+
       for (let i = 0; i < 10; i++) {
         vm.config.systemName = `System${i}`
         vm.config.moduleName = `Module${i}`
       }
       await nextTick()
-      
+
       expect(vm.config.systemName).toBe('System9')
       expect(vm.derivedNamespace).toBe('System9.Module9')
     })
@@ -1284,12 +1286,12 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
   // ==========================================================================
   // 13. 国际化和本地化测试
   // ==========================================================================
-  
+
   describe('国际化测试', () => {
     it('应该正确使用i18n翻译键', async () => {
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
-      
+
       expect(wrapper.html()).toContain('极简代码生成')
     })
 
@@ -1297,7 +1299,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
       const vm = wrapper.vm as any
-      
+
       expect(vm.generationLogs.length).toBeGreaterThan(0)
       expect(vm.generationLogs[0].message).toBeTruthy()
     })
@@ -1306,13 +1308,13 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
   // ==========================================================================
   // 14. 组件生命周期测试
   // ==========================================================================
-  
+
   describe('组件生命周期测试', () => {
     it('应该在挂载时初始化所有状态', async () => {
       const wrapper = createWrapper()
       await waitForAsyncUpdate()
       const vm = wrapper.vm as any
-      
+
       expect(vm.selectedTable).toBe('')
       expect(vm.generating).toBe(false)
       expect(vm.generationComplete).toBe(false)
@@ -1324,7 +1326,7 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
     it('应该在卸载时清理资源', () => {
       const wrapper = createWrapper()
       wrapper.unmount()
-      
+
       expect(wrapper.vm).toBeUndefined()
     })
   })

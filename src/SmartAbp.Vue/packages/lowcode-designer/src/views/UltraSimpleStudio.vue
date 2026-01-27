@@ -155,57 +155,15 @@
               </el-col>
             </el-row>
 
-            <!-- 🎨 新增：UI模板选择 -->
-            <el-row>
-              <el-col :span="24">
+            <!-- 🎨 UI模板选择（简化为下拉列表） -->
+            <el-row :gutter="16">
+              <el-col :span="12">
                 <el-form-item label="UI模板预设 *" required>
-                  <el-radio-group v-model="config.templatePreset" size="large" class="template-selector">
-                    <el-radio-button value="standard">
-                      <div class="template-option">
-                        <div class="template-header">
-                          <el-icon :size="20"><Document /></el-icon>
-                          <span class="template-name">标准企业级</span>
-                          <el-tag type="success" size="small">推荐</el-tag>
-                        </div>
-                        <div class="template-desc">完整CRUD + 基础搜索 + 权限控制 (~400行)</div>
-                        <div class="template-features">
-                          <el-tag size="small" effect="plain">SmartComponents</el-tag>
-                          <el-tag size="small" effect="plain">响应式</el-tag>
-                          <el-tag size="small" effect="plain">企业级</el-tag>
-                        </div>
-                      </div>
-                    </el-radio-button>
-                    <el-radio-button value="pro">
-                      <div class="template-option">
-                        <div class="template-header">
-                          <el-icon :size="20"><Trophy /></el-icon>
-                          <span class="template-name">专业增强版</span>
-                          <el-tag type="warning" size="small">高级</el-tag>
-                        </div>
-                        <div class="template-desc">高级筛选 + 批量操作 + 数据可视化 (~800行)</div>
-                        <div class="template-features">
-                          <el-tag size="small" effect="plain">高级筛选</el-tag>
-                          <el-tag size="small" effect="plain">批量操作</el-tag>
-                          <el-tag size="small" effect="plain">导出打印</el-tag>
-                        </div>
-                      </div>
-                    </el-radio-button>
-                    <el-radio-button value="minimal">
-                      <div class="template-option">
-                        <div class="template-header">
-                          <el-icon :size="20"><Aim /></el-icon>
-                          <span class="template-name">极简版</span>
-                          <el-tag type="info" size="small">快速</el-tag>
-                        </div>
-                        <div class="template-desc">零配置 + 快速原型 + 学习示例 (<200行)</div>
-                        <div class="template-features">
-                          <el-tag size="small" effect="plain">极简</el-tag>
-                          <el-tag size="small" effect="plain">快速上手</el-tag>
-                          <el-tag size="small" effect="plain">原型开发</el-tag>
-                        </div>
-                      </div>
-                    </el-radio-button>
-                  </el-radio-group>
+                  <el-select v-model="config.templatePreset" placeholder="选择模板预设" size="large" style="width: 100%">
+                    <el-option label="标准企业级（推荐）- 完整CRUD + 权限控制" value="standard" />
+                    <el-option label="专业增强版 - 高级筛选 + 批量操作" value="pro" />
+                    <el-option label="极简版 - 快速原型开发" value="minimal" />
+                  </el-select>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -344,7 +302,7 @@
 <script setup lang="ts">
 // @ts-nocheck
 import * as EpIcons from '@element-plus/icons-vue'
-import { Promotion, Document, Trophy, Aim } from '@element-plus/icons-vue'
+import { Promotion } from '@element-plus/icons-vue'
 import type { TableSchema } from '@smartabp/lowcode-api'
 import { codeGeneratorApi } from '@smartabp/lowcode-api'
 import { mapDbTypeToEntityType, safeValidateModuleMetadata } from '@smartabp/lowcode-shared'
@@ -1339,8 +1297,8 @@ onMounted(async () => {
     } else {
       addLog(t('ultraSimple.logs.databaseFailedMock'), 'warning')
     }
-  } catch (error) {
-    console.error('❌ 数据库连接完全失败:', error)
+  } catch (error: any) {
+    console.error('❌ 数据库连接失败:', error)
     addLog(t('ultraSimple.logs.usingMockData'), 'warning')
 
     // 🔥 最终降级：优先尝试使用 connectionTest 中的表名
@@ -2067,68 +2025,5 @@ const importPermissionSystem = async () => {
   }
 }
 
-// 🎨 模板选择器样式
-.template-selector {
-  width: 100%;
-  display: flex;
-  gap: var(--spacing-md);
-
-  :deep(.el-radio-button) {
-    flex: 1;
-    min-width: 0;
-
-    .el-radio-button__inner {
-      width: 100%;
-      height: auto;
-      padding: var(--spacing-md);
-      border-radius: var(--radius-md);
-      transition: all 0.3s;
-
-      &:hover {
-        border-color: var(--color-primary-500);
-        background: var(--color-primary-50);
-      }
-    }
-
-    &.is-active .el-radio-button__inner {
-      border-color: var(--color-primary-500);
-      background: var(--color-primary-500);
-      color: white;
-
-      .template-desc,
-      .template-features .el-tag {
-        color: rgba(255, 255, 255, 0.9);
-      }
-    }
-  }
-}
-
-.template-option {
-  text-align: left;
-
-  .template-header {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-sm);
-
-    .template-name {
-      font-weight: var(--font-weight-semibold);
-      font-size: var(--font-size-base);
-    }
-  }
-
-  .template-desc {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-    margin-bottom: var(--spacing-sm);
-    line-height: 1.5;
-  }
-
-  .template-features {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-xs);
-  }
-}
+/* 🎨 模板选择器样式已简化为下拉列表，无需额外样式 */
 </style>

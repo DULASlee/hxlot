@@ -71,6 +71,15 @@ public class SmartAbpDomainModule : AbpModule
                     .EnableTokenEndpointPassthrough()
                     .EnableStatusCodePagesIntegration();
             });
+
+            // 🔥 添加 OpenIddict Validation 配置，用于验证 API 请求中的 JWT token
+            builder.AddValidation(options =>
+            {
+                // 使用本地服务器验证 token（不需要远程调用）
+                options.UseLocalServer();
+                // 使用 ASP.NET Core 集成
+                options.UseAspNetCore();
+            });
         });
 
     }

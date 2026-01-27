@@ -220,16 +220,49 @@ export const useAuthStore = defineStore('auth', () => {
 
       // 根据ABP登录结果处理
       if (loginResult.result === 1) { // Success
-        // 登录成功，ABP会自动设置Cookie和认证状态
-        console.log('🔐 [Auth] 登录成功，ABP认证完成')
+        // 登录成功，凭据验证通过
+        console.log('🔐 [Auth] 凭据验证成功，正在获取JWT Token...')
 
-        // 等待ABP认证状态完全设置
-        await new Promise(resolve => setTimeout(resolve, 500))
+        // 🔥 关键修复：通过 OAuth2 Password Grant 获取 JWT Token
+        const tokenForm = new URLSearchParams()
+        tokenForm.append('grant_type', 'password')
+        tokenForm.append('username', credentials.username)
+        tokenForm.append('password', credentials.password)
+        tokenForm.append('client_id', 'SmartAbp_App')
+        tokenForm.append('scope', 'SmartAbp')
 
-        // 获取应用配置（包含当前用户信息）
-        const { AbpApplicationConfigurationService } = await import('@/api/generated')
-        const appConfig = await AbpApplicationConfigurationService.getApiAbpApplicationConfiguration({
-          includeLocalizationResources: false
+        const tokenResponse = await fetch('/connect/token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: tokenForm
+        })
+
+        console.log('🔐 [Auth] Token响应状态:', tokenResponse.status, tokenResponse.ok)
+
+        if (!tokenResponse.ok) {
+          const errorData = await tokenResponse.json().catch(() => ({}))
+          console.error('🔐 [Auth] Token获取失败:', errorData)
+          throw new Error(errorData?.error_description || 'Token获取失败')
+        }
+
+        const tokenData = await tokenResponse.json()
+        console.log('🔐 [Auth] JWT Token获取成功:', { hasAccessToken: !!tokenData.access_token })
+
+        // 保存 token
+        setToken(tokenData.access_token, tokenData.refresh_token)
+
+        // 使用 token 获取用户信息
+        console.log('🔐 [Auth] 正在获取用户信息...')
+        const configResponse = await fetch('/api/abp/application-configuration?IncludeLocalizationResources=false', {
+          headers: { 'Authorization': `Bearer ${tokenData.access_token}` }
+        })
+        const appConfig = await configResponse.json()
+
+        console.log('🔐 [Auth] 用户配置响应:', {
+          hasCurrentUser: !!appConfig.currentUser,
+          userId: appConfig.currentUser?.id,
+          userName: appConfig.currentUser?.userName,
+          isAuthenticated: appConfig.currentUser?.isAuthenticated
         })
 
         if (appConfig.currentUser && appConfig.currentUser.id) {
@@ -240,19 +273,6 @@ export const useAuthStore = defineStore('auth', () => {
             roles: appConfig.currentUser.roles || ['user']
           }
 
-          // ABP通常会设置Cookie而不是token，这里尝试获取各种可能的认证标识
-          const authToken = localStorage.getItem('_abp_auth_token') ||
-            localStorage.getItem('Abp.AuthToken') ||
-            localStorage.getItem('access_token') ||
-            document.cookie.match(/\.AspNetCore\.Auth=([^;]+)/)?.[1]
-
-          if (authToken) {
-            setToken(authToken)
-            console.log('🔐 [Auth] 认证token获取成功')
-          } else {
-            console.log('🔐 [Auth] 未找到token，使用Cookie认证')
-          }
-
           setUserInfo(user)
 
           console.log('🔐 [Auth] 用户信息设置完成:', user)
@@ -260,7 +280,7 @@ export const useAuthStore = defineStore('auth', () => {
           return {
             success: true,
             user: user,
-            token: authToken || ''
+            token: tokenData.access_token
           }
         } else {
           throw new Error('登录成功但未获取到用户信息')

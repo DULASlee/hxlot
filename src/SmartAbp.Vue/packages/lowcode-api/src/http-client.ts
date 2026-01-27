@@ -71,7 +71,20 @@ export function createHttpClient(config?: HttpClientConfig): HttpClient {
     timeout,
     headers: {
       'Content-Type': 'application/json'
-    }
+    },
+    // 🔥 修复：显式指定请求体转换，确保 Content-Length 正确计算
+    transformRequest: [
+      (data, headers) => {
+        if (data && typeof data === 'object') {
+          // 确保 Content-Type 正确设置
+          if (headers) {
+            headers['Content-Type'] = 'application/json'
+          }
+          return JSON.stringify(data)
+        }
+        return data
+      }
+    ]
   })
 
   // ✅ Mock服务器已彻底禁用，所有请求必须连接真实后端
