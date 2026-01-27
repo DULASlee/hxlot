@@ -231,7 +231,13 @@ export const useAuthStore = defineStore('auth', () => {
         tokenForm.append('client_id', 'SmartAbp_App')
         tokenForm.append('scope', 'SmartAbp')
 
-        const tokenResponse = await fetch('/connect/token', {
+        // 开发环境直接调用后端，生产环境使用相对路径
+        const tokenUrl = import.meta.env.DEV 
+          ? 'https://localhost:9002/connect/token' 
+          : '/connect/token'
+        console.log('🔐 [Auth] Token请求URL:', tokenUrl)
+
+        const tokenResponse = await fetch(tokenUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: tokenForm

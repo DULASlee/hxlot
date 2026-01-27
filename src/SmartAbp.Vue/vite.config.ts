@@ -1,7 +1,75 @@
 import vue from "@vitejs/plugin-vue"
 import vueJsx from "@vitejs/plugin-vue-jsx"
 import dns from "dns"
+import { createProxyMiddleware, fixRequestBody } from "http-proxy-middleware"
+import express from "express"
 import { fileURLToPath, URL } from "node:url"
+import type { Plugin, ViteDevServer } from "vite"
+
+/**
+ * 🔥 Vite 插件：使用 http-proxy-middleware 实现健壮的 API 代理
+ * 解决内置代理对浏览器 POST JSON 请求的兼容性问题
+ */
+function httpProxyMiddlewarePlugin(): Plugin {
+  return {
+    name: 'http-proxy-middleware-plugin',
+    configureServer(server: ViteDevServer) {
+      // 需要代理的路径前缀正则
+      const proxyPathRegex = /^\/(connect|api|abp|swagger|hubs|signalr)(\/|$)/;
+      
+      console.log('[HPM] ================================================');
+      console.log('[HPM] http-proxy-middleware 插件初始化');
+      console.log('[HPM] 目标: https://localhost:9002');
+      console.log('[HPM] ================================================');
+      
+      // 添加 body-parser 中间件（全局，但只对匹配路径生效）
+      const jsonParser = express.json({ limit: '10mb' });
+      const urlencodedParser = express.urlencoded({ extended: true, limit: '10mb' });
+      
+      server.middlewares.use((req: any, res: any, next: any) => {
+        if (proxyPathRegex.test(req.url || '')) {
+          jsonParser(req, res, (err: any) => {
+            if (err) return next(err);
+            urlencodedParser(req, res, next);
+          });
+        } else {
+          next();
+        }
+      });
+      
+      // 创建代理中间件（使用 filter 函数匹配路径，保留完整 URL）
+      const apiProxy = createProxyMiddleware({
+        target: 'https://localhost:9002',
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+        timeout: 120000,
+        // 🔥 关键：使用 filter 函数而不是路径前缀，这样不会修改 URL
+        pathFilter: (path) => proxyPathRegex.test(path),
+        on: {
+          proxyReq: (proxyReq: any, req: any) => {
+            console.log(`[HPM] 🚀 代理转发: ${req.method} ${req.originalUrl || req.url}`);
+            if (req.body && Object.keys(req.body).length > 0) {
+              fixRequestBody(proxyReq, req);
+              console.log(`[HPM]    ✅ 请求体已修复`);
+            }
+          },
+          proxyRes: (proxyRes: any, req: any) => {
+            console.log(`[HPM] 📩 响应: ${proxyRes.statusCode} ${req.originalUrl || req.url}`);
+          },
+          error: (err: any, req: any) => {
+            console.error(`[HPM] ❌ 错误: ${err.message} - ${req?.originalUrl || req?.url}`);
+          }
+        }
+      });
+
+      // 🔥 关键：不使用路径前缀注册，直接注册到根路径
+      // 由 pathFilter 负责过滤需要代理的请求
+      server.middlewares.use(apiProxy);
+      console.log('[HPM] ✅ 代理中间件已注册（使用 pathFilter 匹配）');
+    }
+  };
+}
 import AutoImport from "unplugin-auto-import/vite"
 import IconsResolver from "unplugin-icons/resolver"
 import Icons from "unplugin-icons/vite"
@@ -46,6 +114,8 @@ export default defineConfig(async ({ mode }) => {
 
   return {
     plugins: [
+      // 🔥 http-proxy-middleware 代理插件（仅开发环境）
+      ...(isDevelopment ? [httpProxyMiddlewarePlugin()] : []),
       // Brotli压缩（生产环境按需，缺失时跳过）
       compression,
       // 🔍 编译期组件名冲突检测（只在生产环境启用，开发环境跳过以提升启动速度）
@@ -211,26 +281,28 @@ export default defineConfig(async ({ mode }) => {
         Pragma: "no-cache",
         Expires: "0",
       },
+      /* 🔒 备份：原有内置代理配置（已注释，作为安全回滚点）
       proxy: {
         "^/(connect|api|abp|swagger|health-status|Account|codegen|metadata|database|db|hubs|signalr)(/.*)?": {
-          target: "https://localhost:9002", // ✅ HTTPS端口9002（OpenIddict要求）
+          target: "https://localhost:9002",
           changeOrigin: true,
-          secure: false, // 开发环境允许自签名证书
+          secure: false,
           ws: true,
-          timeout: 30000,
+          timeout: 120000,
           configure: (proxy, _options) => {
             proxy.on("proxyReq", (proxyReq, req, _res) => {
-              console.log("Proxy Request:", req.method, req.url, "Content-Type:", req.headers['content-type'])
+              console.log(`[Proxy] ${req.method} ${req.url}`)
             })
             proxy.on("proxyRes", (proxyRes, req, _res) => {
-              console.log("Proxy Response:", proxyRes.statusCode, req.url)
+              console.log(`[Proxy] Response: ${proxyRes.statusCode} ${req.url}`)
             })
             proxy.on("error", (err, _req, _res) => {
-              console.error("Proxy Error:", err.message)
+              console.error(`[Proxy] Error: ${err.message}`)
             })
           },
         },
       },
+      */
     },
     build: {
       outDir: "../SmartAbp.Web/wwwroot/dist",

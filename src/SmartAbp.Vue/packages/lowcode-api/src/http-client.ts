@@ -1,11 +1,22 @@
 /**
  * HTTP客户端 - lowcode-api独立封装
  * 符合packages黑盒原则，不依赖主应用
+ * 
+ * 🔥 开发环境说明：
+ * 由于 Vite 内置代理对浏览器 POST JSON 请求存在兼容性问题，
+ * 开发环境下 POST/PUT/PATCH 请求会自动使用原生 fetch 直接调用后端。
  */
 
 import axios, { type AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios'
 // import { setupMockInterceptor } from './__tests__/mocks/mock-server' // ⚠️ 已禁用Mock服务器
 import type { AbpErrorData } from './types/error'
+
+/**
+ * 🔥 开发环境配置
+ * 由于 Vite 代理对浏览器 POST JSON 请求存在问题，开发环境直接调用后端
+ */
+const DEV_BACKEND_URL = 'https://localhost:9002'
+const isDev = import.meta.env?.DEV === true
 
 /**
  * HTTP响应统一格式
@@ -55,6 +66,70 @@ export interface HttpClient {
 }
 
 /**
+ * 🔥 开发环境专用：使用 fetch 直接调用后端
+ * 绕过 Vite 代理对浏览器 POST JSON 请求的兼容性问题
+ */
+async function devFetch<T>(
+  method: string,
+  url: string,
+  data?: any,
+  timeout: number = 30000,
+  getToken?: () => string | null
+): Promise<T> {
+  const fullUrl = `${DEV_BACKEND_URL}${url}`
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeout)
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json'
+  }
+
+  // 添加认证 token
+  if (getToken) {
+    const token = getToken()
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+  }
+
+  try {
+    const response = await fetch(fullUrl, {
+      method,
+      headers,
+      body: data ? JSON.stringify(data) : undefined,
+      signal: controller.signal
+    })
+
+    clearTimeout(timeoutId)
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      let errorData: any = {}
+      try {
+        errorData = JSON.parse(errorText)
+      } catch {
+        errorData = { message: errorText }
+      }
+      
+      const error: any = new Error(errorData.message || `HTTP ${response.status}`)
+      error.response = { status: response.status, data: errorData }
+      throw error
+    }
+
+    const text = await response.text()
+    return text ? JSON.parse(text) : ({} as T)
+  } catch (error: any) {
+    clearTimeout(timeoutId)
+    if (error.name === 'AbortError') {
+      const timeoutError: any = new Error('请求超时')
+      timeoutError.code = 'TIMEOUT'
+      throw timeoutError
+    }
+    throw error
+  }
+}
+
+/**
  * 创建HTTP客户端实例
  */
 export function createHttpClient(config?: HttpClientConfig): HttpClient {
@@ -66,25 +141,80 @@ export function createHttpClient(config?: HttpClientConfig): HttpClient {
     onError
   } = config || {}
 
+  // 🔥 开发环境：创建使用 devFetch 的客户端
+  if (isDev) {
+    return {
+      get: async <T = any>(url: string, axiosConfig?: any): Promise<T> => {
+        // GET 请求通过代理没问题，但为了一致性也使用 devFetch
+        const params = axiosConfig?.params
+        let finalUrl = url
+        if (params) {
+          const searchParams = new URLSearchParams()
+          for (const [key, value] of Object.entries(params)) {
+            if (value !== undefined && value !== null) {
+              searchParams.append(key, String(value))
+            }
+          }
+          const queryString = searchParams.toString()
+          if (queryString) {
+            finalUrl += (url.includes('?') ? '&' : '?') + queryString
+          }
+        }
+        return devFetch<T>('GET', finalUrl, undefined, timeout, getToken)
+      },
+      post: async <T = any>(url: string, data?: any): Promise<T> => {
+        return devFetch<T>('POST', url, data, timeout, getToken)
+      },
+      put: async <T = any>(url: string, data?: any): Promise<T> => {
+        return devFetch<T>('PUT', url, data, timeout, getToken)
+      },
+      delete: async <T = any>(url: string, axiosConfig?: any): Promise<T> => {
+        const params = axiosConfig?.params
+        let finalUrl = url
+        if (params) {
+          const searchParams = new URLSearchParams()
+          for (const [key, value] of Object.entries(params)) {
+            if (value !== undefined && value !== null) {
+              searchParams.append(key, String(value))
+            }
+          }
+          const queryString = searchParams.toString()
+          if (queryString) {
+            finalUrl += (url.includes('?') ? '&' : '?') + queryString
+          }
+        }
+        return devFetch<T>('DELETE', finalUrl, undefined, timeout, getToken)
+      },
+      patch: async <T = any>(url: string, data?: any): Promise<T> => {
+        return devFetch<T>('PATCH', url, data, timeout, getToken)
+      },
+      request: async <T = any>(axiosConfig: any): Promise<T> => {
+        const { method = 'GET', url, data, params } = axiosConfig
+        let finalUrl = url
+        if (params) {
+          const searchParams = new URLSearchParams()
+          for (const [key, value] of Object.entries(params)) {
+            if (value !== undefined && value !== null) {
+              searchParams.append(key, String(value))
+            }
+          }
+          const queryString = searchParams.toString()
+          if (queryString) {
+            finalUrl += (url.includes('?') ? '&' : '?') + queryString
+          }
+        }
+        return devFetch<T>(method.toUpperCase(), finalUrl, data, timeout, getToken)
+      }
+    }
+  }
+
+  // 🔥 生产环境：使用 axios
   const instance = axios.create({
     baseURL,
     timeout,
     headers: {
       'Content-Type': 'application/json'
-    },
-    // 🔥 修复：显式指定请求体转换，确保 Content-Length 正确计算
-    transformRequest: [
-      (data, headers) => {
-        if (data && typeof data === 'object') {
-          // 确保 Content-Type 正确设置
-          if (headers) {
-            headers['Content-Type'] = 'application/json'
-          }
-          return JSON.stringify(data)
-        }
-        return data
-      }
-    ]
+    }
   })
 
   // ✅ Mock服务器已彻底禁用，所有请求必须连接真实后端

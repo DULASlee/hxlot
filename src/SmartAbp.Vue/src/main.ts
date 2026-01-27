@@ -5,6 +5,16 @@ import './styles/enterprise-icons.css'; // 企业级图标系统样式
 import './styles/main.css'; // 基础样式和工具类
 
 /**
+ * 🔥 开发环境配置：NSwag 生成的 API 客户端直接调用后端
+ * 解决 Vite 代理对浏览器 POST JSON 请求的兼容性问题
+ */
+import { OpenAPI } from './api/generated/core/OpenAPI';
+if (import.meta.env.DEV) {
+  OpenAPI.BASE = 'https://localhost:9002';
+  console.log('[API Config] 开发环境：API 直接调用后端', OpenAPI.BASE);
+}
+
+/**
  * 全局Promise rejection处理器
  * 防止未处理的Promise rejection导致控制台错误
  */
